@@ -74,6 +74,9 @@
     <Compile Include="XUnitLogger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="JsonTestFiles\attachments.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="JsonTestFiles\content.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

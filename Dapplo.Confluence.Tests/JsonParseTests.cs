@@ -43,7 +43,7 @@ namespace Dapplo.Confluence.Tests
 			var json = File.ReadAllText("JsonTestFiles/content.json");
 			var content = SimpleJson.DeserializeObject<Content>(json);
 			Assert.NotNull(content);
-			Assert.Equal("https://confluence/rest/api/content/2721", content.Links.Self.AbsoluteUri);
+			Assert.Equal("http://myhost:8080/confluence/rest/api/content/1234", content.Links.Self.AbsoluteUri);
 		}
 	}
 }

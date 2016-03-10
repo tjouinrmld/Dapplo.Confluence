@@ -25,6 +25,7 @@ using Dapplo.LogFacade;
 using Dapplo.LogFacade.Loggers;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -52,6 +53,8 @@ namespace Dapplo.Confluence.WpfExample
 
 		private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
+			await Task.Delay(10);
+
 		}
 	}
 }

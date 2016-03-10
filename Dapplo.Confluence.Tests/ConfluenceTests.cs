@@ -23,8 +23,6 @@
 
 using Xunit;
 using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Dapplo.LogFacade;
@@ -34,27 +32,28 @@ namespace Dapplo.Confluence.Tests
 	public class ConfluenceTests
 	{
 		// Test against a well known Confluence
-		private static readonly Uri TestConfluenceUri = new Uri("https://greenshot.atlassian.net");
+		private static readonly Uri TestConfluenceUri = new Uri("https://greenshot.atlassian.net/wiki");
 
-		private ConfluenceApi _confluenceApi;
+		private readonly ConfluenceApi _confluenceApi;
 
 		public ConfluenceTests(ITestOutputHelper testOutputHelper)
 		{
 			XUnitLogger.RegisterLogger(testOutputHelper, LogLevel.Verbose);
 			_confluenceApi = new ConfluenceApi(TestConfluenceUri);
+			_confluenceApi.SetBasicAuthentication("<username>", "<password>");
 		}
 
 		[Fact]
 		public async Task TestSearch()
 		{
-			var searchResult = await _confluenceApi.SearchAsync("text ~ \"robin\"");
+			var searchResult = await _confluenceApi.SearchAsync("text ~ \"greenshot\"");
 
 			Assert.NotNull(searchResult);
-			Assert.NotNull(searchResult.Issues.Count > 0);
+			Assert.True(searchResult.Results.Count > 0);
 
-			foreach (var issue in searchResult.Issues)
+			foreach (var content in searchResult.Results)
 			{
-				Assert.NotNull(issue.Fields.Project);
+				Assert.NotNull(content.Type);
 			}
 		}
 	}

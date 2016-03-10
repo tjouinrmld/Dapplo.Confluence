@@ -1,0 +1,114 @@
+{
+    "results": [
+        {
+            "id": "att5678",
+            "type": "attachment",
+            "title": "myfile.txt",
+            "version": {
+                "by": {
+                    "type": "known",
+                    "username": "username",
+                    "displayName": "Full Name",
+                    "userKey": ""
+                },
+                "when": "2016-03-03T06:18:55.091Z",
+                "message": "change message for this edit",
+                "number": 2,
+                "minorEdit": false
+            },
+            "ancestors": [],
+            "operations": [],
+            "children": {},
+            "descendants": {},
+            "container": {
+                "id": "1234",
+                "type": "page",
+                "title": "Example Content title",
+                "space": {
+                    "id": 11,
+                    "key": "TST",
+                    "name": "Example space",
+                    "description": {
+                        "plain": {
+                            "value": "This is an example space",
+                            "representation": "plain"
+                        }
+                    },
+                    "_links": {
+                        "self": "http://myhost:8080/confluence/rest/api/space/TST"
+                    }
+                },
+                "version": {
+                    "by": {
+                        "type": "known",
+                        "username": "username",
+                        "displayName": "Full Name",
+                        "userKey": ""
+                    },
+                    "when": "2016-03-03T06:18:55.091Z",
+                    "message": "change message for this edit",
+                    "number": 2,
+                    "minorEdit": false
+                },
+                "ancestors": [
+                    {
+                        "id": "123",
+                        "type": "page",
+                        "ancestors": [],
+                        "operations": [],
+                        "children": {},
+                        "descendants": {},
+                        "body": {},
+                        "metadata": {},
+                        "_links": {
+                            "self": "http://myhost:8080/confluence/rest/api/content/123"
+                        }
+                    }
+                ],
+                "operations": [],
+                "children": {},
+                "descendants": {},
+                "container": {
+                    "id": 11,
+                    "key": "TST",
+                    "name": "Example space",
+                    "description": {
+                        "plain": {
+                            "value": "This is an example space",
+                            "representation": "plain"
+                        }
+                    },
+                    "_links": {
+                        "self": "http://myhost:8080/confluence/rest/api/space/TST"
+                    }
+                },
+                "body": {
+                    "view": {
+                        "value": "<p><h1>Example</h1>Some example content body</p>",
+                        "representation": "view",
+                        "_expandable": {
+                            "content": "/rest/api/content/1234"
+                        }
+                    }
+                },
+                "metadata": {},
+                "_links": {
+                    "self": "http://myhost:8080/confluence/rest/api/content/1234"
+                }
+            },
+            "body": {},
+            "metadata": {
+                "comment": "This is my File",
+                "mediaType": "text/plain"
+            },
+            "_links": {
+                "self": "http://myhost:8080/confluence/rest/api/content/att5678"
+            }
+        }
+    ],
+    "size": 1,
+    "_links": {
+        "base": "http://myhost:8080/confluence",
+        "context": "/confluence"
+    }
+}

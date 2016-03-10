@@ -1,0 +1,17 @@
+{
+    "id": 11,
+    "key": "TST",
+    "name": "Example space",
+    "description": {
+        "plain": {
+            "value": "This is an example space",
+            "representation": "plain"
+        }
+    },
+    "_links": {
+        "collection": "/rest/api/space",
+        "base": "http://myhost:8080/confluence",
+        "context": "/confluence",
+        "self": "http://myhost:8080/confluence/rest/api/space/TST"
+    }
+}

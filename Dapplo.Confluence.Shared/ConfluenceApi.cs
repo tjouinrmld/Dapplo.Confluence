@@ -58,12 +58,12 @@ namespace Dapplo.Confluence
 			{
 				throw new ArgumentNullException(nameof(baseUri));
 			}
-			ConfluenceBaseUri = baseUri.AppendSegments("rest", "api", "2");
+			ConfluenceBaseUri = baseUri.AppendSegments("rest", "api");
 
 			_behaviour = new HttpBehaviour
 			{
 				HttpSettings = httpSettings,
-				OnHttpRequestMessageCreated = (httpMessage) =>
+				OnHttpRequestMessageCreated = httpMessage =>
 				{
 					httpMessage?.Headers.TryAddWithoutValidation("X-Atlassian-Token", "nocheck");
 					if (!string.IsNullOrEmpty(_user) && _password != null)
@@ -94,7 +94,7 @@ namespace Dapplo.Confluence
 		#region write
 		/// <summary>
 		///     Attach content to the specified issue
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e3035
+		///     See: https://docs.atlassian.com/confluence/REST/latest/#d2e3035
 		/// </summary>
 		/// <param name="contentId">Id of the content to attach to</param>
 		/// <param name="content">the content can be anything what Dapplo.HttpExtensions supports</param>
@@ -121,8 +121,10 @@ namespace Dapplo.Confluence
 			where TResponse : class
 		{
 			_behaviour.MakeCurrent();
-			var attachmentUriBuilder = new UriBuilder(ConfluenceBaseUri);
-			attachmentUriBuilder.Path = attachment.Links.Download;
+			var attachmentUriBuilder = new UriBuilder(ConfluenceBaseUri)
+			{
+				Path = attachment.Links.Download
+			};
 			return await attachmentUriBuilder.Uri.GetAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
 		}
 
@@ -137,14 +139,15 @@ namespace Dapplo.Confluence
 			where TResponse : class
 		{
 			_behaviour.MakeCurrent();
-			var pictureUriBuilder = new UriBuilder(ConfluenceBaseUri);
-			pictureUriBuilder.Path = picture.Path;
+			var pictureUriBuilder = new UriBuilder(ConfluenceBaseUri)
+			{
+				Path = picture.Path
+			};
 			return await pictureUriBuilder.Uri.GetAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
-		///     Get Space information
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e4539
+		///     Get Space information see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
 		/// </summary>
 		/// <param name="spaceKey">the space key</param>
 		/// <param name="cancellationToken">CancellationToken</param>
@@ -157,24 +160,28 @@ namespace Dapplo.Confluence
 		}
 
 		/// <summary>
-		///     Search for issues, with a CQL (e.g. from a filter)
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e4539
+		///     Search for issues, with a CQL (e.g. from a filter) see <a href="https://docs.atlassian.com/confluence/REST/latest/#d2e4539">here</a>
 		/// </summary>
 		/// <param name="cql">Confluence Query Language, like SQL, for the search</param>
 		/// <param name="cqlContext">the execution context for CQL functions, provides current space key and content id. If this is not provided some CQL functions will not be available.</param>
 		/// <param name="limit">Maximum number of results returned, default is 20</param>
 		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>dynamic</returns>
-		public async Task<dynamic> SearchAsync(string cql, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		/// <returns>result with content</returns>
+		public async Task<Result<Content>> SearchAsync(string cql, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			_behaviour.MakeCurrent();
-			var searchUri = ConfluenceBaseUri.AppendSegments("content", "search").ExtendQuery("cql", cql).ExtendQuery("cqlcontext", cqlContext).ExtendQuery("limit", limit);
-			return await searchUri.GetAsAsync<dynamic>(cancellationToken).ConfigureAwait(false);
+
+			var searchUri = ConfluenceBaseUri.AppendSegments("content", "search").ExtendQuery("cql", cql).ExtendQuery("limit", limit);
+			if (cqlContext != null)
+			{
+				searchUri = searchUri.ExtendQuery("cqlcontext", cqlContext);
+			}
+			return await searchUri.GetAsAsync<Result<Content>>(cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
 		///     Get content by title
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e4539
+		///     See: https://docs.atlassian.com/confluence/REST/latest/#d2e4539
 		/// </summary>
 		/// <param name="spaceKey">Space key</param>
 		/// <param name="title">Title of the content</param>
@@ -209,7 +216,7 @@ namespace Dapplo.Confluence
 
 		/// <summary>
 		///     Get currrent user information, introduced with 6.6
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#user-getCurrent
+		///     See: https://docs.atlassian.com/confluence/REST/latest/#user-getCurrent
 		/// </summary>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>User</returns>
@@ -222,7 +229,7 @@ namespace Dapplo.Confluence
 
 		/// <summary>
 		///     Get user information, introduced with 6.6
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#user-getUser
+		///     See: https://docs.atlassian.com/confluence/REST/latest/#user-getUser
 		/// </summary>
 		/// <param name="username"></param>
 		/// <param name="cancellationToken">CancellationToken</param>

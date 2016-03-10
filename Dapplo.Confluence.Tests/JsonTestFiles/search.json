@@ -1,0 +1,35 @@
+﻿{
+	"results": [
+		{
+			"id": "950274",
+			"type": "page",
+			"title": "Greenshot 1 Home",
+			"_links": {
+				"webui": "/display/GSI/Greenshot+1+Home",
+				"tinyui": "/x/AoAO",
+				"self": "https://greenshot.atlassian.net/wiki/rest/api/content/950274"
+			},
+			"_expandable": {
+				"container": "",
+				"metadata": "",
+				"extensions": "",
+				"operations": "",
+				"children": "",
+				"history": "/rest/api/content/950274/history",
+				"ancestors": "",
+				"body": "",
+				"version": "",
+				"descendants": "",
+				"space": "/rest/api/space/GSI"
+			}
+		}
+	],
+	"start": 0,
+	"limit": 25,
+	"size": 1,
+	"_links": {
+		"self": "https://greenshot.atlassian.net/wiki/rest/api/content/search?cql=text%20~%20%22greenshot%22",
+		"base": "https://greenshot.atlassian.net/wiki",
+		"context": "/wiki"
+	}
+}

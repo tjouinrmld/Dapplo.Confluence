@@ -80,6 +80,7 @@
     <None Include="JsonTestFiles\content.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="JsonTestFiles\search.json" />
     <None Include="JsonTestFiles\space_content.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

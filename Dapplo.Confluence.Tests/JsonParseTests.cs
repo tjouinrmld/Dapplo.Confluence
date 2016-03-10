@@ -40,11 +40,10 @@ namespace Dapplo.Confluence.Tests
 		[Fact]
 		public void TestParseServerInfo()
 		{
-			var json = File.ReadAllText("JsonTestFiles/serverInfo.json");
-			var serverInfo = SimpleJson.DeserializeObject<ServerInfo>(json);
-			Assert.NotNull(serverInfo);
-			Assert.Equal("http://localhost:8080/Confluence", serverInfo.BaseUrl.AbsoluteUri);
-			Assert.Equal("Greenshot Confluence", serverInfo.ServerTitle);
+			var json = File.ReadAllText("JsonTestFiles/content.json");
+			var content = SimpleJson.DeserializeObject<Content>(json);
+			Assert.NotNull(content);
+			Assert.Equal("https://confluence/rest/api/content/2721", content.Links.Self.AbsoluteUri);
 		}
 	}
 }

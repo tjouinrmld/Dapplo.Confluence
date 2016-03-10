@@ -21,6 +21,8 @@
 
 #region using
 
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -29,17 +31,24 @@ namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
 	///     Version information
+	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class Version : BaseProperties
+	public class Version
 	{
-		[DataMember(Name = "archived")]
-		public bool Archived { get; set; }
+		[DataMember(Name = "by")]
+		public User By { get; set; }
 
-		[DataMember(Name = "name")]
-		public string Name { get; set; }
+		[DataMember(Name = "when")]
+		public DateTimeOffset When { get; set; }
+		
+		[DataMember(Name = "message")]
+		public string Message { get; set; }
 
-		[DataMember(Name = "released")]
-		public bool Released { get; set; }
+		[DataMember(Name = "minorEdit")]
+		public bool IsMinorEdit { get; set; }
+
+		[DataMember(Name = "number")]
+		public int Number { get; set; }
 	}
 }

@@ -30,21 +30,31 @@ using System.Runtime.Serialization;
 namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
-	///     Container for the Watcher
+	///     Links information
+	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class Watches
+	public class Links
 	{
+		[DataMember(Name = "base")]
+		public Uri Base { get; set; }
+
+		[DataMember(Name = "download")]
+		public string Download { get; set; }
+
+		[DataMember(Name = "context")]
+		public string Context { get; set; }
+
+		[DataMember(Name = "collection")]
+		public string Collection { get; set; }
+
+		[DataMember(Name = "webui")]
+		public string WebUi { get; set; }
+
+		[DataMember(Name = "tinyui")]
+		public string TinyUi { get; set; }
+
 		[DataMember(Name = "self")]
 		public Uri Self { get; set; }
-
-		[DataMember(Name = "isWatching")]
-		public bool IsWatching { get; set; }
-
-		[DataMember(Name = "watchCount")]
-		public int WatchCount { get; set; }
-
-		[DataMember(Name = "watchers")]
-		public IList<User> Watchers { get; set; }
 	}
 }

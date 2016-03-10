@@ -21,6 +21,8 @@
 
 #region using
 
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -28,15 +30,25 @@ using System.Runtime.Serialization;
 namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
-	///     Resolution information
+	///     Space information
+	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class ProgressInfo
+	public class Content
 	{
-		[DataMember(Name = "progress")]
-		public long Progress { get; set; }
+		[DataMember(Name = "id")]
+		public string Id { get; set; }
 
-		[DataMember(Name = "total")]
-		public long Total { get; set; }
+		[DataMember(Name = "type")]
+		public string Type { get; set; }
+
+		[DataMember(Name = "space")]
+		public Space Space { get; set; }
+
+		[DataMember(Name = "_expandable")]
+		public IDictionary<string, string> Expandables { get; set; }
+
+		[DataMember(Name = "_links")]
+		public Links Links { get; set; }
 	}
 }

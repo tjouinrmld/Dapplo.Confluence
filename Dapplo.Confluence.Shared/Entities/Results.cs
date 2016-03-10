@@ -21,6 +21,8 @@
 
 #region using
 
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -28,18 +30,25 @@ using System.Runtime.Serialization;
 namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
-	///     ProjectCategory information
+	///     Attachments information
+	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class ProjectCategory
+	public class Result<TResult>
 	{
-		[DataMember(Name = "description")]
-		public string Description { get; set; }
+		[DataMember(Name = "results")]
+		public IList<TResult> Results { get; set; }
 
-		[DataMember(Name = "id")]
-		public string Id { get; set; }
+		[DataMember(Name = "start")]
+		public int Start { get; set; }
 
-		[DataMember(Name = "name")]
-		public string Name { get; set; }
+		[DataMember(Name = "limit")]
+		public int Limit { get; set; }
+
+		[DataMember(Name = "size")]
+		public int Size { get; set; }
+
+		[DataMember(Name = "_links")]
+		public Links Links { get; set; }
 	}
 }

@@ -22,6 +22,7 @@
 #region using
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -30,27 +31,24 @@ namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
 	///     User information
-	///     See: https://docs.atlassian.com/Confluence/REST/latest/#api/2/user
+	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
 	public class User
 	{
-		[DataMember(Name = "active")]
-		public bool Active { get; set; }
+		[DataMember(Name = "type")]
+		public string Type { get; set; }
 
-		[DataMember(Name = "avatarUrls")]
-		public AvatarUrls Avatars { get; set; }
+		[DataMember(Name = "profilePicture")]
+		public Picture ProfilePicture { get; set; }
+		
+		[DataMember(Name = "username")]
+		public string Username { get; set; }
 
 		[DataMember(Name = "displayName")]
 		public string DisplayName { get; set; }
 
-		[DataMember(Name = "emailAddress")]
-		public string EmailAddress { get; set; }
-
-		[DataMember(Name = "name")]
-		public string Name { get; set; }
-
-		[DataMember(Name = "self")]
-		public Uri Self { get; set; }
+		[DataMember(Name = "userKey")]
+		public string UserKey { get; set; }
 	}
 }

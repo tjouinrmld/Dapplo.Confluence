@@ -21,6 +21,8 @@
 
 #region using
 
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -28,43 +30,22 @@ using System.Runtime.Serialization;
 namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
-	///     Component information
-	///     See: https://docs.atlassian.com/Confluence/REST/latest/#api/2/component
+	///     Space information
+	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class Component
+	public class Picture
 	{
-		[DataMember(Name = "assignee")]
-		public User Assignee { get; set; }
+		[DataMember(Name = "width")]
+		public int Width { get; set; }
 
-		[DataMember(Name = "assigneeType")]
-		public string AssigneeType { get; set; }
+		[DataMember(Name = "height")]
+		public int Height { get; set; }
 
-		[DataMember(Name = "description")]
-		public string Description { get; set; }
+		[DataMember(Name = "path")]
+		public string Path { get; set; }
 
-		[DataMember(Name = "id")]
-		public string Id { get; set; }
-
-		[DataMember(Name = "isAssigneeTypeValid")]
-		public bool IsAssigneeTypeValid { get; set; }
-
-		[DataMember(Name = "lead")]
-		public User Lead { get; set; }
-
-		[DataMember(Name = "name")]
-		public string Name { get; set; }
-
-		[DataMember(Name = "project")]
-		public string Project { get; set; }
-
-		[DataMember(Name = "projectId")]
-		public int ProjectId { get; set; }
-
-		[DataMember(Name = "realAssignee")]
-		public User RealAssignee { get; set; }
-
-		[DataMember(Name = "realAssigneeType")]
-		public string RealAssigneeType { get; set; }
+		[DataMember(Name = "isDefault")]
+		public bool IsDefault { get; set; }
 	}
 }

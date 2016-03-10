@@ -36,49 +36,18 @@ namespace Dapplo.Confluence.Tests
 		// Test against a well known Confluence
 		private static readonly Uri TestConfluenceUri = new Uri("https://greenshot.atlassian.net");
 
-		private ConfluenceApi _ConfluenceApi;
+		private ConfluenceApi _confluenceApi;
 
 		public ConfluenceTests(ITestOutputHelper testOutputHelper)
 		{
 			XUnitLogger.RegisterLogger(testOutputHelper, LogLevel.Verbose);
-		}
-
-		[Fact]
-		public async Task TestCreateAndInitializeAsync()
-		{
-			_ConfluenceApi = await ConfluenceApi.CreateAndInitializeAsync(TestConfluenceUri);
-			Assert.NotNull(_ConfluenceApi);
-			Assert.NotNull(_ConfluenceApi.ConfluenceVersion);
-			Assert.NotNull(_ConfluenceApi.ServerTitle);
-			// This should be changed when the title changes
-			Assert.Equal("Greenshot Confluence", _ConfluenceApi.ServerTitle);
-			Debug.WriteLine($"Version {_ConfluenceApi.ConfluenceVersion} - Title: {_ConfluenceApi.ServerTitle}");
-		}
-
-		[Fact]
-		public async Task TestProjectsAsync()
-		{
-			_ConfluenceApi = await ConfluenceApi.CreateAndInitializeAsync(TestConfluenceUri);
-			var projects = await _ConfluenceApi.ProjectsAsync();
-
-			Assert.NotNull(projects);
-			Assert.NotNull(projects.Count > 0);
-
-			foreach (var project in projects)
-			{
-				var avatar = await _ConfluenceApi.AvatarAsync<Bitmap>(project.Avatar, AvatarSizes.ExtraLarge);
-				Assert.True(avatar.Width == 48);
-
-				var projectDetails = await _ConfluenceApi.ProjectAsync(project.Key);
-				Assert.NotNull(projectDetails);
-			}
+			_confluenceApi = new ConfluenceApi(TestConfluenceUri);
 		}
 
 		[Fact]
 		public async Task TestSearch()
 		{
-			_ConfluenceApi = await ConfluenceApi.CreateAndInitializeAsync(TestConfluenceUri);
-			var searchResult = await _ConfluenceApi.SearchAsync("text ~ \"robin\"");
+			var searchResult = await _confluenceApi.SearchAsync("text ~ \"robin\"");
 
 			Assert.NotNull(searchResult);
 			Assert.NotNull(searchResult.Issues.Count > 0);

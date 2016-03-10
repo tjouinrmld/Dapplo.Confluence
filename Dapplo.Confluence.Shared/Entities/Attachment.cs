@@ -22,6 +22,7 @@
 #region using
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -30,30 +31,31 @@ namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
 	///     Attachment information
-	///     See: https://docs.atlassian.com/Confluence/REST/latest/#api/2/attachment
+	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class Attachment : BaseProperties
+	public class Attachment
 	{
-		[DataMember(Name = "author")]
-		public User Author { get; set; }
+		[DataMember(Name = "id")]
+		public string Id { get; set; }
 
-		[DataMember(Name = "content")]
-		public Uri ContentUri { get; set; }
+		[DataMember(Name = "type")]
+		public string Type { get; set; }
 
-		[DataMember(Name = "created")]
-		public DateTimeOffset Created { get; set; }
+		[DataMember(Name = "title")]
+		public string Title { get; set; }
 
-		[DataMember(Name = "filename")]
-		public User Filename { get; set; }
+		[DataMember(Name = "version")]
+		public Version Version { get; set; }
 
-		[DataMember(Name = "mimeType")]
-		public string MimeType { get; set; }
+		[DataMember(Name = "container")]
+		public Content Container { get; set; }
 
-		[DataMember(Name = "size")]
-		public long Size { get; set; }
 
-		[DataMember(Name = "thumbnail")]
-		public Uri ThumbnailUri { get; set; }
+		[DataMember(Name = "metadata")]
+		public Metadata Metadata { get; set; }
+
+		[DataMember(Name = "_links")]
+		public Links Links { get; set; }
 	}
 }

@@ -35,11 +35,11 @@ namespace Dapplo.Confluence.WpfExample
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		public ObservableCollection<Project> Projects
+		public ObservableCollection<object> Projects
 		{
 			get;
 			set;
-		} = new ObservableCollection<Project>();
+		} = new ObservableCollection<object>();
 
 		public MainWindow()
 		{
@@ -52,21 +52,6 @@ namespace Dapplo.Confluence.WpfExample
 
 		private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
-			var confluenceApi = await ConfluenceApi.CreateAndInitializeAsync(new Uri("https://greenshot.atlassian.net"));
-
-			var projects = await confluenceApi.ProjectsAsync();
-
-			foreach (var project in projects)
-			{
-				// Demonstrate the Avatar and it's underlying GetAsAsync<BitmapSource>
-				// could also be done with setting the source of the image, but this might not work without login
-				var avatar = await confluenceApi.AvatarAsync<BitmapSource>(project.Avatar);
-				Projects.Add(new Project
-				{
-					Title = project.Name,
-					Avatar = avatar
-				});
-			}
 		}
 	}
 }

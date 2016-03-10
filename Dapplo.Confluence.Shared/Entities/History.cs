@@ -22,6 +22,7 @@
 #region using
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -29,15 +30,25 @@ using System.Runtime.Serialization;
 namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
-	///     Base fields, used in pretty much every entity
+	///     History information
+	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class BaseProperties
+	public class History
 	{
-		[DataMember(Name = "id")]
-		public string Id { get; set; }
+		[DataMember(Name = "latest")]
+		public bool Latest { get; set; }
 
-		[DataMember(Name = "self")]
-		public Uri Self { get; set; }
+		[DataMember(Name = "createdDate")]
+		public DateTimeOffset CreatedDate { get; set; }
+
+		[DataMember(Name = "createdBy")]
+		public User CreatedBy { get; set; }
+
+		[DataMember(Name = "_expandable")]
+		public IDictionary<string, string> Expandables { get; set; }
+
+		[DataMember(Name = "_links")]
+		public Links Links { get; set; }
 	}
 }

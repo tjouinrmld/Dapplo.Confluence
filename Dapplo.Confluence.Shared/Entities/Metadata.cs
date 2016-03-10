@@ -22,6 +22,7 @@
 #region using
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -29,15 +30,16 @@ using System.Runtime.Serialization;
 namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
-	///     Visibility information
+	///     Metadata information
+	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class Priority :BaseProperties
+	public class Metadata
 	{
-		[DataMember(Name = "name")]
-		public string Name { get; set; }
+		[DataMember(Name = "comment")]
+		public string comment { get; set; }
 
-		[DataMember(Name = "iconUrl")]
-		public Uri IconUrl { get; set; }
+		[DataMember(Name = "mediaType")]
+		public string MediaType { get; set; }
 	}
 }

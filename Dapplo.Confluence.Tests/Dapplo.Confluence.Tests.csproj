@@ -74,7 +74,13 @@
     <Compile Include="XUnitLogger.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="JsonTestFiles\serverInfo.json">
+    <None Include="JsonTestFiles\content.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="JsonTestFiles\space_content.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="JsonTestFiles\space.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

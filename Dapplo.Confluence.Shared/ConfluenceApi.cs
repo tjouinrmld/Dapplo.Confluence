@@ -52,7 +52,7 @@ namespace Dapplo.Confluence
 		/// </summary>
 		/// <param name="baseUri">Base URL, e.g. https://yourConfluenceserver</param>
 		/// <param name="httpSettings">IHttpSettings or null for default</param>
-		private ConfluenceApi(Uri baseUri, IHttpSettings httpSettings)
+		public ConfluenceApi(Uri baseUri, IHttpSettings httpSettings = null)
 		{
 			if (baseUri == null)
 			{
@@ -81,16 +81,6 @@ namespace Dapplo.Confluence
 		public Uri ConfluenceBaseUri { get; }
 
 		/// <summary>
-		///     The version of the Confluence server
-		/// </summary>
-		public string ConfluenceVersion { get; private set; }
-
-		/// <summary>
-		///     The title of the Confluence server
-		/// </summary>
-		public string ServerTitle { get; private set; }
-
-		/// <summary>
 		///     Set Basic Authentication for the current client
 		/// </summary>
 		/// <param name="user">username</param>
@@ -106,139 +96,133 @@ namespace Dapplo.Confluence
 		///     Attach content to the specified issue
 		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e3035
 		/// </summary>
-		/// <param name="issueKey"></param>
+		/// <param name="contentId">Id of the content to attach to</param>
 		/// <param name="content">the content can be anything what Dapplo.HttpExtensions supports</param>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Attachment</returns>
-		public async Task<Attachment> AttachAsync(string issueKey, object content, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Result<Attachment>> AttachAsync(string contentId, object content, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			_behaviour.MakeCurrent();
-			var attachUri = ConfluenceBaseUri.AppendSegments("issue", issueKey, "attachments");
-			return await attachUri.PostAsync<Attachment>(content, cancellationToken).ConfigureAwait(false);
+			var attachUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachments");
+			return await attachUri.PostAsync<Result<Attachment>>(content, cancellationToken).ConfigureAwait(false);
 		}
 		#endregion
 
 		#region Read
 
 		/// <summary>
-		///     Retrieve the Avatar for the supplied avatarUrls object
+		///     Retrieve the attachment for the supplied Attachment entity
 		/// </summary>
 		/// <typeparam name="TResponse">the type to return the result into. e.g. Bitmap,BitmapSource or MemoryStream</typeparam>
-		/// <param name="avatarUrls">AvatarUrls object from User or Myself method, or a project from the projects</param>
-		/// <param name="avatarSize">Use one of the AvatarSizes to specify the size you want to have</param>
+		/// <param name="attachment">Attachment</param>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
-		public async Task<TResponse> AvatarAsync<TResponse>(AvatarUrls avatarUrls, AvatarSizes avatarSize = AvatarSizes.ExtraLarge, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<TResponse> PictureAsync<TResponse>(Attachment attachment, CancellationToken cancellationToken = default(CancellationToken))
 			where TResponse : class
 		{
 			_behaviour.MakeCurrent();
-			switch (avatarSize)
-			{
-				case AvatarSizes.Small:
-					return await avatarUrls.Small.GetAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
-				case AvatarSizes.Medium:
-					return await avatarUrls.Medium.GetAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
-				case AvatarSizes.Large:
-					return await avatarUrls.Large.GetAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
-				case AvatarSizes.ExtraLarge:
-					return await avatarUrls.ExtraLarge.GetAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
-			}
-			throw new ArgumentException($"Unknown avatar size: {avatarSize}", nameof(avatarSize));
+			var attachmentUriBuilder = new UriBuilder(ConfluenceBaseUri);
+			attachmentUriBuilder.Path = attachment.Links.Download;
+			return await attachmentUriBuilder.Uri.GetAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
-		///     Get issue information
+		///     Retrieve the picture for the supplied Picture entity
+		/// </summary>
+		/// <typeparam name="TResponse">the type to return the result into. e.g. Bitmap,BitmapSource or MemoryStream</typeparam>
+		/// <param name="picture">Picture from User, Space, History etc</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
+		public async Task<TResponse> PictureAsync<TResponse>(Picture picture, CancellationToken cancellationToken = default(CancellationToken))
+			where TResponse : class
+		{
+			_behaviour.MakeCurrent();
+			var pictureUriBuilder = new UriBuilder(ConfluenceBaseUri);
+			pictureUriBuilder.Path = picture.Path;
+			return await pictureUriBuilder.Uri.GetAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
+		}
+
+		/// <summary>
+		///     Get Space information
 		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e4539
 		/// </summary>
-		/// <param name="issue">the issue key</param>
+		/// <param name="spaceKey">the space key</param>
 		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>Issue</returns>
-		public async Task<Issue> IssueAsync(string issue, CancellationToken cancellationToken = default(CancellationToken))
+		/// <returns>Space</returns>
+		public async Task<Space> SpaceAsync(string spaceKey, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var issueUri = ConfluenceBaseUri.AppendSegments("issue", issue);
+			var spaceUri = ConfluenceBaseUri.AppendSegments("space", spaceKey);
 			_behaviour.MakeCurrent();
-			return await issueUri.GetAsAsync<Issue>(cancellationToken).ConfigureAwait(false);
+			return await spaceUri.GetAsAsync<Space>(cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
-		///     Get currrent user information
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e4253
+		///     Search for issues, with a CQL (e.g. from a filter)
+		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e4539
+		/// </summary>
+		/// <param name="cql">Confluence Query Language, like SQL, for the search</param>
+		/// <param name="cqlContext">the execution context for CQL functions, provides current space key and content id. If this is not provided some CQL functions will not be available.</param>
+		/// <param name="limit">Maximum number of results returned, default is 20</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>dynamic</returns>
+		public async Task<dynamic> SearchAsync(string cql, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			_behaviour.MakeCurrent();
+			var searchUri = ConfluenceBaseUri.AppendSegments("content", "search").ExtendQuery("cql", cql).ExtendQuery("cqlcontext", cqlContext).ExtendQuery("limit", limit);
+			return await searchUri.GetAsAsync<dynamic>(cancellationToken).ConfigureAwait(false);
+		}
+
+		/// <summary>
+		///     Get content by title
+		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e4539
+		/// </summary>
+		/// <param name="spaceKey">Space key</param>
+		/// <param name="title">Title of the content</param>
+		/// <param name="start">Start of the results, used for paging</param>
+		/// <param name="limit">Maximum number of results returned, default is 20</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Results with content items</returns>
+		public async Task<Result<Content>> ContentByTitleAsync(string spaceKey, string title, int start = 0, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			_behaviour.MakeCurrent();
+			var searchUri = ConfluenceBaseUri.AppendSegments("content").ExtendQuery(new Dictionary<string, object>
+				{
+					{
+						"start", start
+					},
+					{
+						"limit", limit
+					},
+					{
+						"type", "page"
+					},
+					{
+						"spaceKey", spaceKey
+					},
+					{
+						"title", title
+					},
+				});
+			return await searchUri.GetAsAsync<Result<Content>>(cancellationToken).ConfigureAwait(false);
+		}
+
+
+		/// <summary>
+		///     Get currrent user information, introduced with 6.6
+		///     See: https://docs.atlassian.com/Confluence/REST/latest/#user-getCurrent
 		/// </summary>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>User</returns>
 		public async Task<User> MyselfAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var myselfUri = ConfluenceBaseUri.AppendSegments("myself");
+			var myselfUri = ConfluenceBaseUri.AppendSegments("user","current");
 			_behaviour.MakeCurrent();
 			return await myselfUri.GetAsAsync<User>(cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
-		///     Get projects information
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e2779
-		/// </summary>
-		/// <param name="projectKey">key of the project</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>ProjectDetails</returns>
-		public async Task<Project> ProjectAsync(string projectKey, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var projectUri = ConfluenceBaseUri.AppendSegments("project", projectKey);
-			_behaviour.MakeCurrent();
-			return await projectUri.GetAsAsync<Project>(cancellationToken).ConfigureAwait(false);
-		}
-
-		/// <summary>
-		///     Get all visible projects
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e2779
-		/// </summary>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>list of ProjectDigest</returns>
-		public async Task<IList<ProjectDigest>> ProjectsAsync(CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var projectUri = ConfluenceBaseUri.AppendSegments("project");
-			_behaviour.MakeCurrent();
-			return await projectUri.GetAsAsync<IList<ProjectDigest>>(cancellationToken).ConfigureAwait(false);
-		}
-
-		/// <summary>
-		///     Search for issues, with a JQL (e.g. from a filter)
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e2713
-		/// </summary>
-		/// <param name="jql">Confluence Query Language, like SQL, for the search</param>
-		/// <param name="maxResults">Maximum number of results returned, default is 20</param>
-		/// <param name="fields">Confluence fields to include, if null a default is taken</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>SearchResult</returns>
-		public async Task<SearchResult> SearchAsync(string jql, int maxResults = 20, IList<string> fields = null, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			_behaviour.MakeCurrent();
-			var search = new Search
-			{
-				Jql = jql,
-				ValidateQuery = true,
-				MaxResults = maxResults,
-				Fields = fields ?? new List<string> { "summary", "status", "assignee", "key", "project"}
-			};
-			var searchUri = ConfluenceBaseUri.AppendSegments("search");
-			return await searchUri.PostAsync<SearchResult>(search, cancellationToken).ConfigureAwait(false);
-		}
-
-		/// <summary>
-		///     Get server information
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e3828
-		/// </summary>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>ServerInfo</returns>
-		public async Task<ServerInfo> ServerInfoAsync(CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var serverInfoUri = ConfluenceBaseUri.AppendSegments("serverInfo");
-			_behaviour.MakeCurrent();
-			return await serverInfoUri.GetAsAsync<ServerInfo>(cancellationToken).ConfigureAwait(false);
-		}
-
-		/// <summary>
-		///     Get user information
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e5339
+		///     Get user information, introduced with 6.6
+		///     See: https://docs.atlassian.com/Confluence/REST/latest/#user-getUser
 		/// </summary>
 		/// <param name="username"></param>
 		/// <param name="cancellationToken">CancellationToken</param>
@@ -248,59 +232,6 @@ namespace Dapplo.Confluence
 			var userUri = ConfluenceBaseUri.AppendSegments("user").ExtendQuery("username", username);
 			_behaviour.MakeCurrent();
 			return await userUri.GetAsAsync<User>(cancellationToken).ConfigureAwait(false);
-		}
-
-		#endregion
-
-		#region Initializer
-
-		/// <summary>
-		///     Create the ConfluenceApi, and initialize
-		///     This overload is created to prevent needed a reference to Dapplo.HttpExtensions for the IHttpSettings
-		/// </summary>
-		/// <param name="baseUri">Base URL, e.g. https://yourConfluenceserver</param>
-		/// <returns>ConfluenceApi (in a Task)</returns>
-		public static async Task<ConfluenceApi> CreateAndInitializeAsync(Uri baseUri)
-		{
-			return await CreateAndInitializeAsync(baseUri, null);
-		}
-
-		/// <summary>
-		///     Create the ConfluenceApi, and initialize
-		/// </summary>
-		/// <param name="baseUri">Base URL, e.g. https://yourConfluenceserver</param>
-		/// <param name="httpSettings">IHttpSettings or null for default</param>
-		/// <returns>ConfluenceApi (in a Task)</returns>
-		public static async Task<ConfluenceApi> CreateAndInitializeAsync(Uri baseUri, IHttpSettings httpSettings)
-		{
-			var ConfluenceApi = new ConfluenceApi(baseUri, httpSettings);
-			await ConfluenceApi.InitializeAsync();
-			return ConfluenceApi;
-		}
-
-		/// <summary>
-		///     Get filter favorites
-		///     See: https://docs.atlassian.com/Confluence/REST/latest/#d2e1388
-		/// </summary>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>dynamic (JsonArray)</returns>
-		public async Task<dynamic> FiltersAsync(CancellationToken cancellationToken = default(CancellationToken))
-		{
-			_behaviour.MakeCurrent();
-			var filterFavouriteUri = ConfluenceBaseUri.AppendSegments("filter", "favourite");
-			return await filterFavouriteUri.GetAsAsync<dynamic>(cancellationToken).ConfigureAwait(false);
-		}
-
-		/// <summary>
-		///     This will just create a connection and retrieve the server title / Confluence version
-		/// </summary>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>Task</returns>
-		public async Task InitializeAsync(CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var serverInfo = await ServerInfoAsync(cancellationToken);
-			ServerTitle = serverInfo.ServerTitle;
-			ConfluenceVersion = serverInfo.Version;
 		}
 
 		#endregion

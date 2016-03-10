@@ -30,24 +30,32 @@ using System.Runtime.Serialization;
 namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
-	///     Search result information, see <a href="https://docs.atlassian.com/Confluence/REST/latest/#api/2/search-search">here</a>
+	///     Space information
+	///     See: https://docs.atlassian.com/confluence/REST/latest
+	///     Should be called with expand=icon,description.plain,homepage
 	/// </summary>
 	[DataContract]
-	public class SearchResult
+	public class Space
 	{
-		[DataMember(Name = "expand")]
-		public string Expand { get; set; }
+		[DataMember(Name = "id")]
+		public string Id { get; set; }
 
-		[DataMember(Name = "startAt")]
-		public int StartAt { get; set; }
+		[DataMember(Name = "key")]
+		public string Key { get; set; }
 
-		[DataMember(Name = "maxResults")]
-		public int MaxResults { get; set; }
+		[DataMember(Name = "name")]
+		public string Name { get; set; }
 
-		[DataMember(Name = "total")]
-		public int Total { get; set; }
+		[DataMember(Name = "type")]
+		public string Type { get; set; }
 
-		[DataMember(Name = "issues")]
-		public IList<Issue> Issues { get; set; }
+		[DataMember(Name = "_expandable")]
+		public IDictionary<string, string> Expandables { get; set; }
+
+		[DataMember(Name = "_links")]
+		public Links Links { get; set; }
+
+		[DataMember(Name = "icon")]
+		public Picture Icon { get; set; }
 	}
 }

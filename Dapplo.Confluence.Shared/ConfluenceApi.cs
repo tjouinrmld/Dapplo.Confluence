@@ -186,7 +186,7 @@ namespace Dapplo.Confluence
 		/// <returns>List of Space</returns>
 		public async Task<IList<Space>> SpacesAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var spacesUri = ConfluenceBaseUri.AppendSegments("space");
+			var spacesUri = ConfluenceBaseUri.AppendSegments("space").ExtendQuery("expand", "icon,description.plain");
 			_behaviour.MakeCurrent();
 			var response = await spacesUri.GetAsAsync<HttpResponse<Result<Space>, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)

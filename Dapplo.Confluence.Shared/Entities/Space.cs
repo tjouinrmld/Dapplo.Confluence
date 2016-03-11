@@ -21,7 +21,6 @@
 
 #region using
 
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -57,5 +56,7 @@ namespace Dapplo.Confluence.Entities
 
 		[DataMember(Name = "icon")]
 		public Picture Icon { get; set; }
+
+		public bool IsPersonal => true == Key?.StartsWith("~");
 	}
 }

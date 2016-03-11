@@ -42,8 +42,14 @@ namespace Dapplo.Confluence.Entities
 		[DataMember(Name = "type")]
 		public string Type { get; set; }
 
+		[DataMember(Name = "title")]
+		public string Title { get; set; }
+
 		[DataMember(Name = "space")]
 		public Space Space { get; set; }
+
+		[DataMember(Name = "version")]
+		public Version Version { get; set; }
 
 		[DataMember(Name = "_expandable")]
 		public IDictionary<string, string> Expandables { get; set; }

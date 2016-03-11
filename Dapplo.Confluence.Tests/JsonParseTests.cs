@@ -38,7 +38,7 @@ namespace Dapplo.Confluence.Tests
 		}
 
 		[Fact]
-		public void TestParseServerInfo()
+		public void TestParseContent()
 		{
 			var json = File.ReadAllText("JsonTestFiles/content.json");
 			var content = SimpleJson.DeserializeObject<Content>(json);

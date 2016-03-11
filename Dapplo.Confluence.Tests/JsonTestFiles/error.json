@@ -1,0 +1,4 @@
+{
+	"statusCode": 500,
+	"message": "com.sun.jersey.api.ParamException$PathParamException: com.atlassian.confluence.api.service.exceptions.BadRequestException: Can't parse as a ContentId: search"
+}

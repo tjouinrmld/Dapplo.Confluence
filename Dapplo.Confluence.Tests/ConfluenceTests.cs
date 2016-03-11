@@ -32,7 +32,7 @@ namespace Dapplo.Confluence.Tests
 	public class ConfluenceTests
 	{
 		// Test against a well known Confluence
-		private static readonly Uri TestConfluenceUri = new Uri("https://greenshot.atlassian.net/wiki");
+		private static readonly Uri TestConfluenceUri = new Uri("https://confluence.cip4.org/");
 
 		private readonly ConfluenceApi _confluenceApi;
 
@@ -40,14 +40,13 @@ namespace Dapplo.Confluence.Tests
 		{
 			XUnitLogger.RegisterLogger(testOutputHelper, LogLevel.Verbose);
 			_confluenceApi = new ConfluenceApi(TestConfluenceUri);
-			_confluenceApi.SetBasicAuthentication("<username>", "<password>");
+			//_confluenceApi.SetBasicAuthentication("<username>", "<password>");
 		}
 
 		[Fact]
 		public async Task TestSearch()
 		{
-			var searchResult = await _confluenceApi.SearchAsync("text ~ \"greenshot\"");
-
+			var searchResult = await _confluenceApi.SearchAsync("text ~ \"CIP4\"");
 			Assert.NotNull(searchResult);
 			Assert.True(searchResult.Results.Count > 0);
 

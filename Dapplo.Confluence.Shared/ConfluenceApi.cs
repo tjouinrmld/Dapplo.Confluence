@@ -99,12 +99,17 @@ namespace Dapplo.Confluence
 		/// <param name="contentId">Id of the content to attach to</param>
 		/// <param name="content">the content can be anything what Dapplo.HttpExtensions supports</param>
 		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>Attachment</returns>
+		/// <returns>Result with Attachment items</returns>
 		public async Task<Result<Attachment>> AttachAsync(string contentId, object content, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			_behaviour.MakeCurrent();
 			var attachUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachments");
-			return await attachUri.PostAsync<Result<Attachment>>(content, cancellationToken).ConfigureAwait(false);
+			var response = await attachUri.PostAsync<HttpResponse<Result<Attachment>, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
 		}
 		#endregion
 
@@ -125,7 +130,12 @@ namespace Dapplo.Confluence
 			{
 				Path = attachment.Links.Download
 			};
-			return await attachmentUriBuilder.Uri.GetAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
+			var response = await attachmentUriBuilder.Uri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse);
+			}
+			return response.Response;
 		}
 
 		/// <summary>
@@ -143,7 +153,12 @@ namespace Dapplo.Confluence
 			{
 				Path = picture.Path
 			};
-			return await pictureUriBuilder.Uri.GetAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
+			var response = await pictureUriBuilder.Uri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse);
+			}
+			return response.Response;
 		}
 
 		/// <summary>
@@ -156,17 +171,59 @@ namespace Dapplo.Confluence
 		{
 			var spaceUri = ConfluenceBaseUri.AppendSegments("space", spaceKey);
 			_behaviour.MakeCurrent();
-			return await spaceUri.GetAsAsync<Space>(cancellationToken).ConfigureAwait(false);
+			var response = await spaceUri.GetAsAsync<HttpResponse<Space, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
 		}
 
 		/// <summary>
+		///     Get Content information see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
+		/// </summary>
+		/// <param name="contentId">content id</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Content</returns>
+		public async Task<Content> ContentAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var contentUri = ConfluenceBaseUri.AppendSegments("content", contentId);
+			_behaviour.MakeCurrent();
+			var response = await contentUri.GetAsAsync<HttpResponse<Content, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
+		}
+
+		/// <summary>
+		///     Get Content information see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
+		/// </summary>
+		/// <param name="contentId">content id</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>List with Content</returns>
+		public async Task<IList<Content>> ChildrenAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var contentUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child").ExtendQuery("expand", "page");
+			_behaviour.MakeCurrent();
+			var response = await contentUri.GetAsAsync<HttpResponse<Child, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response.Result.Results;
+		}
+
+		/// <summary>
+		///     Possible since 5.7 
 		///     Search for issues, with a CQL (e.g. from a filter) see <a href="https://docs.atlassian.com/confluence/REST/latest/#d2e4539">here</a>
 		/// </summary>
 		/// <param name="cql">Confluence Query Language, like SQL, for the search</param>
 		/// <param name="cqlContext">the execution context for CQL functions, provides current space key and content id. If this is not provided some CQL functions will not be available.</param>
 		/// <param name="limit">Maximum number of results returned, default is 20</param>
 		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>result with content</returns>
+		/// <returns>Result with content items</returns>
 		public async Task<Result<Content>> SearchAsync(string cql, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			_behaviour.MakeCurrent();
@@ -176,7 +233,13 @@ namespace Dapplo.Confluence
 			{
 				searchUri = searchUri.ExtendQuery("cqlcontext", cqlContext);
 			}
-			return await searchUri.GetAsAsync<Result<Content>>(cancellationToken).ConfigureAwait(false);
+			
+			var response = await searchUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
 		}
 
 		/// <summary>
@@ -210,7 +273,12 @@ namespace Dapplo.Confluence
 						"title", title
 					},
 				});
-			return await searchUri.GetAsAsync<Result<Content>>(cancellationToken).ConfigureAwait(false);
+			var response = await searchUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
 		}
 
 
@@ -224,7 +292,12 @@ namespace Dapplo.Confluence
 		{
 			var myselfUri = ConfluenceBaseUri.AppendSegments("user","current");
 			_behaviour.MakeCurrent();
-			return await myselfUri.GetAsAsync<User>(cancellationToken).ConfigureAwait(false);
+			var response = await myselfUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
 		}
 
 		/// <summary>
@@ -238,7 +311,12 @@ namespace Dapplo.Confluence
 		{
 			var userUri = ConfluenceBaseUri.AppendSegments("user").ExtendQuery("username", username);
 			_behaviour.MakeCurrent();
-			return await userUri.GetAsAsync<User>(cancellationToken).ConfigureAwait(false);
+			var response = await userUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
 		}
 
 		#endregion

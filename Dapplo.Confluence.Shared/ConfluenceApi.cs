@@ -65,7 +65,7 @@ namespace Dapplo.Confluence
 				HttpSettings = httpSettings,
 				OnHttpRequestMessageCreated = httpMessage =>
 				{
-					httpMessage?.Headers.TryAddWithoutValidation("X-Atlassian-Token", "nocheck");
+					httpMessage?.Headers.TryAddWithoutValidation("X-Atlassian-Token", "no-check");
 					if (!string.IsNullOrEmpty(_user) && _password != null)
 					{
 						httpMessage?.SetBasicAuthorization(_user, _password);
@@ -104,7 +104,7 @@ namespace Dapplo.Confluence
 		{
 			_behaviour.MakeCurrent();
 			var attachUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachments");
-			var response = await attachUri.PostAsync<HttpResponse<Result<Attachment>, Error>>(cancellationToken).ConfigureAwait(false);
+			var response = await attachUri.PostAsync<HttpResponse<Result<Attachment>, Error>>(content, cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
 				throw new Exception(response.ErrorResponse.Message);
@@ -122,7 +122,7 @@ namespace Dapplo.Confluence
 		/// <param name="attachment">Attachment</param>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
-		public async Task<TResponse> PictureAsync<TResponse>(Attachment attachment, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<TResponse> AttachmentAsync<TResponse>(Attachment attachment, CancellationToken cancellationToken = default(CancellationToken))
 			where TResponse : class
 		{
 			_behaviour.MakeCurrent();
@@ -177,6 +177,23 @@ namespace Dapplo.Confluence
 				throw new Exception(response.ErrorResponse.Message);
 			}
 			return response.Response;
+		}
+
+		/// <summary>
+		///     Get Spaces see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
+		/// </summary>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>List of Space</returns>
+		public async Task<IList<Space>> SpacesAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var spacesUri = ConfluenceBaseUri.AppendSegments("space");
+			_behaviour.MakeCurrent();
+			var response = await spacesUri.GetAsAsync<HttpResponse<Result<Space>, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response.Results;
 		}
 
 		/// <summary>

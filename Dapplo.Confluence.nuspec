@@ -8,7 +8,7 @@
         <projectUrl>http://www.dapplo.net/blocks/Dapplo.Confluence</projectUrl>
         <iconUrl>http://www.dapplo.net/favicon.ico</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>$description$</description>
+        <description>A client library for accessing the Atlassian Confluence API.</description>
 		<summary>A library to access a Confluence server</summary>
         <language>en-us</language>
 		<copyright>$author$</copyright>

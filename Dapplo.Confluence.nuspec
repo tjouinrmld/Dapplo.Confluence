@@ -14,7 +14,6 @@
 		<copyright>$author$</copyright>
 		<tags>Confluence rest</tags>
 		<dependencies>
-		<dependencies>
 			<group targetFramework="net45">
 				<dependency id="Dapplo.HttpExtensions" version="0.4.36" />
 			</group>

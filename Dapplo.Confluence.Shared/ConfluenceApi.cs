@@ -16,7 +16,7 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU Lesser General Public License for more details.
 // 
-//  You should have Config a copy of the GNU Lesser General Public License
+//  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 #region using
@@ -25,8 +25,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Dapplo.HttpExtensions;
 using Dapplo.Confluence.Entities;
+using Dapplo.HttpExtensions;
 
 #endregion
 
@@ -80,18 +80,8 @@ namespace Dapplo.Confluence
 		/// </summary>
 		public Uri ConfluenceBaseUri { get; }
 
-		/// <summary>
-		///     Set Basic Authentication for the current client
-		/// </summary>
-		/// <param name="user">username</param>
-		/// <param name="password">password</param>
-		public void SetBasicAuthentication(string user, string password)
-		{
-			_user = user;
-			_password = password;
-		}
-
 		#region write
+
 		/// <summary>
 		///     Attach content to the specified issue
 		///     See: https://docs.atlassian.com/confluence/REST/latest/#d2e3035
@@ -111,7 +101,19 @@ namespace Dapplo.Confluence
 			}
 			return response.Response;
 		}
+
 		#endregion
+
+		/// <summary>
+		///     Set Basic Authentication for the current client
+		/// </summary>
+		/// <param name="user">username</param>
+		/// <param name="password">password</param>
+		public void SetBasicAuthentication(string user, string password)
+		{
+			_user = user;
+			_password = password;
+		}
 
 		#region Read
 
@@ -233,11 +235,15 @@ namespace Dapplo.Confluence
 		}
 
 		/// <summary>
-		///     Possible since 5.7 
-		///     Search for issues, with a CQL (e.g. from a filter) see <a href="https://docs.atlassian.com/confluence/REST/latest/#d2e4539">here</a>
+		///     Possible since 5.7
+		///     Search for issues, with a CQL (e.g. from a filter) see
+		///     <a href="https://docs.atlassian.com/confluence/REST/latest/#d2e4539">here</a>
 		/// </summary>
 		/// <param name="cql">Confluence Query Language, like SQL, for the search</param>
-		/// <param name="cqlContext">the execution context for CQL functions, provides current space key and content id. If this is not provided some CQL functions will not be available.</param>
+		/// <param name="cqlContext">
+		///     the execution context for CQL functions, provides current space key and content id. If this is
+		///     not provided some CQL functions will not be available.
+		/// </param>
 		/// <param name="limit">Maximum number of results returned, default is 20</param>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Result with content items</returns>
@@ -250,7 +256,7 @@ namespace Dapplo.Confluence
 			{
 				searchUri = searchUri.ExtendQuery("cqlcontext", cqlContext);
 			}
-			
+
 			var response = await searchUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
@@ -273,23 +279,23 @@ namespace Dapplo.Confluence
 		{
 			_behaviour.MakeCurrent();
 			var searchUri = ConfluenceBaseUri.AppendSegments("content").ExtendQuery(new Dictionary<string, object>
+			{
 				{
-					{
-						"start", start
-					},
-					{
-						"limit", limit
-					},
-					{
-						"type", "page"
-					},
-					{
-						"spaceKey", spaceKey
-					},
-					{
-						"title", title
-					},
-				});
+					"start", start
+				},
+				{
+					"limit", limit
+				},
+				{
+					"type", "page"
+				},
+				{
+					"spaceKey", spaceKey
+				},
+				{
+					"title", title
+				}
+			});
 			var response = await searchUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
@@ -307,7 +313,7 @@ namespace Dapplo.Confluence
 		/// <returns>User</returns>
 		public async Task<User> MyselfAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var myselfUri = ConfluenceBaseUri.AppendSegments("user","current");
+			var myselfUri = ConfluenceBaseUri.AppendSegments("user", "current");
 			_behaviour.MakeCurrent();
 			var response = await myselfUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)

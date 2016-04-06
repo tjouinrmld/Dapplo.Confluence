@@ -16,7 +16,7 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU Lesser General Public License for more details.
 // 
-//  You should have Config a copy of the GNU Lesser General Public License
+//  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 #region using
@@ -36,27 +36,27 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class Space
 	{
+		[DataMember(Name = "_expandable")]
+		public IDictionary<string, string> Expandables { get; set; }
+
+		[DataMember(Name = "icon")]
+		public Picture Icon { get; set; }
+
 		[DataMember(Name = "id")]
 		public string Id { get; set; }
 
+		public bool IsPersonal => true == Key?.StartsWith("~");
+
 		[DataMember(Name = "key")]
 		public string Key { get; set; }
+
+		[DataMember(Name = "_links")]
+		public Links Links { get; set; }
 
 		[DataMember(Name = "name")]
 		public string Name { get; set; }
 
 		[DataMember(Name = "type")]
 		public string Type { get; set; }
-
-		[DataMember(Name = "_expandable")]
-		public IDictionary<string, string> Expandables { get; set; }
-
-		[DataMember(Name = "_links")]
-		public Links Links { get; set; }
-
-		[DataMember(Name = "icon")]
-		public Picture Icon { get; set; }
-
-		public bool IsPersonal => true == Key?.StartsWith("~");
 	}
 }

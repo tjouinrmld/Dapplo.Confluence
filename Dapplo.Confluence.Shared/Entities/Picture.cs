@@ -16,13 +16,11 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU Lesser General Public License for more details.
 // 
-//  You should have Config a copy of the GNU Lesser General Public License
+//  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 #region using
 
-using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -36,16 +34,16 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class Picture
 	{
-		[DataMember(Name = "width")]
-		public int Width { get; set; }
-
 		[DataMember(Name = "height")]
 		public int Height { get; set; }
+
+		[DataMember(Name = "isDefault")]
+		public bool IsDefault { get; set; }
 
 		[DataMember(Name = "path")]
 		public string Path { get; set; }
 
-		[DataMember(Name = "isDefault")]
-		public bool IsDefault { get; set; }
+		[DataMember(Name = "width")]
+		public int Width { get; set; }
 	}
 }

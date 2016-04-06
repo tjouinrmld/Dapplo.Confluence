@@ -16,13 +16,12 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU Lesser General Public License for more details.
 // 
-//  You should have Config a copy of the GNU Lesser General Public License
+//  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 #region using
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -39,22 +38,22 @@ namespace Dapplo.Confluence.Entities
 		[DataMember(Name = "base")]
 		public Uri Base { get; set; }
 
-		[DataMember(Name = "download")]
-		public string Download { get; set; }
+		[DataMember(Name = "collection")]
+		public string Collection { get; set; }
 
 		[DataMember(Name = "context")]
 		public string Context { get; set; }
 
-		[DataMember(Name = "collection")]
-		public string Collection { get; set; }
+		[DataMember(Name = "download")]
+		public string Download { get; set; }
 
-		[DataMember(Name = "webui")]
-		public string WebUi { get; set; }
+		[DataMember(Name = "self")]
+		public Uri Self { get; set; }
 
 		[DataMember(Name = "tinyui")]
 		public string TinyUi { get; set; }
 
-		[DataMember(Name = "self")]
-		public Uri Self { get; set; }
+		[DataMember(Name = "webui")]
+		public string WebUi { get; set; }
 	}
 }

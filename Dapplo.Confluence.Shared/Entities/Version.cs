@@ -16,13 +16,12 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU Lesser General Public License for more details.
 // 
-//  You should have Config a copy of the GNU Lesser General Public License
+//  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 #region using
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -39,16 +38,16 @@ namespace Dapplo.Confluence.Entities
 		[DataMember(Name = "by")]
 		public User By { get; set; }
 
-		[DataMember(Name = "when")]
-		public DateTimeOffset When { get; set; }
-		
-		[DataMember(Name = "message")]
-		public string Message { get; set; }
-
 		[DataMember(Name = "minorEdit")]
 		public bool IsMinorEdit { get; set; }
 
+		[DataMember(Name = "message")]
+		public string Message { get; set; }
+
 		[DataMember(Name = "number")]
 		public int Number { get; set; }
+
+		[DataMember(Name = "when")]
+		public DateTimeOffset When { get; set; }
 	}
 }

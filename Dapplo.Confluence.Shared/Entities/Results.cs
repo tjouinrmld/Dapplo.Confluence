@@ -16,12 +16,11 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU Lesser General Public License for more details.
 // 
-//  You should have Config a copy of the GNU Lesser General Public License
+//  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 #region using
 
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -36,19 +35,19 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class Result<TResult>
 	{
-		[DataMember(Name = "results")]
-		public IList<TResult> Results { get; set; }
-
-		[DataMember(Name = "start")]
-		public int Start { get; set; }
-
 		[DataMember(Name = "limit")]
 		public int Limit { get; set; }
+
+		[DataMember(Name = "_links")]
+		public Links Links { get; set; }
+
+		[DataMember(Name = "results")]
+		public IList<TResult> Results { get; set; }
 
 		[DataMember(Name = "size")]
 		public int Size { get; set; }
 
-		[DataMember(Name = "_links")]
-		public Links Links { get; set; }
+		[DataMember(Name = "start")]
+		public int Start { get; set; }
 	}
 }

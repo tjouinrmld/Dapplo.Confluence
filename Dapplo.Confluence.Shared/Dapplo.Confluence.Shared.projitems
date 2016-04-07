@@ -10,6 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ConfluenceApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConfluenceConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\AttachmentContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Child.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Error.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Results.cs" />

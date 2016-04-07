@@ -34,7 +34,7 @@ namespace Dapplo.Confluence.Tests
 	public class ConfluenceTests
 	{
 		// Test against a well known Confluence
-		private static readonly Uri TestConfluenceUri = new Uri("https://confluence.cip4.org/");
+		private static readonly Uri TestConfluenceUri = new Uri("https://confluence.cip4.org");
 
 		private readonly ConfluenceApi _confluenceApi;
 
@@ -42,7 +42,7 @@ namespace Dapplo.Confluence.Tests
 		{
 			XUnitLogger.RegisterLogger(testOutputHelper, LogLevel.Verbose);
 			_confluenceApi = new ConfluenceApi(TestConfluenceUri);
-			//_confluenceApi.SetBasicAuthentication("<username>", "<password>");
+			//_confluenceApi.SetBasicAuthentication("username", "password");
 		}
 
 		[Fact]
@@ -56,6 +56,30 @@ namespace Dapplo.Confluence.Tests
 			{
 				Assert.NotNull(content.Type);
 			}
+		}
+
+		//[Fact]
+		public async Task TestContent()
+		{
+			var content = await _confluenceApi.GetContentAsync("2721");
+			Assert.NotNull(content);
+			Assert.NotNull(content.Version);
+		}
+
+		//[Fact]
+		public async Task TestAttachments()
+		{
+			var attachments = await _confluenceApi.GetAttachmentsAsync("37298618");
+			Assert.NotNull(attachments);
+			Assert.NotNull(attachments.Results.Count > 0);
+		}
+
+
+		//[Fact]
+		public async Task TestAttach()
+		{
+			var attachment = await _confluenceApi.AttachAsync("37298618", "Testing 1 2 3", "test.txt", "This is a test");
+			Assert.NotNull(attachment);
 		}
 	}
 }

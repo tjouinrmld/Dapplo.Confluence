@@ -90,17 +90,18 @@ namespace Dapplo.Confluence
 		/// <param name="content">content of type TContent tfor the attachment</param>
 		/// <param name="filename">Filename of the attachment</param>
 		/// <param name="comment">Comment in the attachments information</param>
+		/// <param name="contentType">Content-Type for the content, or null</param>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Result with Attachment</returns>
-		public async Task<Result<Attachment>> AttachAsync<TContent>(string contentId, TContent content, string filename, string comment = null,
-			CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Result<Attachment>> AttachAsync<TContent>(string contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default(CancellationToken))
 			where TContent : class
 		{
 			var attachment = new AttachmentContainer<TContent>
 			{
 				Comment = comment,
 				FileName = filename,
-				Content = content
+				Content = content,
+				ContentType = contentType
 			};
 			_behaviour.MakeCurrent();
 			var postAttachmentUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachment");

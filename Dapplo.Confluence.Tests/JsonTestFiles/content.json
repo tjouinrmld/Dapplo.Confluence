@@ -1,69 +1,79 @@
 {
-	"id": "2721",
-	"type": "page",
-	"title": "Struts Validator",
-	"space": {
-		"id": 42467330,
-		"key": "ITBCallClients",
-		"name": "ITB CC Call Clients",
-		"type": "global",
-		"_links": { "self": "https://confluence/rest/api/space/ITBCallClients" },
-		"_expandable": {
-			"icon": "",
-			"description": "",
-			"homepage": "/rest/api/content/41914258"
-		}
-	},
-	"history": {
-		"latest": true,
-		"createdBy": {
-			"type": "known",
-			"profilePicture": {
-				"path": "/s/en_GB/5639/a252d7f5e75d7a8bf7047b4b2c92f71a56a8f048.12/_/download/attachments/249/05015500-13911-pp-passphoto_eichinger_small_neu.jpg?version=1&modificationDate=1288184111000&api=v2",
-				"width": 48,
-				"height": 48,
-				"isDefault": false
-			},
-			"username": "05015500",
-			"displayName": "Eichinger, Volker",
-			"userKey": "8adc15404bc9e48e014bca21109a03f5"
-		},
-		"createdDate": "2007-04-19T10:41:35.000+0200",
-		"_links": { "self": "https://confluence/rest/api/content/2721/history" },
-		"_expandable": { "lastUpdated": "" }
-	},
-	"version": {
-		"by": {
-			"type": "known",
-			"profilePicture": {
-				"path": "/s/en_GB/5639/a252d7f5e75d7a8bf7047b4b2c92f71a56a8f048.12/_/download/attachments/249/05015500-13911-pp-passphoto_eichinger_small_neu.jpg?version=1&modificationDate=1288184111000&api=v2",
-				"width": 48,
-				"height": 48,
-				"isDefault": false
-			},
-			"username": "05015500",
-			"displayName": "Eichinger, Volker",
-			"userKey": "8adc15404bc9e48e014bca21109a03f5"
-		},
-		"when": "2007-04-19T10:41:36.000+0200",
-		"message": "Migrated to Confluence 4.0",
-		"number": 2,
-		"minorEdit": false
-	},
+    "id": "1234",
+    "type": "page",
+    "title": "Example Content title",
+    "space": {
+        "id": 11,
+        "key": "TST",
+        "name": "Example space",
+        "description": {
+            "plain": {
+                "value": "This is an example space",
+                "representation": "plain"
+            }
+        },
+        "_links": {
+            "self": "http://myhost:8080/confluence/rest/api/space/TST"
+        }
+    },
+    "version": {
+        "by": {
+            "type": "known",
+            "username": "username",
+            "displayName": "Full Name",
+            "userKey": ""
+        },
+        "when": "2016-03-03T06:18:54.953Z",
+        "message": "change message for this edit",
+        "number": 2,
+        "minorEdit": false
+    },
+    "ancestors": [
+        {
+            "id": "123",
+            "type": "page",
+            "ancestors": [],
+            "operations": [],
+            "children": {},
+            "descendants": {},
+            "body": {},
+            "metadata": {},
+            "_links": {
+                "self": "http://myhost:8080/confluence/rest/api/content/123"
+            }
+        }
+    ],
+    "operations": [],
+    "children": {},
+    "descendants": {},
+    "container": {
+        "id": 11,
+        "key": "TST",
+        "name": "Example space",
+        "description": {
+            "plain": {
+                "value": "This is an example space",
+                "representation": "plain"
+            }
+        },
+        "_links": {
+            "self": "http://myhost:8080/confluence/rest/api/space/TST"
+        }
+    },
+    "body": {
+        "view": {
+            "value": "<p><h1>Example</h1>Some example content body</p>",
+            "representation": "view",
+            "_expandable": {
+                "content": "/rest/api/content/1234"
+            }
+        }
+    },
+    "metadata": {},
 	"_links": {
-		"webui": "/display/ITBCallClients/Struts+Validator",
-		"tinyui": "/x/oQo",
 		"collection": "/rest/api/content",
-		"base": "https://confluence",
-		"context": "",
-		"self": "https://confluence/rest/api/content/2721"
-	},
-	"_expandable": {
-		"body": "",
-		"container": "",
-		"ancestors": "",
-		"children": "/rest/api/content/2721/child",
-		"descendants": "/rest/api/content/2721/descendant",
-		"metadata": ""
+		"base": "http://myhost:8080/confluence",
+		"context": "/confluence",
+		"self": "http://myhost:8080/confluence/rest/api/content/1234"
 	}
 }

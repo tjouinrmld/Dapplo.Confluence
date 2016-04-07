@@ -19,97 +19,57 @@
 //  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-#region using
-using System.Collections.Generic;
-#endregion
-
 namespace Dapplo.Confluence
 {
 	/// <summary>
-	/// Use this class to configure some of the behaviour
+	///     Use this class to configure some of the behaviour
 	/// </summary>
 	public static class ConfluenceConfig
 	{
 		/// <summary>
-		/// The values that are expanded in the Search results
+		///     The values that are expanded in the GetAttachments result
 		/// </summary>
-		public static IList<string> ExpandSearch
-		{
-			get;
-			set;
-		} = new List<string> { "version", "space", "space.icon", "space.description", "space.homepage" };
+		public static string[] ExpandGetAttachments { get; set; } = {"version"};
 
 		/// <summary>
-		/// The values that are expanded in the GetChildren results
+		///     The values that are expanded in the GetChildren results
 		/// </summary>
-		public static IList<string> ExpandGetChildren
-		{
-			get;
-			set;
-		} = new List<string> { "page" };
+		public static string[] ExpandGetChildren { get; set; } = {"page"};
 
 		/// <summary>
-		/// The values that are expanded in the GetContent result
+		///     The values that are expanded in the GetContent result
 		/// </summary>
-		public static IList<string> ExpandGetContent
-		{
-			get;
-			set;
-		} = new List<string>();
+		public static string[] ExpandGetContent { get; set; }
 
 		/// <summary>
-		/// The values that are expanded in the GetContentByTitle results
+		///     The values that are expanded in the GetContentByTitle results
 		/// </summary>
-		public static IList<string> ExpandGetContentByTitle
-		{
-			get;
-			set;
-		} = new List<string>();
+		public static string[] ExpandGetContentByTitle { get; set; }
 
 		/// <summary>
-		/// The values that are expanded in the GetSpace result
+		///     The values that are expanded in the GetCurrentUser result
 		/// </summary>
-		public static IList<string> ExpandGetSpace
-		{
-			get;
-			set;
-		} = new List<string>();
+		public static string[] ExpandGetCurrentUser { get; set; }
 
 		/// <summary>
-		/// The values that are expanded in the GetCurrentUser result
+		///     The values that are expanded in the GetSpace result
 		/// </summary>
-		public static IList<string> ExpandGetCurrentUser
-		{
-			get;
-			set;
-		} = new List<string>();
-
-		/// <summary>
-		/// The values that are expanded in the GetUser result
-		/// </summary>
-		public static IList<string> ExpandGetUser
-		{
-			get;
-			set;
-		} = new List<string>();
-
-		/// <summary>
-		/// The values that are expanded in the GetAttachments result
-		/// </summary>
-		public static IList<string> ExpandGetAttachments
-		{
-			get;
-			set;
-		} = new List<string> { "version" };
+		public static string[] ExpandGetSpace { get; set; }
 
 
 		/// <summary>
-		/// The values that are expanded in the GetSpaces results
+		///     The values that are expanded in the GetSpaces results
 		/// </summary>
-		public static IList<string> ExpandGetSpaces
-		{
-			get;
-			set;
-		} = new List<string> { "icon","description.plain" };
+		public static string[] ExpandGetSpaces { get; set; } = {"icon", "description.plain"};
+
+		/// <summary>
+		///     The values that are expanded in the GetUser result
+		/// </summary>
+		public static string[] ExpandGetUser { get; set; }
+
+		/// <summary>
+		///     The values that are expanded in the Search results
+		/// </summary>
+		public static string[] ExpandSearch { get; set; } = {"version", "space", "space.icon", "space.description", "space.homepage"};
 	}
 }

@@ -80,6 +80,40 @@ namespace Dapplo.Confluence
 		/// </summary>
 		public Uri ConfluenceBaseUri { get; }
 
+		#region Write
+
+		/// <summary>
+		///     Add an attachment to content
+		/// </summary>
+		/// <typeparam name="TContent">The content to upload</typeparam>
+		/// <param name="contentId">content to add the attachment to</param>
+		/// <param name="content">content of type TContent tfor the attachment</param>
+		/// <param name="filename">Filename of the attachment</param>
+		/// <param name="comment">Comment in the attachments information</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Result with Attachment</returns>
+		public async Task<Result<Attachment>> AttachAsync<TContent>(string contentId, TContent content, string filename, string comment = null,
+			CancellationToken cancellationToken = default(CancellationToken))
+			where TContent : class
+		{
+			var attachment = new AttachmentContainer<TContent>
+			{
+				Comment = comment,
+				FileName = filename,
+				Content = content
+			};
+			_behaviour.MakeCurrent();
+			var postAttachmentUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachment");
+			var response = await postAttachmentUri.PostAsync<HttpResponse<Result<Attachment>, string>>(attachment, cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse);
+			}
+			return response.Response;
+		}
+
+		#endregion
+
 		/// <summary>
 		///     Set Basic Authentication for the current client
 		/// </summary>
@@ -126,7 +160,7 @@ namespace Dapplo.Confluence
 		{
 			_behaviour.MakeCurrent();
 			var attachmentsUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachment");
-			if (ConfluenceConfig.ExpandGetAttachments?.Count != 0)
+			if (ConfluenceConfig.ExpandGetAttachments != null && ConfluenceConfig.ExpandGetAttachments.Length != 0)
 			{
 				attachmentsUri = attachmentsUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetAttachments));
 			}
@@ -170,7 +204,7 @@ namespace Dapplo.Confluence
 		public async Task<Space> GetSpaceAsync(string spaceKey, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var spaceUri = ConfluenceBaseUri.AppendSegments("space", spaceKey);
-			if (ConfluenceConfig.ExpandGetSpace?.Count != 0)
+			if (ConfluenceConfig.ExpandGetSpace != null && ConfluenceConfig.ExpandGetSpace.Length != 0)
 			{
 				spaceUri = spaceUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetSpace));
 			}
@@ -193,7 +227,7 @@ namespace Dapplo.Confluence
 		{
 			var spacesUri = ConfluenceBaseUri.AppendSegments("space");
 
-			if (ConfluenceConfig.ExpandGetSpace?.Count != 0)
+			if (ConfluenceConfig.ExpandGetSpace != null && ConfluenceConfig.ExpandGetSpace.Length != 0)
 			{
 				spacesUri = spacesUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetSpace));
 			}
@@ -216,7 +250,7 @@ namespace Dapplo.Confluence
 		public async Task<Content> GetContentAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var contentUri = ConfluenceBaseUri.AppendSegments("content", contentId);
-			if (ConfluenceConfig.ExpandGetContent?.Count != 0)
+			if (ConfluenceConfig.ExpandGetContent != null && ConfluenceConfig.ExpandGetContent.Length != 0)
 			{
 				contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetContent));
 			}
@@ -239,7 +273,7 @@ namespace Dapplo.Confluence
 		public async Task<IList<Content>> GetChildrenAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var contentUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child");
-			if (ConfluenceConfig.ExpandGetChildren?.Count != 0)
+			if (ConfluenceConfig.ExpandGetChildren != null && ConfluenceConfig.ExpandGetChildren.Length != 0)
 			{
 				contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetChildren));
 			}
@@ -270,7 +304,7 @@ namespace Dapplo.Confluence
 			_behaviour.MakeCurrent();
 
 			var searchUri = ConfluenceBaseUri.AppendSegments("content", "search").ExtendQuery("cql", cql).ExtendQuery("limit", limit);
-			if (ConfluenceConfig.ExpandSearch?.Count != 0)
+			if (ConfluenceConfig.ExpandSearch != null && ConfluenceConfig.ExpandSearch.Length != 0)
 			{
 				searchUri = searchUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandSearch));
 			}
@@ -318,7 +352,7 @@ namespace Dapplo.Confluence
 					"title", title
 				}
 			});
-			if (ConfluenceConfig.ExpandGetContentByTitle?.Count != 0)
+			if (ConfluenceConfig.ExpandGetContentByTitle != null && ConfluenceConfig.ExpandGetContentByTitle.Length != 0)
 			{
 				searchUri = searchUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetContentByTitle));
 			}
@@ -340,7 +374,7 @@ namespace Dapplo.Confluence
 		public async Task<User> GetCurrentUserAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var myselfUri = ConfluenceBaseUri.AppendSegments("user", "current");
-			if (ConfluenceConfig.ExpandGetCurrentUser?.Count != 0)
+			if (ConfluenceConfig.ExpandGetCurrentUser != null && ConfluenceConfig.ExpandGetCurrentUser.Length != 0)
 			{
 				myselfUri = myselfUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetCurrentUser));
 			}
@@ -363,7 +397,7 @@ namespace Dapplo.Confluence
 		public async Task<User> GetUserAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var userUri = ConfluenceBaseUri.AppendSegments("user").ExtendQuery("username", username);
-			if (ConfluenceConfig.ExpandGetUser?.Count != 0)
+			if (ConfluenceConfig.ExpandGetUser != null && ConfluenceConfig.ExpandGetUser.Length != 0)
 			{
 				userUri = userUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetUser));
 			}
@@ -377,36 +411,5 @@ namespace Dapplo.Confluence
 		}
 
 		#endregion
-
-		#region Write
-
-		/// <summary>
-		/// Add an attachment to content
-		/// </summary>
-		/// <typeparam name="TContent">The content to upload</typeparam>
-		/// <param name="contentId">content to add the attachment to</param>
-		/// <param name="content">content of type TContent to add</param>
-		/// <param name="filename">Filename of the attachment</param>
-		/// <returns>Result with Attachment</returns>
-		public async Task<Result<Attachment>> AttachAsync<TContent>(string contentId, TContent content, string filename, string comment, CancellationToken cancellationToken = default(CancellationToken))
-			where TContent : class
-		{
-			var attachment = new AttachmentContainer<TContent>
-			{
-				Comment = comment,
-				FileName = filename,
-				Content = content
-			};
-			_behaviour.MakeCurrent();
-			var postAttachmentUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachment");
-			var response = await postAttachmentUri.PostAsync<HttpResponse<Result<Attachment>, string>>(attachment, cancellationToken).ConfigureAwait(false);
-			if (response.HasError)
-			{
-				throw new Exception(response.ErrorResponse);
-			}
-			return response.Response;
-		}
-		#endregion
-
 	}
 }

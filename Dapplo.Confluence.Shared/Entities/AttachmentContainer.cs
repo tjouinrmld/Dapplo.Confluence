@@ -33,6 +33,16 @@ namespace Dapplo.Confluence.Entities
 	[HttpRequest(MultiPart = true)]
 	public class AttachmentContainer<T>
 	{
+		[HttpPart(HttpParts.RequestContent, Order = 1)]
+		public string Comment { get; set; }
+
+		[HttpPart(HttpParts.RequestContentType, Order = 1)]
+		public string CommentContentType { get; } = "text/plain";
+
+		// Comment information
+		[HttpPart(HttpParts.RequestMultipartName, Order = 1)]
+		public string CommentName { get; } = "comment";
+
 		[HttpPart(HttpParts.RequestContent, Order = 0)]
 		public T Content { get; set; }
 
@@ -44,15 +54,5 @@ namespace Dapplo.Confluence.Entities
 
 		[HttpPart(HttpParts.RequestMultipartFilename, Order = 0)]
 		public string FileName { get; set; }
-
-		// Comment information
-		[HttpPart(HttpParts.RequestMultipartName, Order = 1)]
-		public string CommentName { get; } = "comment";
-
-		[HttpPart(HttpParts.RequestContentType, Order = 1)]
-		public string CommentContentType { get; } = "text/plain";
-
-		[HttpPart(HttpParts.RequestContent, Order = 1)]
-		public string Comment { get; set; }
 	}
 }

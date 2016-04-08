@@ -33,9 +33,15 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class Error
 	{
+		/// <summary>
+		/// Error message from Confluence
+		/// </summary>
 		[DataMember(Name = "message")]
 		public string Message { get; set; }
 
+		/// <summary>
+		/// Confluence status code
+		/// </summary>
 		[DataMember(Name = "statusCode")]
 		public int StatusCode { get; set; }
 	}

@@ -47,25 +47,15 @@ namespace Dapplo.Confluence
 		public static string[] ExpandGetContentByTitle { get; set; }
 
 		/// <summary>
-		///     The values that are expanded in the GetCurrentUser result
-		/// </summary>
-		public static string[] ExpandGetCurrentUser { get; set; }
-
-		/// <summary>
 		///     The values that are expanded in the GetSpace result
 		/// </summary>
-		public static string[] ExpandGetSpace { get; set; }
+		public static string[] ExpandGetSpace { get; set; } = { "icon", "description.plain", "homepage" };
 
 
 		/// <summary>
 		///     The values that are expanded in the GetSpaces results
 		/// </summary>
-		public static string[] ExpandGetSpaces { get; set; } = {"icon", "description.plain"};
-
-		/// <summary>
-		///     The values that are expanded in the GetUser result
-		/// </summary>
-		public static string[] ExpandGetUser { get; set; }
+		public static string[] ExpandGetSpaces { get; set; } = { "icon", "description.plain", "homepage" };
 
 		/// <summary>
 		///     The values that are expanded in the Search results

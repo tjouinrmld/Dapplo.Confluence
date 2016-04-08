@@ -15,27 +15,34 @@
 		<tags>Confluence rest</tags>
 		<dependencies>
 			<group targetFramework="net45">
-				<dependency id="Dapplo.HttpExtensions" version="0.4.44" />
+				<dependency id="Dapplo.HttpExtensions" version="0.4.45" />
 			</group>
 			<group targetFramework="dnxcore50">
-				<dependency id="Dapplo.HttpExtensions" version="0.4.44" />
+				<dependency id="Dapplo.HttpExtensions" version="0.4.45" />
 			</group>
 			<group targetFramework="uap10.0">
-				<dependency id="Dapplo.HttpExtensions" version="0.4.44" />
+				<dependency id="Dapplo.HttpExtensions" version="0.4.45" />
 			</group>
 			<group targetFramework="dotnet">
-				<dependency id="Dapplo.HttpExtensions" version="0.4.44" />
+				<dependency id="Dapplo.HttpExtensions" version="0.4.45" />
 			</group>
 		</dependencies>
 	</metadata>
 	<files>
 		<file src="$id$\bin\release\$id$.pdb" target="lib\net45" />
+		<file src="$id$\bin\release\$id$.xml" target="lib\net45" />
 		<file src="$id$\bin\release\$id$.dll" target="lib\net45" />
+
 		<file src="$id$.PCL\bin\release\$id$.pdb" target="lib\dnxcore50" />
+		<file src="$id$.PCL\bin\release\$id$.xml" target="lib\dnxcore50" />
 		<file src="$id$.PCL\bin\release\$id$.dll" target="lib\dnxcore50" />
+
 		<file src="$id$.PCL\bin\release\$id$.pdb" target="lib\uap10.0" />
+		<file src="$id$.PCL\bin\release\$id$.xml" target="lib\uap10.0" />
 		<file src="$id$.PCL\bin\release\$id$.dll" target="lib\uap10.0" />
+
 		<file src="$id$.PCL\bin\release\$id$.pdb" target="lib\dotnet" />
+		<file src="$id$.PCL\bin\release\$id$.xml" target="lib\dotnet" />
 		<file src="$id$.PCL\bin\release\$id$.dll" target="lib\dotnet" />
 	</files>
 </package>

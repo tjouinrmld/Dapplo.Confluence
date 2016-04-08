@@ -34,15 +34,27 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class Picture
 	{
+		/// <summary>
+		/// Height of the picture
+		/// </summary>
 		[DataMember(Name = "height")]
 		public int Height { get; set; }
 
+		/// <summary>
+		/// Is this picture the default
+		/// </summary>
 		[DataMember(Name = "isDefault")]
 		public bool IsDefault { get; set; }
 
+		/// <summary>
+		/// The path for the picture relative to the hostname (and port) of the server, this is outside the Rest API path
+		/// </summary>
 		[DataMember(Name = "path")]
 		public string Path { get; set; }
 
+		/// <summary>
+		/// Width of the picture
+		/// </summary>
 		[DataMember(Name = "width")]
 		public int Width { get; set; }
 	}

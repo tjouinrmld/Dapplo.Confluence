@@ -35,24 +35,45 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class Links
 	{
+		/// <summary>
+		/// The base (hostname) for the server
+		/// </summary>
 		[DataMember(Name = "base")]
 		public Uri Base { get; set; }
 
+		/// <summary>
+		/// A path to the rest API to where this belongs, content has a collection of "/rest/api/content"
+		/// </summary>
 		[DataMember(Name = "collection")]
 		public string Collection { get; set; }
 
+		/// <summary>
+		/// TODO: What is this?
+		/// </summary>
 		[DataMember(Name = "context")]
 		public string Context { get; set; }
 
+		/// <summary>
+		/// The link, usually for attachments, to download the content
+		/// </summary>
 		[DataMember(Name = "download")]
 		public string Download { get; set; }
 
+		/// <summary>
+		/// A link to the entity itself (so one can find it again)
+		/// </summary>
 		[DataMember(Name = "self")]
 		public Uri Self { get; set; }
 
+		/// <summary>
+		/// A short link to the content, relative to the hostname (and port)
+		/// </summary>
 		[DataMember(Name = "tinyui")]
 		public string TinyUi { get; set; }
 
+		/// <summary>
+		/// A normal, but well readable, link to the content
+		/// </summary>
 		[DataMember(Name = "webui")]
 		public string WebUi { get; set; }
 	}

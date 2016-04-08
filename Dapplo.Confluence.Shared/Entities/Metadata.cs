@@ -28,15 +28,21 @@ using System.Runtime.Serialization;
 namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
-	///     Metadata information
+	///     Metadata information, used in attachment
 	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
 	public class Metadata
 	{
+		/// <summary>
+		/// A comment for the attachment
+		/// </summary>
 		[DataMember(Name = "comment")]
-		public string comment { get; set; }
+		public string Comment { get; set; }
 
+		/// <summary>
+		/// Type of media (content-type)
+		/// </summary>
 		[DataMember(Name = "mediaType")]
 		public string MediaType { get; set; }
 	}

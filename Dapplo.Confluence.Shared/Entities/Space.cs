@@ -36,26 +36,50 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class Space
 	{
+		/// <summary>
+		/// The values that are expandable
+		/// </summary>
 		[DataMember(Name = "_expandable")]
 		public IDictionary<string, string> Expandables { get; set; }
 
+		/// <summary>
+		/// Icon for the space
+		/// </summary>
 		[DataMember(Name = "icon")]
 		public Picture Icon { get; set; }
 
+		/// <summary>
+		/// Id for the space
+		/// </summary>
 		[DataMember(Name = "id")]
 		public string Id { get; set; }
 
+		/// <summary>
+		/// Test if this space is a personal space, this is true when the Key starts with a ~
+		/// </summary>
 		public bool IsPersonal => true == Key?.StartsWith("~");
 
+		/// <summary>
+		/// Key for the space
+		/// </summary>
 		[DataMember(Name = "key")]
 		public string Key { get; set; }
 
+		/// <summary>
+		/// Different links for this entity, depending on the entry
+		/// </summary>
 		[DataMember(Name = "_links")]
 		public Links Links { get; set; }
 
+		/// <summary>
+		/// The name of the space
+		/// </summary>
 		[DataMember(Name = "name")]
 		public string Name { get; set; }
 
+		/// <summary>
+		/// Type for the space, e.g. Team space or Knowledge Base space etc
+		/// </summary>
 		[DataMember(Name = "type")]
 		public string Type { get; set; }
 	}

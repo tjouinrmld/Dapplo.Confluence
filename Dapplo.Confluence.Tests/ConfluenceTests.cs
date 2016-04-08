@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using Dapplo.LogFacade;
 using Xunit;
 using Xunit.Abstractions;
+using System.IO;
 
 #endregion
 
@@ -56,6 +57,17 @@ namespace Dapplo.Confluence.Tests
 			{
 				Assert.NotNull(content.Type);
 			}
+		}
+
+		[Fact]
+		public async Task TestCurrentUserAndPicture()
+		{
+			var currentUser = await _confluenceApi.GetCurrentUserAsync();
+			Assert.NotNull(currentUser);
+			Assert.NotNull(currentUser.ProfilePicture);
+
+			var bitmapSource = await _confluenceApi.GetPictureAsync<MemoryStream>(currentUser.ProfilePicture);
+			Assert.NotNull(bitmapSource);
 		}
 
 		//[Fact]

@@ -35,12 +35,21 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class Child
 	{
+		/// <summary>
+		/// The values that are expandable
+		/// </summary>
 		[DataMember(Name = "_expandable")]
 		public IDictionary<string, string> Expandables { get; set; }
 
+		/// <summary>
+		/// Different links for this entity, depending on the entry
+		/// </summary>
 		[DataMember(Name = "_links")]
 		public Links Links { get; set; }
 
+		/// <summary>
+		/// Results with pages
+		/// </summary>
 		[DataMember(Name = "page")]
 		public Result<Content> Result { get; set; }
 	}

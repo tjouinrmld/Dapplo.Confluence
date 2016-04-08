@@ -35,18 +35,33 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class Version
 	{
+		/// <summary>
+		/// Who made this version
+		/// </summary>
 		[DataMember(Name = "by")]
 		public User By { get; set; }
 
+		/// <summary>
+		/// Is it a small version change
+		/// </summary>
 		[DataMember(Name = "minorEdit")]
 		public bool IsMinorEdit { get; set; }
 
+		/// <summary>
+		/// A message for the version
+		/// </summary>
 		[DataMember(Name = "message")]
 		public string Message { get; set; }
 
+		/// <summary>
+		/// Version number
+		/// </summary>
 		[DataMember(Name = "number")]
 		public int Number { get; set; }
 
+		/// <summary>
+		/// When was this version
+		/// </summary>
 		[DataMember(Name = "when")]
 		public DateTimeOffset When { get; set; }
 	}

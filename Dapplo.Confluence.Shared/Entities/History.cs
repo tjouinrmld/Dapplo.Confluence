@@ -36,18 +36,33 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class History
 	{
+		/// <summary>
+		/// User who created it
+		/// </summary>
 		[DataMember(Name = "createdBy")]
 		public User CreatedBy { get; set; }
 
+		/// <summary>
+		/// Created data
+		/// </summary>
 		[DataMember(Name = "createdDate")]
 		public DateTimeOffset CreatedDate { get; set; }
 
+		/// <summary>
+		/// The values that are expandable
+		/// </summary>
 		[DataMember(Name = "_expandable")]
 		public IDictionary<string, string> Expandables { get; set; }
 
+		/// <summary>
+		/// Is this history entity the latest entry?
+		/// </summary>
 		[DataMember(Name = "latest")]
 		public bool Latest { get; set; }
 
+		/// <summary>
+		/// Different links for this entity, depending on the entry
+		/// </summary>
 		[DataMember(Name = "_links")]
 		public Links Links { get; set; }
 	}

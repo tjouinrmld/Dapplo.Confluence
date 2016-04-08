@@ -34,18 +34,33 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class User
 	{
+		/// <summary>
+		/// The name which is displayed in the UI, usually "firstname lastname"
+		/// </summary>
 		[DataMember(Name = "displayName")]
 		public string DisplayName { get; set; }
 
+		/// <summary>
+		/// Information on the profile picture
+		/// </summary>
 		[DataMember(Name = "profilePicture")]
 		public Picture ProfilePicture { get; set; }
 
+		/// <summary>
+		/// Type of user
+		/// </summary>
 		[DataMember(Name = "type")]
 		public string Type { get; set; }
 
+		/// <summary>
+		/// A unique key for the user
+		/// </summary>
 		[DataMember(Name = "userKey")]
 		public string UserKey { get; set; }
 
+		/// <summary>
+		/// The username
+		/// </summary>
 		[DataMember(Name = "username")]
 		public string Username { get; set; }
 	}

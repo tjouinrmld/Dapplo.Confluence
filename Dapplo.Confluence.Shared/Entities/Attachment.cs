@@ -34,25 +34,45 @@ namespace Dapplo.Confluence.Entities
 	[DataContract]
 	public class Attachment
 	{
+		/// <summary>
+		/// The container where this attachment hangs, this is not filled unless expand=container
+		/// </summary>
 		[DataMember(Name = "container")]
 		public Content Container { get; set; }
 
+		/// <summary>
+		/// The ID of the attachment
+		/// </summary>
 		[DataMember(Name = "id")]
 		public string Id { get; set; }
 
+		/// <summary>
+		/// Different links for this entity, depending on the entry
+		/// </summary>
 		[DataMember(Name = "_links")]
 		public Links Links { get; set; }
 
-
+		/// <summary>
+		/// Additional meta-data for the attachment, like the comment
+		/// </summary>
 		[DataMember(Name = "metadata")]
 		public Metadata Metadata { get; set; }
 
+		/// <summary>
+		/// Title for the attachment
+		/// </summary>
 		[DataMember(Name = "title")]
 		public string Title { get; set; }
 
+		/// <summary>
+		/// Type of attachment
+		/// </summary>
 		[DataMember(Name = "type")]
 		public string Type { get; set; }
 
+		/// <summary>
+		/// Version information on the attachment, this is not filled unless expand=version
+		/// </summary>
 		[DataMember(Name = "version")]
 		public Version Version { get; set; }
 	}

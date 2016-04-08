@@ -75,6 +75,11 @@ namespace Dapplo.Confluence
 			};
 		}
 
+		internal void Promote()
+		{
+
+		}
+
 		/// <summary>
 		///     The base URI for your Confluence server
 		/// </summary>
@@ -375,10 +380,24 @@ namespace Dapplo.Confluence
 		public async Task<User> GetCurrentUserAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var myselfUri = ConfluenceBaseUri.AppendSegments("user", "current");
-			if (ConfluenceConfig.ExpandGetCurrentUser != null && ConfluenceConfig.ExpandGetCurrentUser.Length != 0)
+			_behaviour.MakeCurrent();
+			var response = await myselfUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
 			{
-				myselfUri = myselfUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetCurrentUser));
+				throw new Exception(response.ErrorResponse.Message);
 			}
+			return response.Response;
+		}
+
+		/// <summary>
+		///     Get Anonymous user information, introduced with 6.6
+		///     See: https://docs.atlassian.com/confluence/REST/latest/#user-getAnonymous
+		/// </summary>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>User</returns>
+		public async Task<User> GetAnonymousUserAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var myselfUri = ConfluenceBaseUri.AppendSegments("user", "anonymous");
 			_behaviour.MakeCurrent();
 			var response = await myselfUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
@@ -398,10 +417,6 @@ namespace Dapplo.Confluence
 		public async Task<User> GetUserAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var userUri = ConfluenceBaseUri.AppendSegments("user").ExtendQuery("username", username);
-			if (ConfluenceConfig.ExpandGetUser != null && ConfluenceConfig.ExpandGetUser.Length != 0)
-			{
-				userUri = userUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetUser));
-			}
 			_behaviour.MakeCurrent();
 			var response = await userUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)

@@ -31,7 +31,7 @@ namespace Dapplo.Confluence.Entities
 	///     The attachment needs to be uploaded as a multi-part request
 	/// </summary>
 	[HttpRequest(MultiPart = true)]
-	public class AttachmentContainer<T>
+	internal class AttachmentContainer<T>
 	{
 		[HttpPart(HttpParts.RequestContent, Order = 1)]
 		public string Comment { get; set; }

@@ -59,7 +59,11 @@ namespace Dapplo.Confluence.Tests
 			}
 		}
 
-		[Fact]
+		/// <summary>
+		/// Test only works on Confluence 6.6 and later
+		/// </summary>
+		/// <returns></returns>
+		//[Fact]
 		public async Task TestCurrentUserAndPicture()
 		{
 			var currentUser = await _confluenceApi.GetCurrentUserAsync();
@@ -70,6 +74,10 @@ namespace Dapplo.Confluence.Tests
 			Assert.NotNull(bitmapSource);
 		}
 
+		/// <summary>
+		/// Test will need test-data, as it's an integration test
+		/// </summary>
+		/// <returns></returns>
 		//[Fact]
 		public async Task TestContent()
 		{

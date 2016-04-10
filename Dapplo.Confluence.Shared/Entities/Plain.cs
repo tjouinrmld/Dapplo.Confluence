@@ -21,7 +21,6 @@
 
 #region using
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 #endregion
@@ -29,58 +28,23 @@ using System.Runtime.Serialization;
 namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
-	///     Space information
+	///     Plain information, used in the description.
+	/// TODO: Find a better name
 	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class Content
+	public class Plain
 	{
 		/// <summary>
-		///     Body of the content
+		/// Value of the plain description
 		/// </summary>
-		[DataMember(Name = "body")]
-		public Body Body { get; set; }
+		[DataMember(Name = "value")]
+		public string Value { get; set; }
 
 		/// <summary>
-		///     The values that are expandable
+		/// Type of representation
 		/// </summary>
-		[DataMember(Name = "_expandable")]
-		public IDictionary<string, string> Expandables { get; set; }
-
-		/// <summary>
-		///     Unique ID for the content
-		/// </summary>
-		[DataMember(Name = "id")]
-		public string Id { get; set; }
-
-		/// <summary>
-		///     Different links for this entity, depending on the entry
-		/// </summary>
-		[DataMember(Name = "_links")]
-		public Links Links { get; set; }
-
-		/// <summary>
-		///     The space where this content is
-		/// </summary>
-		[DataMember(Name = "space")]
-		public Space Space { get; set; }
-
-		/// <summary>
-		///     The title of the content
-		/// </summary>
-		[DataMember(Name = "title")]
-		public string Title { get; set; }
-
-		/// <summary>
-		///     The type for the content, e.g. page
-		/// </summary>
-		[DataMember(Name = "type")]
-		public string Type { get; set; }
-
-		/// <summary>
-		///     Version information for the content, this is not filled unless expand=version
-		/// </summary>
-		[DataMember(Name = "version")]
-		public Version Version { get; set; }
+		[DataMember(Name = "representation")]
+		public string Representation { get; set; } = "plain";
 	}
 }

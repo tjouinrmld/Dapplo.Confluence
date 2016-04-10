@@ -82,5 +82,11 @@ namespace Dapplo.Confluence.Entities
 		/// </summary>
 		[DataMember(Name = "type")]
 		public string Type { get; set; }
+
+		/// <summary>
+		/// Description
+		/// </summary>
+		[DataMember(Name = "description")]
+		public Description Description { get; set; }
 	}
 }

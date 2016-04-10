@@ -39,7 +39,7 @@ namespace Dapplo.Confluence
 		/// <summary>
 		///     The values that are expanded in the GetContent result
 		/// </summary>
-		public static string[] ExpandGetContent { get; set; }
+		public static string[] ExpandGetContent { get; set; } = {"body","body.view", "version"};
 
 		/// <summary>
 		///     The values that are expanded in the GetContentByTitle results

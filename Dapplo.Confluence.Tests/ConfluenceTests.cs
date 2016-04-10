@@ -32,10 +32,13 @@ using System.IO;
 
 namespace Dapplo.Confluence.Tests
 {
+	/// <summary>
+	/// Tests
+	/// </summary>
 	public class ConfluenceTests
 	{
 		// Test against a well known Confluence
-		private static readonly Uri TestConfluenceUri = new Uri("https://confluence.cip4.org");
+		private static readonly Uri TestConfluenceUri = new Uri("https://greenshot.atlassian.net/wiki");
 
 		private readonly ConfluenceApi _confluenceApi;
 
@@ -43,13 +46,19 @@ namespace Dapplo.Confluence.Tests
 		{
 			XUnitLogger.RegisterLogger(testOutputHelper, LogLevel.Verbose);
 			_confluenceApi = new ConfluenceApi(TestConfluenceUri);
-			//_confluenceApi.SetBasicAuthentication("username", "password");
+
+			var username = Environment.GetEnvironmentVariable("confluence_username");
+			var password = Environment.GetEnvironmentVariable("confluence_password");
+			if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+			{
+				_confluenceApi.SetBasicAuthentication(username, password);
+			}
 		}
 
-		[Fact]
+		//[Fact]
 		public async Task TestSearch()
 		{
-			var searchResult = await _confluenceApi.SearchAsync("text ~ \"CIP4\"");
+			var searchResult = await _confluenceApi.SearchAsync("text ~ \"Test Home\"");
 			Assert.NotNull(searchResult);
 			Assert.True(searchResult.Results.Count > 0);
 
@@ -75,31 +84,64 @@ namespace Dapplo.Confluence.Tests
 		}
 
 		/// <summary>
-		/// Test will need test-data, as it's an integration test
+		/// Test GetSpacesAsync
 		/// </summary>
-		/// <returns></returns>
 		//[Fact]
-		public async Task TestContent()
+		public async Task TestGetSpaces()
 		{
-			var content = await _confluenceApi.GetContentAsync("2721");
+			var spaces = await _confluenceApi.GetSpacesAsync();
+			Assert.NotNull(spaces);
+			Assert.NotNull(spaces.Count > 0);
+		}
+
+		/// <summary>
+		/// Test GetSpaceAsync
+		/// </summary>
+		//[Fact]
+		public async Task TestGetSpace()
+		{
+			var space = await _confluenceApi.GetSpaceAsync("TEST");
+			Assert.NotNull(space);
+			Assert.NotNull(space.Description);
+		}
+
+		//[Fact]
+		public async Task TestGetAttachments()
+		{
+			var attachments = await _confluenceApi.GetAttachmentsAsync("950274");
+			Assert.NotNull(attachments);
+			Assert.NotNull(attachments.Results.Count > 0);
+		}
+
+		//[Fact]
+		public async Task TestAttach()
+		{
+			var attachment = await _confluenceApi.AttachAsync("950274", "Testing 1 2 3", "test.txt", "This is a test");
+			Assert.NotNull(attachment);
+		}
+
+		/// <summary>
+		/// Test GetContentAsync
+		/// </summary>
+		//[Fact]
+		public async Task TestGetContent()
+		{
+			var content = await _confluenceApi.GetContentAsync("950274");
 			Assert.NotNull(content);
 			Assert.NotNull(content.Version);
 		}
 
 		//[Fact]
-		public async Task TestAttachments()
+		public async Task TestCreateContent()
 		{
-			var attachments = await _confluenceApi.GetAttachmentsAsync("37298618");
-			Assert.NotNull(attachments);
-			Assert.NotNull(attachments.Results.Count > 0);
+			var attachment = await _confluenceApi.CreateContentAsync("page", "Testing 1 2 3", "TEST", "<p>This is a test</p>");
+			Assert.NotNull(attachment);
 		}
 
-
 		//[Fact]
-		public async Task TestAttach()
+		public async Task TestDeleteContent()
 		{
-			var attachment = await _confluenceApi.AttachAsync("37298618", "Testing 1 2 3", "test.txt", "This is a test");
-			Assert.NotNull(attachment);
+			await _confluenceApi.DeleteContentAsync("30375945");
 		}
 	}
 }

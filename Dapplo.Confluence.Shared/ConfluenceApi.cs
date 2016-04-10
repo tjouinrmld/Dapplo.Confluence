@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
+using Dapplo.Confluence.Internals;
 using Dapplo.HttpExtensions;
 
 #endregion
@@ -75,50 +76,7 @@ namespace Dapplo.Confluence
 			};
 		}
 
-		internal void Promote()
-		{
-
-		}
-
-		/// <summary>
-		///     The base URI for your Confluence server
-		/// </summary>
-		public Uri ConfluenceBaseUri { get; }
-
-		#region Write
-
-		/// <summary>
-		///     Add an attachment to content
-		/// </summary>
-		/// <typeparam name="TContent">The content to upload</typeparam>
-		/// <param name="contentId">content to add the attachment to</param>
-		/// <param name="content">content of type TContent tfor the attachment</param>
-		/// <param name="filename">Filename of the attachment</param>
-		/// <param name="comment">Comment in the attachments information</param>
-		/// <param name="contentType">Content-Type for the content, or null</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>Result with Attachment</returns>
-		public async Task<Result<Attachment>> AttachAsync<TContent>(string contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default(CancellationToken))
-			where TContent : class
-		{
-			var attachment = new AttachmentContainer<TContent>
-			{
-				Comment = comment,
-				FileName = filename,
-				Content = content,
-				ContentType = contentType
-			};
-			_behaviour.MakeCurrent();
-			var postAttachmentUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachment");
-			var response = await postAttachmentUri.PostAsync<HttpResponse<Result<Attachment>, string>>(attachment, cancellationToken).ConfigureAwait(false);
-			if (response.HasError)
-			{
-				throw new Exception(response.ErrorResponse);
-			}
-			return response.Response;
-		}
-
-		#endregion
+		#region Supporting
 
 		/// <summary>
 		///     Set Basic Authentication for the current client
@@ -131,24 +89,48 @@ namespace Dapplo.Confluence
 			_password = password;
 		}
 
-		#region Read
-
 		/// <summary>
-		///     Retrieve the attachment for the supplied Attachment entity
+		///     This makes sure that the HttpBehavior is promoted for the following Http call.
 		/// </summary>
-		/// <typeparam name="TResponse">the type to return the result into. e.g. Bitmap,BitmapSource or MemoryStream</typeparam>
-		/// <param name="attachment">Attachment</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
-		public async Task<TResponse> GetAttachmentContentAsync<TResponse>(Attachment attachment, CancellationToken cancellationToken = default(CancellationToken))
-			where TResponse : class
+		internal void PromoteContext()
 		{
 			_behaviour.MakeCurrent();
-			var attachmentUriBuilder = new UriBuilder(ConfluenceBaseUri)
+		}
+
+		/// <summary>
+		///     The base URI for your Confluence server
+		/// </summary>
+		public Uri ConfluenceBaseUri { get; }
+
+		#endregion
+
+		#region Attachment
+
+		/// <summary>
+		///     Add an attachment to content
+		/// </summary>
+		/// <typeparam name="TContent">The content to upload</typeparam>
+		/// <param name="contentId">content to add the attachment to</param>
+		/// <param name="content">content of type TContent tfor the attachment</param>
+		/// <param name="filename">Filename of the attachment</param>
+		/// <param name="comment">Comment in the attachments information</param>
+		/// <param name="contentType">Content-Type for the content, or null</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Result with Attachment</returns>
+		public async Task<Result<Attachment>> AttachAsync<TContent>(string contentId, TContent content, string filename, string comment = null, string contentType = null,
+			CancellationToken cancellationToken = default(CancellationToken))
+			where TContent : class
+		{
+			var attachment = new AttachmentContainer<TContent>
 			{
-				Path = attachment.Links.Download
+				Comment = comment,
+				FileName = filename,
+				Content = content,
+				ContentType = contentType
 			};
-			var response = await attachmentUriBuilder.Uri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
+			PromoteContext();
+			var postAttachmentUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachment");
+			var response = await postAttachmentUri.PostAsync<HttpResponse<Result<Attachment>, string>>(attachment, cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
 				throw new Exception(response.ErrorResponse);
@@ -164,7 +146,7 @@ namespace Dapplo.Confluence
 		/// <returns>Result with Attachment(s)</returns>
 		public async Task<Result<Attachment>> GetAttachmentsAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			_behaviour.MakeCurrent();
+			PromoteContext();
 			var attachmentsUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachment");
 			if (ConfluenceConfig.ExpandGetAttachments != null && ConfluenceConfig.ExpandGetAttachments.Length != 0)
 			{
@@ -179,26 +161,113 @@ namespace Dapplo.Confluence
 		}
 
 		/// <summary>
-		///     Retrieve the picture for the supplied Picture entity
+		///     Retrieve the attachment for the supplied Attachment entity
 		/// </summary>
 		/// <typeparam name="TResponse">the type to return the result into. e.g. Bitmap,BitmapSource or MemoryStream</typeparam>
-		/// <param name="picture">Picture from User, Space, History etc</param>
+		/// <param name="attachment">Attachment</param>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
-		public async Task<TResponse> GetPictureAsync<TResponse>(Picture picture, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<TResponse> GetAttachmentContentAsync<TResponse>(Attachment attachment, CancellationToken cancellationToken = default(CancellationToken))
 			where TResponse : class
 		{
-			_behaviour.MakeCurrent();
-			var pictureUriBuilder = new UriBuilder(ConfluenceBaseUri)
+			PromoteContext();
+			var attachmentUriBuilder = new UriBuilder(ConfluenceBaseUri)
 			{
-				Path = picture.Path
+				Path = attachment.Links.Download
 			};
-			var response = await pictureUriBuilder.Uri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
+			var response = await attachmentUriBuilder.Uri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
 				throw new Exception(response.ErrorResponse);
 			}
 			return response.Response;
+		}
+
+		#endregion
+
+		#region Space
+
+		/// <summary>
+		///     Create a space
+		/// </summary>
+		/// <param name="key">Key for the space</param>
+		/// <param name="name">Name for the space</param>
+		/// <param name="description">Description for the space</param>
+		/// <param name="isPrivate">true if the space needs to be private</param>
+		/// <param name="cancellationToken"></param>
+		/// <returns>created Space</returns>
+		public async Task<Space> CreateSpaceAsync(string key, string name, string description, bool isPrivate = false, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var space = new Space
+			{
+				Key = key,
+				Name = name,
+				Description = new Description
+				{
+					Plain = new Plain
+					{
+						Value = description
+					}
+				}
+			};
+			PromoteContext();
+			var spaceUri = ConfluenceBaseUri.AppendSegments("space");
+			// Create private space?
+			if (isPrivate)
+			{
+				spaceUri = spaceUri.AppendSegments("_private");
+			}
+			var response = await spaceUri.PostAsync<HttpResponse<Space, string>>(space, cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse);
+			}
+			return response.Response;
+		}
+
+		/// <summary>
+		///     Update a space
+		/// </summary>
+		/// <param name="key">Key for the space</param>
+		/// <param name="name">Name for the space</param>
+		/// <param name="description">Description for the space</param>
+		/// <param name="cancellationToken"></param>
+		/// <returns>updated Space</returns>
+		public async Task<Space> UpdateSpaceAsync(string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var space = new Space
+			{
+				Key = key,
+				Name = name,
+				Description = new Description
+				{
+					Plain = new Plain
+					{
+						Value = description
+					}
+				}
+			};
+			PromoteContext();
+			var spaceUri = ConfluenceBaseUri.AppendSegments("space");
+			var response = await spaceUri.PutAsync<HttpResponse<Space, string>>(space, cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse);
+			}
+			return response.Response;
+		}
+
+		/// <summary>
+		///     Delete a space
+		/// </summary>
+		/// <param name="key">Key for the space</param>
+		/// <param name="cancellationToken"></param>
+		/// <returns>Long task for deleting the space</returns>
+		public async Task<string> DeleteSpaceAsync(string key, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			PromoteContext();
+			var spaceUri = ConfluenceBaseUri.AppendSegments("space");
+			return await spaceUri.DeleteAsync<string>(cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -215,7 +284,7 @@ namespace Dapplo.Confluence
 				spaceUri = spaceUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetSpace));
 			}
 
-			_behaviour.MakeCurrent();
+			PromoteContext();
 			var response = await spaceUri.GetAsAsync<HttpResponse<Space, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
@@ -238,7 +307,7 @@ namespace Dapplo.Confluence
 				spacesUri = spacesUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetSpace));
 			}
 
-			_behaviour.MakeCurrent();
+			PromoteContext();
 			var response = await spacesUri.GetAsAsync<HttpResponse<Result<Space>, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
@@ -246,6 +315,37 @@ namespace Dapplo.Confluence
 			}
 			return response.Response.Results;
 		}
+
+		#endregion
+
+		#region Read
+
+		/// <summary>
+		///     Retrieve the picture for the supplied Picture entity
+		/// </summary>
+		/// <typeparam name="TResponse">the type to return the result into. e.g. Bitmap,BitmapSource or MemoryStream</typeparam>
+		/// <param name="picture">Picture from User, Space, History etc</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
+		public async Task<TResponse> GetPictureAsync<TResponse>(Picture picture, CancellationToken cancellationToken = default(CancellationToken))
+			where TResponse : class
+		{
+			PromoteContext();
+			var pictureUriBuilder = new UriBuilder(ConfluenceBaseUri)
+			{
+				Path = picture.Path
+			};
+			var response = await pictureUriBuilder.Uri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse);
+			}
+			return response.Response;
+		}
+
+		#endregion
+
+		#region Content
 
 		/// <summary>
 		///     Get Content information see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
@@ -261,8 +361,69 @@ namespace Dapplo.Confluence
 				contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetContent));
 			}
 
-			_behaviour.MakeCurrent();
+			PromoteContext();
 			var response = await contentUri.GetAsAsync<HttpResponse<Content, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
+		}
+
+		/// <summary>
+		/// Delete content
+		/// </summary>
+		/// <param name="contentId">ID for the content which needs to be deleted</param>
+		/// <param name="isTrashed">If the content is trashable, you will need to call DeleteAsyc twice, second time with isTrashed = true</param>
+		/// <param name="cancellationToken">cancellationToken</param>
+		public async Task DeleteContentAsync(string contentId, bool isTrashed = false, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var contentUri = ConfluenceBaseUri.AppendSegments("content", contentId);
+			if (isTrashed)
+			{
+				contentUri = contentUri.ExtendQuery("status", "trashed");
+			}
+			PromoteContext();
+
+			var response = await contentUri.DeleteAsync<HttpResponse<Content, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+		}
+
+		/// <summary>
+		/// Create content
+		/// </summary>
+		/// <param name="type">Type of content, usually page</param>
+		/// <param name="title">Title for the content</param>
+		/// <param name="spaceKey">Key of the space to add the content to</param>
+		/// <param name="body">the complete body (HTML)</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Content</returns>
+		public async Task<Content> CreateContentAsync(string type, string title, string spaceKey, string body, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var contentUri = ConfluenceBaseUri.AppendSegments("content");
+
+			var newPage = new Content
+			{
+				Type = type,
+				Title = title,
+				Space = new Space
+				{
+					Key = spaceKey
+				},
+				Body = new Body
+				{
+					Storage = new BodyContent
+					{
+						Value = body,
+						Representation = "storage"
+					}
+				}
+			};
+			PromoteContext();
+			var response = await contentUri.PostAsync<HttpResponse<Content, Error>>(newPage,cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
 				throw new Exception(response.ErrorResponse.Message);
@@ -283,7 +444,7 @@ namespace Dapplo.Confluence
 			{
 				contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetChildren));
 			}
-			_behaviour.MakeCurrent();
+			PromoteContext();
 			var response = await contentUri.GetAsAsync<HttpResponse<Child, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
@@ -307,7 +468,7 @@ namespace Dapplo.Confluence
 		/// <returns>Result with content items</returns>
 		public async Task<Result<Content>> SearchAsync(string cql, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			_behaviour.MakeCurrent();
+			PromoteContext();
 
 			var searchUri = ConfluenceBaseUri.AppendSegments("content", "search").ExtendQuery("cql", cql).ExtendQuery("limit", limit);
 			if (ConfluenceConfig.ExpandSearch != null && ConfluenceConfig.ExpandSearch.Length != 0)
@@ -339,7 +500,7 @@ namespace Dapplo.Confluence
 		/// <returns>Results with content items</returns>
 		public async Task<Result<Content>> GetContentByTitleAsync(string spaceKey, string title, int start = 0, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			_behaviour.MakeCurrent();
+			PromoteContext();
 			var searchUri = ConfluenceBaseUri.AppendSegments("content").ExtendQuery(new Dictionary<string, object>
 			{
 				{
@@ -370,7 +531,9 @@ namespace Dapplo.Confluence
 			return response.Response;
 		}
 
+		#endregion
 
+		#region User
 		/// <summary>
 		///     Get currrent user information, introduced with 6.6
 		///     See: https://docs.atlassian.com/confluence/REST/latest/#user-getCurrent
@@ -380,7 +543,7 @@ namespace Dapplo.Confluence
 		public async Task<User> GetCurrentUserAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var myselfUri = ConfluenceBaseUri.AppendSegments("user", "current");
-			_behaviour.MakeCurrent();
+			PromoteContext();
 			var response = await myselfUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
@@ -398,7 +561,7 @@ namespace Dapplo.Confluence
 		public async Task<User> GetAnonymousUserAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var myselfUri = ConfluenceBaseUri.AppendSegments("user", "anonymous");
-			_behaviour.MakeCurrent();
+			PromoteContext();
 			var response = await myselfUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
@@ -411,19 +574,37 @@ namespace Dapplo.Confluence
 		///     Get user information, introduced with 6.6
 		///     See: https://docs.atlassian.com/confluence/REST/latest/#user-getUser
 		/// </summary>
-		/// <param name="username"></param>
+		/// <param name="username">string with username</param>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>user information</returns>
 		public async Task<User> GetUserAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var userUri = ConfluenceBaseUri.AppendSegments("user").ExtendQuery("username", username);
-			_behaviour.MakeCurrent();
+			PromoteContext();
 			var response = await userUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
 				throw new Exception(response.ErrorResponse.Message);
 			}
 			return response.Response;
+		}
+
+		/// <summary>
+		/// Get the groups for a user
+		/// </summary>
+		/// <param name="username">string with username</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>List with Groups</returns>
+		public async Task<IList<Group>> GetGroupsAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var groupUri = ConfluenceBaseUri.AppendSegments("user", "memberof").ExtendQuery("username", username);
+			PromoteContext();
+			var response = await groupUri.GetAsAsync<HttpResponse<Result<Group>, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response.Results;
 		}
 
 		#endregion

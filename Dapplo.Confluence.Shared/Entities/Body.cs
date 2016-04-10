@@ -21,38 +21,29 @@
 
 #region using
 
-using Dapplo.HttpExtensions.Support;
+using System.Runtime.Serialization;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
-	///     The attachment needs to be uploaded as a multi-part request
+	///     Body
+	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
-	[HttpRequest(MultiPart = true)]
-	internal class AttachmentContainer<T>
+	[DataContract]
+	public class Body
 	{
-		[HttpPart(HttpParts.RequestContent, Order = 1)]
-		public string Comment { get; set; }
+		/// <summary>
+		/// View for Body
+		/// </summary>
+		[DataMember(Name = "view")]
+		public BodyContent View { get; set; }
 
-		[HttpPart(HttpParts.RequestContentType, Order = 1)]
-		public string CommentContentType { get; } = "text/plain";
-
-		// Comment information
-		[HttpPart(HttpParts.RequestMultipartName, Order = 1)]
-		public string CommentName { get; } = "comment";
-
-		[HttpPart(HttpParts.RequestContent, Order = 0)]
-		public T Content { get; set; }
-
-		[HttpPart(HttpParts.RequestMultipartName, Order = 0)]
-		public string ContentName { get; } = "file";
-
-		[HttpPart(HttpParts.RequestContentType, Order = 0)]
-		public string ContentType { get; set; } = "text/plain";
-
-		[HttpPart(HttpParts.RequestMultipartFilename, Order = 0)]
-		public string FileName { get; set; }
+		/// <summary>
+		/// Storage for content, used when creating
+		/// </summary>
+		[DataMember(Name = "storage")]
+		public BodyContent Storage { get; set; }
 	}
 }

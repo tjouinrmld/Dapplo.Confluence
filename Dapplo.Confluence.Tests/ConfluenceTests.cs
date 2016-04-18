@@ -47,8 +47,8 @@ namespace Dapplo.Confluence.Tests
 			XUnitLogger.RegisterLogger(testOutputHelper, LogLevel.Verbose);
 			_confluenceApi = new ConfluenceApi(TestConfluenceUri);
 
-			var username = Environment.GetEnvironmentVariable("confluence_username");
-			var password = Environment.GetEnvironmentVariable("confluence_password");
+			var username = Environment.GetEnvironmentVariable("confluence_test_username");
+			var password = Environment.GetEnvironmentVariable("confluence_test_password");
 			if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
 			{
 				_confluenceApi.SetBasicAuthentication(username, password);
@@ -72,7 +72,7 @@ namespace Dapplo.Confluence.Tests
 		/// Test only works on Confluence 6.6 and later
 		/// </summary>
 		/// <returns></returns>
-		//[Fact]
+		[Fact]
 		public async Task TestCurrentUserAndPicture()
 		{
 			var currentUser = await _confluenceApi.GetCurrentUserAsync();
@@ -86,7 +86,7 @@ namespace Dapplo.Confluence.Tests
 		/// <summary>
 		/// Test GetSpacesAsync
 		/// </summary>
-		//[Fact]
+		[Fact]
 		public async Task TestGetSpaces()
 		{
 			var spaces = await _confluenceApi.GetSpacesAsync();
@@ -97,7 +97,7 @@ namespace Dapplo.Confluence.Tests
 		/// <summary>
 		/// Test GetSpaceAsync
 		/// </summary>
-		//[Fact]
+		[Fact]
 		public async Task TestGetSpace()
 		{
 			var space = await _confluenceApi.GetSpaceAsync("TEST");
@@ -105,7 +105,7 @@ namespace Dapplo.Confluence.Tests
 			Assert.NotNull(space.Description);
 		}
 
-		//[Fact]
+		[Fact]
 		public async Task TestGetAttachments()
 		{
 			var attachments = await _confluenceApi.GetAttachmentsAsync("950274");
@@ -113,11 +113,49 @@ namespace Dapplo.Confluence.Tests
 			Assert.NotNull(attachments.Results.Count > 0);
 		}
 
+		/// <summary>
+		/// Doesn't work yet, as deleting an attachment is not supported
+		/// See <a href="https://jira.atlassian.com/browse/CONF-36015">CONF-36015</a>
+		/// </summary>
+		/// <returns></returns>
 		//[Fact]
 		public async Task TestAttach()
 		{
-			var attachment = await _confluenceApi.AttachAsync("950274", "Testing 1 2 3", "test.txt", "This is a test");
-			Assert.NotNull(attachment);
+			const string testPageId = "950274";
+			var attachments = await _confluenceApi.GetAttachmentsAsync(testPageId);
+			Assert.NotNull(attachments);
+
+			// Delete all attachments
+			foreach (var attachment in attachments.Results)
+			{
+				// Attachments are content!!
+				await _confluenceApi.DeleteAttachmentAsync(attachment);
+			}
+
+			const string attachmentContent = "Testing 1 2 3";
+			attachments = await _confluenceApi.AttachAsync(testPageId, attachmentContent, "test.txt", "This is a test");
+			Assert.NotNull(attachments);
+
+			attachments = await _confluenceApi.GetAttachmentsAsync(testPageId);
+			Assert.NotNull(attachments);
+			Assert.True(attachments.Results.Count > 0);
+
+			// Test if the content is correct
+			foreach (var attachment in attachments.Results)
+			{
+				var content = await _confluenceApi.GetAttachmentContentAsync<string>(attachment);
+				Assert.Equal(attachmentContent, content);
+			}
+			// Delete all attachments
+			foreach (var attachment in attachments.Results)
+			{
+				// Attachments are content!!
+				await _confluenceApi.DeleteContentAsync(attachment.Id);
+			}
+			attachments = await _confluenceApi.GetAttachmentsAsync(testPageId);
+			Assert.NotNull(attachments);
+			Assert.True(attachments.Results.Count == 0);
+
 		}
 
 		/// <summary>

@@ -59,7 +59,8 @@ namespace Dapplo.Confluence
 			{
 				throw new ArgumentNullException(nameof(baseUri));
 			}
-			ConfluenceBaseUri = baseUri.AppendSegments("rest", "api");
+			ConfluenceDownloadBaseUri = baseUri;
+			ConfluenceApiBaseUri = baseUri.AppendSegments("rest", "api");
 
 			_behaviour = new HttpBehaviour
 			{
@@ -98,9 +99,14 @@ namespace Dapplo.Confluence
 		}
 
 		/// <summary>
-		///     The base URI for your Confluence server
+		///     The base URI for your Confluence server api calls
 		/// </summary>
-		public Uri ConfluenceBaseUri { get; }
+		public Uri ConfluenceApiBaseUri { get; }
+
+		/// <summary>
+		///     The base URI for your Confluence server downloads
+		/// </summary>
+		private Uri ConfluenceDownloadBaseUri { get; }
 
 		#endregion
 
@@ -129,7 +135,7 @@ namespace Dapplo.Confluence
 				ContentType = contentType
 			};
 			PromoteContext();
-			var postAttachmentUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachment");
+			var postAttachmentUri = ConfluenceApiBaseUri.AppendSegments("content", contentId, "child", "attachment");
 			var response = await postAttachmentUri.PostAsync<HttpResponse<Result<Attachment>, string>>(attachment, cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
@@ -147,7 +153,7 @@ namespace Dapplo.Confluence
 		public async Task<Result<Attachment>> GetAttachmentsAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			PromoteContext();
-			var attachmentsUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child", "attachment");
+			var attachmentsUri = ConfluenceApiBaseUri.AppendSegments("content", contentId, "child", "attachment");
 			if (ConfluenceConfig.ExpandGetAttachments != null && ConfluenceConfig.ExpandGetAttachments.Length != 0)
 			{
 				attachmentsUri = attachmentsUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetAttachments));
@@ -161,6 +167,21 @@ namespace Dapplo.Confluence
 		}
 
 		/// <summary>
+		/// Delete attachment
+		/// Can't work yet, see <a href="https://jira.atlassian.com/browse/CONF-36015">CONF-36015</a>
+		/// </summary>
+		/// <param name="attachment">Attachment which needs to be deleted</param>
+		/// <param name="cancellationToken">cancellationToken</param>
+		public async Task DeleteAttachmentAsync(Attachment attachment, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var contentUri = ConfluenceDownloadBaseUri.AppendSegments("json","removeattachmentversion.action").ExtendQuery("pageId",attachment.Container.Id).ExtendQuery("fileName",attachment.Title);
+			PromoteContext();
+
+			await contentUri.GetAsAsync<string>(cancellationToken).ConfigureAwait(false);
+		}
+
+
+		/// <summary>
 		///     Retrieve the attachment for the supplied Attachment entity
 		/// </summary>
 		/// <typeparam name="TResponse">the type to return the result into. e.g. Bitmap,BitmapSource or MemoryStream</typeparam>
@@ -171,7 +192,7 @@ namespace Dapplo.Confluence
 			where TResponse : class
 		{
 			PromoteContext();
-			var attachmentUriBuilder = new UriBuilder(ConfluenceBaseUri)
+			var attachmentUriBuilder = new UriBuilder(ConfluenceDownloadBaseUri)
 			{
 				Path = attachment.Links.Download
 			};
@@ -211,7 +232,7 @@ namespace Dapplo.Confluence
 				}
 			};
 			PromoteContext();
-			var spaceUri = ConfluenceBaseUri.AppendSegments("space");
+			var spaceUri = ConfluenceApiBaseUri.AppendSegments("space");
 			// Create private space?
 			if (isPrivate)
 			{
@@ -248,7 +269,7 @@ namespace Dapplo.Confluence
 				}
 			};
 			PromoteContext();
-			var spaceUri = ConfluenceBaseUri.AppendSegments("space");
+			var spaceUri = ConfluenceApiBaseUri.AppendSegments("space");
 			var response = await spaceUri.PutAsync<HttpResponse<Space, string>>(space, cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
@@ -266,7 +287,7 @@ namespace Dapplo.Confluence
 		public async Task<string> DeleteSpaceAsync(string key, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			PromoteContext();
-			var spaceUri = ConfluenceBaseUri.AppendSegments("space");
+			var spaceUri = ConfluenceApiBaseUri.AppendSegments("space");
 			return await spaceUri.DeleteAsync<string>(cancellationToken).ConfigureAwait(false);
 		}
 
@@ -278,7 +299,7 @@ namespace Dapplo.Confluence
 		/// <returns>Space</returns>
 		public async Task<Space> GetSpaceAsync(string spaceKey, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var spaceUri = ConfluenceBaseUri.AppendSegments("space", spaceKey);
+			var spaceUri = ConfluenceApiBaseUri.AppendSegments("space", spaceKey);
 			if (ConfluenceConfig.ExpandGetSpace != null && ConfluenceConfig.ExpandGetSpace.Length != 0)
 			{
 				spaceUri = spaceUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetSpace));
@@ -300,7 +321,7 @@ namespace Dapplo.Confluence
 		/// <returns>List of Space</returns>
 		public async Task<IList<Space>> GetSpacesAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var spacesUri = ConfluenceBaseUri.AppendSegments("space");
+			var spacesUri = ConfluenceApiBaseUri.AppendSegments("space");
 
 			if (ConfluenceConfig.ExpandGetSpace != null && ConfluenceConfig.ExpandGetSpace.Length != 0)
 			{
@@ -331,7 +352,7 @@ namespace Dapplo.Confluence
 			where TResponse : class
 		{
 			PromoteContext();
-			var pictureUriBuilder = new UriBuilder(ConfluenceBaseUri)
+			var pictureUriBuilder = new UriBuilder(ConfluenceApiBaseUri)
 			{
 				Path = picture.Path
 			};
@@ -355,7 +376,7 @@ namespace Dapplo.Confluence
 		/// <returns>Content</returns>
 		public async Task<Content> GetContentAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var contentUri = ConfluenceBaseUri.AppendSegments("content", contentId);
+			var contentUri = ConfluenceApiBaseUri.AppendSegments("content", contentId);
 			if (ConfluenceConfig.ExpandGetContent != null && ConfluenceConfig.ExpandGetContent.Length != 0)
 			{
 				contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetContent));
@@ -371,14 +392,14 @@ namespace Dapplo.Confluence
 		}
 
 		/// <summary>
-		/// Delete content
+		/// Delete content (attachments are also content)
 		/// </summary>
 		/// <param name="contentId">ID for the content which needs to be deleted</param>
 		/// <param name="isTrashed">If the content is trashable, you will need to call DeleteAsyc twice, second time with isTrashed = true</param>
 		/// <param name="cancellationToken">cancellationToken</param>
 		public async Task DeleteContentAsync(string contentId, bool isTrashed = false, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var contentUri = ConfluenceBaseUri.AppendSegments("content", contentId);
+			var contentUri = ConfluenceApiBaseUri.AppendSegments("content", contentId);
 			if (isTrashed)
 			{
 				contentUri = contentUri.ExtendQuery("status", "trashed");
@@ -403,7 +424,7 @@ namespace Dapplo.Confluence
 		/// <returns>Content</returns>
 		public async Task<Content> CreateContentAsync(string type, string title, string spaceKey, string body, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var contentUri = ConfluenceBaseUri.AppendSegments("content");
+			var contentUri = ConfluenceApiBaseUri.AppendSegments("content");
 
 			var newPage = new Content
 			{
@@ -439,7 +460,7 @@ namespace Dapplo.Confluence
 		/// <returns>List with Content</returns>
 		public async Task<IList<Content>> GetChildrenAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var contentUri = ConfluenceBaseUri.AppendSegments("content", contentId, "child");
+			var contentUri = ConfluenceApiBaseUri.AppendSegments("content", contentId, "child");
 			if (ConfluenceConfig.ExpandGetChildren != null && ConfluenceConfig.ExpandGetChildren.Length != 0)
 			{
 				contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandGetChildren));
@@ -470,7 +491,7 @@ namespace Dapplo.Confluence
 		{
 			PromoteContext();
 
-			var searchUri = ConfluenceBaseUri.AppendSegments("content", "search").ExtendQuery("cql", cql).ExtendQuery("limit", limit);
+			var searchUri = ConfluenceApiBaseUri.AppendSegments("content", "search").ExtendQuery("cql", cql).ExtendQuery("limit", limit);
 			if (ConfluenceConfig.ExpandSearch != null && ConfluenceConfig.ExpandSearch.Length != 0)
 			{
 				searchUri = searchUri.ExtendQuery("expand", string.Join(",", ConfluenceConfig.ExpandSearch));
@@ -501,7 +522,7 @@ namespace Dapplo.Confluence
 		public async Task<Result<Content>> GetContentByTitleAsync(string spaceKey, string title, int start = 0, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			PromoteContext();
-			var searchUri = ConfluenceBaseUri.AppendSegments("content").ExtendQuery(new Dictionary<string, object>
+			var searchUri = ConfluenceApiBaseUri.AppendSegments("content").ExtendQuery(new Dictionary<string, object>
 			{
 				{
 					"start", start
@@ -542,7 +563,7 @@ namespace Dapplo.Confluence
 		/// <returns>User</returns>
 		public async Task<User> GetCurrentUserAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var myselfUri = ConfluenceBaseUri.AppendSegments("user", "current");
+			var myselfUri = ConfluenceApiBaseUri.AppendSegments("user", "current");
 			PromoteContext();
 			var response = await myselfUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
@@ -560,7 +581,7 @@ namespace Dapplo.Confluence
 		/// <returns>User</returns>
 		public async Task<User> GetAnonymousUserAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var myselfUri = ConfluenceBaseUri.AppendSegments("user", "anonymous");
+			var myselfUri = ConfluenceApiBaseUri.AppendSegments("user", "anonymous");
 			PromoteContext();
 			var response = await myselfUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
@@ -579,7 +600,7 @@ namespace Dapplo.Confluence
 		/// <returns>user information</returns>
 		public async Task<User> GetUserAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var userUri = ConfluenceBaseUri.AppendSegments("user").ExtendQuery("username", username);
+			var userUri = ConfluenceApiBaseUri.AppendSegments("user").ExtendQuery("username", username);
 			PromoteContext();
 			var response = await userUri.GetAsAsync<HttpResponse<User, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
@@ -597,7 +618,7 @@ namespace Dapplo.Confluence
 		/// <returns>List with Groups</returns>
 		public async Task<IList<Group>> GetGroupsAsync(string username, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var groupUri = ConfluenceBaseUri.AppendSegments("user", "memberof").ExtendQuery("username", username);
+			var groupUri = ConfluenceApiBaseUri.AppendSegments("user", "memberof").ExtendQuery("username", username);
 			PromoteContext();
 			var response = await groupUri.GetAsAsync<HttpResponse<Result<Group>, Error>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)

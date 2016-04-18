@@ -29,7 +29,7 @@ namespace Dapplo.Confluence
 		/// <summary>
 		///     The values that are expanded in the GetAttachments result
 		/// </summary>
-		public static string[] ExpandGetAttachments { get; set; } = {"version"};
+		public static string[] ExpandGetAttachments { get; set; } = {"version", "container"};
 
 		/// <summary>
 		///     The values that are expanded in the GetChildren results

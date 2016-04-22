@@ -4,26 +4,27 @@
 //  For more information see: http://dapplo.net/
 //  Dapplo repositories are hosted on GitHub: https://github.com/dapplo
 // 
-//  This file is part of Dapplo.Confluence
+//  This file is part of Dapplo.HttpExtensions
 // 
-//  Dapplo.Confluence is free software: you can redistribute it and/or modify
+//  Dapplo.HttpExtensions is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU Lesser General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 // 
-//  Dapplo.Confluence is distributed in the hope that it will be useful,
+//  Dapplo.HttpExtensions is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU Lesser General Public License for more details.
 // 
 //  You should have a copy of the GNU Lesser General Public License
-//  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
+//  along with Dapplo.HttpExtensions. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 #region using
 
 using System;
 using System.Threading;
 using Dapplo.LogFacade;
+using Dapplo.LogFacade.Loggers;
 using Xunit.Abstractions;
 
 #endregion
@@ -36,7 +37,7 @@ namespace Dapplo.Confluence.Tests
 	///     This class solves the problem by registering the ITestOutputHelper in the CallContext.
 	///     Every log statement will retrieve the ITestOutputHelper from the context and use it to log.
 	/// </summary>
-	public class XUnitLogger : ILogger
+	public class XUnitLogger : AbstractLogger
 	{
 		private static readonly AsyncLocal<ITestOutputHelper> TestOutputHelperAsyncLocal = new AsyncLocal<ITestOutputHelper>();
 		private static readonly AsyncLocal<LogLevel> LogLevelAsyncLocal = new AsyncLocal<LogLevel>();
@@ -52,16 +53,11 @@ namespace Dapplo.Confluence.Tests
 		///     LogLevel, this can give a different result pro xUnit test...
 		///     It will depend on the RegisterLogger value which was used in the current xUnit test
 		/// </summary>
-		public LogLevel Level
+		public override LogLevel Level
 		{
 			get
 			{
-				var logLevel = LogLevelAsyncLocal.Value;
-				if (logLevel != LogLevel.None)
-				{
-					return logLevel;
-				}
-				return LogSettings.DefaultLevel;
+				return LogLevelAsyncLocal.Value;
 			}
 			set { LogLevelAsyncLocal.Value = value; }
 		}
@@ -72,12 +68,12 @@ namespace Dapplo.Confluence.Tests
 		/// </summary>
 		/// <param name="level">LogLevel</param>
 		/// <returns>true if the level is enabled</returns>
-		public bool IsLogLevelEnabled(LogLevel level)
+		public override bool IsLogLevelEnabled(LogLevel level)
 		{
 			return level != LogLevel.None && level >= Level;
 		}
 
-		public void Write(LogInfo logInfo, string messageTemplate, params object[] logParameters)
+		public override void Write(LogInfo logInfo, string messageTemplate, params object[] logParameters)
 		{
 			var testOutputHelper = TestOutputHelperAsyncLocal.Value;
 			if (testOutputHelper == null)
@@ -87,15 +83,21 @@ namespace Dapplo.Confluence.Tests
 			testOutputHelper.WriteLine($"{logInfo} - {messageTemplate}", logParameters);
 		}
 
-		public void Write(LogInfo logInfo, Exception exception, string messageTemplate, params object[] logParameters)
+		public override void Write(LogInfo logInfo, Exception exception, string messageTemplate, params object[] logParameters)
 		{
 			var testOutputHelper = TestOutputHelperAsyncLocal.Value;
 			if (testOutputHelper == null)
 			{
 				throw new ArgumentNullException(nameof(testOutputHelper), "Couldn't find a ITestOutputHelper in the CallContext");
 			}
-			testOutputHelper.WriteLine($"{logInfo} - {messageTemplate}", logParameters);
-			testOutputHelper.WriteLine(exception.ToString());
+			if (messageTemplate != null)
+			{
+				testOutputHelper.WriteLine($"{logInfo} - {messageTemplate}", logParameters);
+			}
+			if (exception != null)
+			{
+				testOutputHelper.WriteLine(exception.ToString());
+			}
 		}
 
 		/// <summary>
@@ -107,7 +109,7 @@ namespace Dapplo.Confluence.Tests
 		public static void RegisterLogger(ITestOutputHelper testOutputHelper, LogLevel level = default(LogLevel))
 		{
 			TestOutputHelperAsyncLocal.Value = testOutputHelper;
-			LogLevelAsyncLocal.Value = level;
+			LogLevelAsyncLocal.Value = level == LogLevel.None ? LogSettings.DefaultLevel : level;
 			if (!(LogSettings.Logger is XUnitLogger))
 			{
 				LogSettings.Logger = new XUnitLogger();

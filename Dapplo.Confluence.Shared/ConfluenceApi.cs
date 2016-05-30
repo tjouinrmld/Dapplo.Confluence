@@ -392,6 +392,26 @@ namespace Dapplo.Confluence
 		}
 
 		/// <summary>
+		///     Get Content History information see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
+		/// </summary>
+		/// <param name="contentId">content id</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Content</returns>
+		public async Task<History> GetContentHistoryAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var historyUri = ConfluenceApiBaseUri.AppendSegments("content", contentId, "history");
+			
+			PromoteContext();
+
+			var response = await historyUri.GetAsAsync<HttpResponse<History, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
+		}
+
+		/// <summary>
 		/// Delete content (attachments are also content)
 		/// </summary>
 		/// <param name="contentId">ID for the content which needs to be deleted</param>

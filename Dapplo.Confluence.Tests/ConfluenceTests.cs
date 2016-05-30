@@ -169,6 +169,17 @@ namespace Dapplo.Confluence.Tests
 			Assert.NotNull(content.Version);
 		}
 
+		/// <summary>
+		/// Test GetContentHistoryAsync
+		/// </summary>
+		//[Fact]
+		public async Task TestGetContentHistory()
+		{
+			var history = await _confluenceApi.GetContentHistoryAsync("950274");
+			Assert.NotNull(history);
+			Assert.NotNull(history.CreatedBy);
+		}
+
 		//[Fact]
 		public async Task TestCreateContent()
 		{

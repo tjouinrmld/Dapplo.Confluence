@@ -39,7 +39,7 @@ namespace Dapplo.Confluence.WpfExample
 		public MainWindow()
 		{
 			InitializeComponent();
-			LogSettings.Logger = new TraceLogger();
+			LogSettings.RegisterDefaultLogger<TraceLogger>();
 			DataContext = this;
 
 			Loaded += MainWindow_Loaded;

@@ -24,7 +24,7 @@
 using Dapplo.Confluence.Entities;
 using Dapplo.HttpExtensions;
 using Dapplo.Log.XUnit;
-using Dapplo.LogFacade;
+using Dapplo.Log.Facade;
 using System.IO;
 using Xunit;
 using Xunit.Abstractions;
@@ -37,7 +37,7 @@ namespace Dapplo.Confluence.Tests
 	{
 		public JsonParseTests(ITestOutputHelper testOutputHelper)
 		{
-			XUnitLogger.RegisterLogger(testOutputHelper, LogLevels.Verbose);
+			LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
 		}
 
 		[Fact]

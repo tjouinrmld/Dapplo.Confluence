@@ -22,7 +22,7 @@
 #region using
 
 using Dapplo.Log.XUnit;
-using Dapplo.LogFacade;
+using Dapplo.Log.Facade;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -45,7 +45,7 @@ namespace Dapplo.Confluence.Tests
 
 		public ConfluenceTests(ITestOutputHelper testOutputHelper)
 		{
-			XUnitLogger.RegisterLogger(testOutputHelper, LogLevels.Verbose);
+			LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
 			_confluenceApi = new ConfluenceApi(TestConfluenceUri);
 
 			var username = Environment.GetEnvironmentVariable("confluence_test_username");

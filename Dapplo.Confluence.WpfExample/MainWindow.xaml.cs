@@ -24,8 +24,6 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
-using Dapplo.LogFacade;
-using Dapplo.LogFacade.Loggers;
 
 #endregion
 
@@ -39,7 +37,6 @@ namespace Dapplo.Confluence.WpfExample
 		public MainWindow()
 		{
 			InitializeComponent();
-			LogSettings.RegisterDefaultLogger<TraceLogger>();
 			DataContext = this;
 
 			Loaded += MainWindow_Loaded;

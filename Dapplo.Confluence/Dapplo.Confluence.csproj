@@ -33,8 +33,8 @@
     <DocumentationFile>bin\Release\Dapplo.Confluence.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dapplo.HttpExtensions, Version=0.5.25.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapplo.HttpExtensions.0.5.25\lib\net45\Dapplo.HttpExtensions.dll</HintPath>
+    <Reference Include="Dapplo.HttpExtensions, Version=0.5.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapplo.HttpExtensions.0.5.26\lib\net45\Dapplo.HttpExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Dapplo.Log.Facade, Version=0.5.4.0, Culture=neutral, processorArchitecture=MSIL">

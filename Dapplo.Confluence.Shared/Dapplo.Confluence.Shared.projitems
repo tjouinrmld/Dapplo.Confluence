@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConfluenceConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Child.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Group.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\LastUpdated.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Plain.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Error.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Description.cs" />

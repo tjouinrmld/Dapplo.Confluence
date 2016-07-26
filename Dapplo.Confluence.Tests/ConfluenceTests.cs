@@ -1,31 +1,35 @@
-﻿//  Dapplo - building blocks for desktop applications
-//  Copyright (C) 2015-2016 Dapplo
-// 
-//  For more information see: http://dapplo.net/
-//  Dapplo repositories are hosted on GitHub: https://github.com/dapplo
-// 
-//  This file is part of Dapplo.Confluence
-// 
-//  Dapplo.Confluence is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU Lesser General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-// 
-//  Dapplo.Confluence is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU Lesser General Public License for more details.
-// 
-//  You should have a copy of the GNU Lesser General Public License
-//  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
+﻿#region Dapplo 2016 - GNU Lesser General Public License
 
-#region using
+// Dapplo - building blocks for .NET applications
+// Copyright (C) 2016 Dapplo
+// 
+// For more information see: http://dapplo.net/
+// Dapplo repositories are hosted on GitHub: https://github.com/dapplo
+// 
+// This file is part of Dapplo.Confluence
+// 
+// Dapplo.Confluence is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// Dapplo.Confluence is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have a copy of the GNU Lesser General Public License
+// along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-using Dapplo.Log.XUnit;
-using Dapplo.Log.Facade;
+#endregion
+
+#region Usings
+
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Dapplo.Log.Facade;
+using Dapplo.Log.XUnit;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -34,15 +38,10 @@ using Xunit.Abstractions;
 namespace Dapplo.Confluence.Tests
 {
 	/// <summary>
-	/// Tests
+	///     Tests
 	/// </summary>
 	public class ConfluenceTests
 	{
-		// Test against a well known Confluence
-		private static readonly Uri TestConfluenceUri = new Uri("https://greenshot.atlassian.net/wiki");
-
-		private readonly ConfluenceApi _confluenceApi;
-
 		public ConfluenceTests(ITestOutputHelper testOutputHelper)
 		{
 			LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
@@ -56,67 +55,14 @@ namespace Dapplo.Confluence.Tests
 			}
 		}
 
-		//[Fact]
-		public async Task TestSearch()
-		{
-			var searchResult = await _confluenceApi.SearchAsync("text ~ \"Test Home\"");
-			Assert.NotNull(searchResult);
-			Assert.True(searchResult.Results.Count > 0);
+		// Test against a well known Confluence
+		private static readonly Uri TestConfluenceUri = new Uri("https://greenshot.atlassian.net/wiki");
 
-			foreach (var content in searchResult.Results)
-			{
-				Assert.NotNull(content.Type);
-			}
-		}
+		private readonly ConfluenceApi _confluenceApi;
 
 		/// <summary>
-		/// Test only works on Confluence 6.6 and later
-		/// </summary>
-		/// <returns></returns>
-		[Fact]
-		public async Task TestCurrentUserAndPicture()
-		{
-			var currentUser = await _confluenceApi.GetCurrentUserAsync();
-			Assert.NotNull(currentUser);
-			Assert.NotNull(currentUser.ProfilePicture);
-
-			var bitmapSource = await _confluenceApi.GetPictureAsync<MemoryStream>(currentUser.ProfilePicture);
-			Assert.NotNull(bitmapSource);
-		}
-
-		/// <summary>
-		/// Test GetSpacesAsync
-		/// </summary>
-		[Fact]
-		public async Task TestGetSpaces()
-		{
-			var spaces = await _confluenceApi.GetSpacesAsync();
-			Assert.NotNull(spaces);
-			Assert.NotNull(spaces.Count > 0);
-		}
-
-		/// <summary>
-		/// Test GetSpaceAsync
-		/// </summary>
-		[Fact]
-		public async Task TestGetSpace()
-		{
-			var space = await _confluenceApi.GetSpaceAsync("TEST");
-			Assert.NotNull(space);
-			Assert.NotNull(space.Description);
-		}
-
-		[Fact]
-		public async Task TestGetAttachments()
-		{
-			var attachments = await _confluenceApi.GetAttachmentsAsync("950274");
-			Assert.NotNull(attachments);
-			Assert.NotNull(attachments.Results.Count > 0);
-		}
-
-		/// <summary>
-		/// Doesn't work yet, as deleting an attachment is not supported
-		/// See <a href="https://jira.atlassian.com/browse/CONF-36015">CONF-36015</a>
+		///     Doesn't work yet, as deleting an attachment is not supported
+		///     See <a href="https://jira.atlassian.com/browse/CONF-36015">CONF-36015</a>
 		/// </summary>
 		/// <returns></returns>
 		//[Fact]
@@ -156,11 +102,10 @@ namespace Dapplo.Confluence.Tests
 			attachments = await _confluenceApi.GetAttachmentsAsync(testPageId);
 			Assert.NotNull(attachments);
 			Assert.True(attachments.Results.Count == 0);
-
 		}
 
 		/// <summary>
-		/// Test GetContentAsync
+		///     Test GetContentAsync
 		/// </summary>
 		//[Fact]
 		public async Task TestGetContent()
@@ -171,7 +116,7 @@ namespace Dapplo.Confluence.Tests
 		}
 
 		/// <summary>
-		/// Test GetContentHistoryAsync
+		///     Test GetContentHistoryAsync
 		/// </summary>
 		//[Fact]
 		public async Task TestGetContentHistory()
@@ -192,6 +137,66 @@ namespace Dapplo.Confluence.Tests
 		public async Task TestDeleteContent()
 		{
 			await _confluenceApi.DeleteContentAsync("30375945");
+		}
+
+		/// <summary>
+		///     Test only works on Confluence 6.6 and later
+		/// </summary>
+		/// <returns></returns>
+		[Fact]
+		public async Task TestCurrentUserAndPicture()
+		{
+			var currentUser = await _confluenceApi.GetCurrentUserAsync();
+			Assert.NotNull(currentUser);
+			Assert.NotNull(currentUser.ProfilePicture);
+
+			var bitmapSource = await _confluenceApi.GetPictureAsync<MemoryStream>(currentUser.ProfilePicture);
+			Assert.NotNull(bitmapSource);
+		}
+
+		[Fact]
+		public async Task TestGetAttachments()
+		{
+			var attachments = await _confluenceApi.GetAttachmentsAsync("950274");
+			Assert.NotNull(attachments);
+			Assert.NotNull(attachments.Results.Count > 0);
+		}
+
+		/// <summary>
+		///     Test GetSpaceAsync
+		/// </summary>
+		[Fact]
+		public async Task TestGetSpace()
+		{
+			var space = await _confluenceApi.GetSpaceAsync("TEST");
+			Assert.NotNull(space);
+			Assert.NotNull(space.Description);
+		}
+
+		/// <summary>
+		///     Test GetSpacesAsync
+		/// </summary>
+		[Fact]
+		public async Task TestGetSpaces()
+		{
+			var spaces = await _confluenceApi.GetSpacesAsync();
+			Assert.NotNull(spaces);
+			Assert.NotNull(spaces.Count > 0);
+		}
+
+		[Fact]
+		public async Task TestSearch()
+		{
+			ConfluenceConfig.ExpandSearch = new[] {"version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated"};
+
+			var searchResult = await _confluenceApi.SearchAsync("text ~ \"Test Home\"");
+			Assert.NotNull(searchResult);
+			Assert.True(searchResult.Results.Count > 0);
+
+			foreach (var content in searchResult.Results)
+			{
+				Assert.NotNull(content.Type);
+			}
 		}
 	}
 }

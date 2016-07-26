@@ -1,25 +1,29 @@
-﻿//  Dapplo - building blocks for desktop applications
-//  Copyright (C) 2015-2016 Dapplo
-// 
-//  For more information see: http://dapplo.net/
-//  Dapplo repositories are hosted on GitHub: https://github.com/dapplo
-// 
-//  This file is part of Dapplo.Confluence
-// 
-//  Dapplo.Confluence is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU Lesser General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-// 
-//  Dapplo.Confluence is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU Lesser General Public License for more details.
-// 
-//  You should have a copy of the GNU Lesser General Public License
-//  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
+﻿#region Dapplo 2016 - GNU Lesser General Public License
 
-#region using
+// Dapplo - building blocks for .NET applications
+// Copyright (C) 2016 Dapplo
+// 
+// For more information see: http://dapplo.net/
+// Dapplo repositories are hosted on GitHub: https://github.com/dapplo
+// 
+// This file is part of Dapplo.Confluence
+// 
+// Dapplo.Confluence is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// Dapplo.Confluence is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have a copy of the GNU Lesser General Public License
+// along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
+
+#endregion
+
+#region Usings
 
 using System;
 using System.Collections.Generic;
@@ -76,6 +80,33 @@ namespace Dapplo.Confluence
 				}
 			};
 		}
+
+		#region Read
+
+		/// <summary>
+		///     Retrieve the picture for the supplied Picture entity
+		/// </summary>
+		/// <typeparam name="TResponse">the type to return the result into. e.g. Bitmap,BitmapSource or MemoryStream</typeparam>
+		/// <param name="picture">Picture from User, Space, History etc</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
+		public async Task<TResponse> GetPictureAsync<TResponse>(Picture picture, CancellationToken cancellationToken = default(CancellationToken))
+			where TResponse : class
+		{
+			PromoteContext();
+			var pictureUriBuilder = new UriBuilder(ConfluenceApiBaseUri)
+			{
+				Path = picture.Path
+			};
+			var response = await pictureUriBuilder.Uri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse);
+			}
+			return response.Response;
+		}
+
+		#endregion
 
 		#region Supporting
 
@@ -167,14 +198,17 @@ namespace Dapplo.Confluence
 		}
 
 		/// <summary>
-		/// Delete attachment
-		/// Can't work yet, see <a href="https://jira.atlassian.com/browse/CONF-36015">CONF-36015</a>
+		///     Delete attachment
+		///     Can't work yet, see <a href="https://jira.atlassian.com/browse/CONF-36015">CONF-36015</a>
 		/// </summary>
 		/// <param name="attachment">Attachment which needs to be deleted</param>
 		/// <param name="cancellationToken">cancellationToken</param>
 		public async Task DeleteAttachmentAsync(Attachment attachment, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var contentUri = ConfluenceDownloadBaseUri.AppendSegments("json","removeattachmentversion.action").ExtendQuery("pageId",attachment.Container.Id).ExtendQuery("fileName",attachment.Title);
+			var contentUri =
+				ConfluenceDownloadBaseUri.AppendSegments("json", "removeattachmentversion.action")
+					.ExtendQuery("pageId", attachment.Container.Id)
+					.ExtendQuery("fileName", attachment.Title);
 			PromoteContext();
 
 			await contentUri.GetAsAsync<string>(cancellationToken).ConfigureAwait(false);
@@ -217,7 +251,8 @@ namespace Dapplo.Confluence
 		/// <param name="isPrivate">true if the space needs to be private</param>
 		/// <param name="cancellationToken"></param>
 		/// <returns>created Space</returns>
-		public async Task<Space> CreateSpaceAsync(string key, string name, string description, bool isPrivate = false, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Space> CreateSpaceAsync(string key, string name, string description, bool isPrivate = false,
+			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var space = new Space
 			{
@@ -339,33 +374,6 @@ namespace Dapplo.Confluence
 
 		#endregion
 
-		#region Read
-
-		/// <summary>
-		///     Retrieve the picture for the supplied Picture entity
-		/// </summary>
-		/// <typeparam name="TResponse">the type to return the result into. e.g. Bitmap,BitmapSource or MemoryStream</typeparam>
-		/// <param name="picture">Picture from User, Space, History etc</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
-		public async Task<TResponse> GetPictureAsync<TResponse>(Picture picture, CancellationToken cancellationToken = default(CancellationToken))
-			where TResponse : class
-		{
-			PromoteContext();
-			var pictureUriBuilder = new UriBuilder(ConfluenceApiBaseUri)
-			{
-				Path = picture.Path
-			};
-			var response = await pictureUriBuilder.Uri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
-			if (response.HasError)
-			{
-				throw new Exception(response.ErrorResponse);
-			}
-			return response.Response;
-		}
-
-		#endregion
-
 		#region Content
 
 		/// <summary>
@@ -400,7 +408,7 @@ namespace Dapplo.Confluence
 		public async Task<History> GetContentHistoryAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var historyUri = ConfluenceApiBaseUri.AppendSegments("content", contentId, "history");
-			
+
 			PromoteContext();
 
 			var response = await historyUri.GetAsAsync<HttpResponse<History, Error>>(cancellationToken).ConfigureAwait(false);
@@ -412,10 +420,13 @@ namespace Dapplo.Confluence
 		}
 
 		/// <summary>
-		/// Delete content (attachments are also content)
+		///     Delete content (attachments are also content)
 		/// </summary>
 		/// <param name="contentId">ID for the content which needs to be deleted</param>
-		/// <param name="isTrashed">If the content is trashable, you will need to call DeleteAsyc twice, second time with isTrashed = true</param>
+		/// <param name="isTrashed">
+		///     If the content is trashable, you will need to call DeleteAsyc twice, second time with isTrashed
+		///     = true
+		/// </param>
 		/// <param name="cancellationToken">cancellationToken</param>
 		public async Task DeleteContentAsync(string contentId, bool isTrashed = false, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -434,7 +445,7 @@ namespace Dapplo.Confluence
 		}
 
 		/// <summary>
-		/// Create content
+		///     Create content
 		/// </summary>
 		/// <param name="type">Type of content, usually page</param>
 		/// <param name="title">Title for the content</param>
@@ -464,7 +475,7 @@ namespace Dapplo.Confluence
 				}
 			};
 			PromoteContext();
-			var response = await contentUri.PostAsync<HttpResponse<Content, Error>>(newPage,cancellationToken).ConfigureAwait(false);
+			var response = await contentUri.PostAsync<HttpResponse<Content, Error>>(newPage, cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
 				throw new Exception(response.ErrorResponse.Message);
@@ -539,7 +550,8 @@ namespace Dapplo.Confluence
 		/// <param name="limit">Maximum number of results returned, default is 20</param>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Results with content items</returns>
-		public async Task<Result<Content>> GetContentByTitleAsync(string spaceKey, string title, int start = 0, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Result<Content>> GetContentByTitleAsync(string spaceKey, string title, int start = 0, int limit = 20,
+			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			PromoteContext();
 			var searchUri = ConfluenceApiBaseUri.AppendSegments("content").ExtendQuery(new Dictionary<string, object>
@@ -575,6 +587,7 @@ namespace Dapplo.Confluence
 		#endregion
 
 		#region User
+
 		/// <summary>
 		///     Get currrent user information, introduced with 6.6
 		///     See: https://docs.atlassian.com/confluence/REST/latest/#user-getCurrent
@@ -631,7 +644,7 @@ namespace Dapplo.Confluence
 		}
 
 		/// <summary>
-		/// Get the groups for a user
+		///     Get the groups for a user
 		/// </summary>
 		/// <param name="username">string with username</param>
 		/// <param name="cancellationToken">CancellationToken</param>

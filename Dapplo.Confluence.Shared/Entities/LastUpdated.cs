@@ -25,6 +25,7 @@
 
 #region Usings
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -33,40 +34,40 @@ using System.Runtime.Serialization;
 namespace Dapplo.Confluence.Entities
 {
 	/// <summary>
-	///     A container to store pageable results
+	///     LastUpdated information
 	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class Result<TResult>
+	public class LastUpdated
 	{
 		/// <summary>
-		///     The result is limited by
+		///     User who updated
 		/// </summary>
-		[DataMember(Name = "limit")]
-		public int Limit { get; set; }
+		[DataMember(Name = "by")]
+		public User By { get; set; }
+
+		/// <summary>
+		///     When the last update was
+		/// </summary>
+		[DataMember(Name = "when")]
+		public DateTimeOffset When { get; set; }
+
+		/// <summary>
+		///     Friendly representation for When
+		/// </summary>
+		[DataMember(Name = "friendlyWhen")]
+		public string FriendlyWhen { get; set; }
+
+		/// <summary>
+		///     The values that are expandable
+		/// </summary>
+		[DataMember(Name = "_expandable")]
+		public IDictionary<string, string> Expandables { get; set; }
 
 		/// <summary>
 		///     Different links for this entity, depending on the entry
 		/// </summary>
 		[DataMember(Name = "_links")]
 		public Links Links { get; set; }
-
-		/// <summary>
-		///     The actual requested information
-		/// </summary>
-		[DataMember(Name = "results")]
-		public IList<TResult> Results { get; set; }
-
-		/// <summary>
-		///     How many elements
-		/// </summary>
-		[DataMember(Name = "size")]
-		public int Size { get; set; }
-
-		/// <summary>
-		///     The start of the elements, this is used for paging
-		/// </summary>
-		[DataMember(Name = "start")]
-		public int Start { get; set; }
 	}
 }

@@ -1,0 +1,76 @@
+﻿{
+	"payload": [
+		{
+			"usersPermittedToView": [ ],
+			"subscriberCount": 0,
+			"childSubCalendars": [
+				{
+					"usersPermittedToView": [ ],
+					"subscriberCount": 0,
+					"eventsHidden": false,
+					"deletable": true,
+					"usersPermittedToEdit": [ ],
+					"subCalendar": {
+						"id": "f9ae387d-a203-4182-89cb-8f8741f1822e",
+						"parentId": "55a1b320-a04f-4a52-b07f-a99d02a8ae0e",
+						"restrictable": true,
+						"spaceName": "ITB CC Call Clients",
+						"color": "subcalendar-green",
+						"eventInviteesSupported": true,
+						"watchable": true,
+						"name": "calendar3.subcalendar.type.other",
+						"spaceKey": "ITBCallClients",
+						"type": "other",
+						"typeKey": "calendar3.subcalendar.type.other",
+						"timeZoneId": "Europe/Berlin",
+						"creator": "8adc15404bc9e48e014bca21222b1168"
+					},
+					"editable": true,
+					"watched": false,
+					"eventsViewable": true,
+					"eventsEditable": true,
+					"hidden": false,
+					"groupsPermittedToView": [ ],
+					"administrable": true,
+					"subscribedByCurrentUser": false,
+					"warnings": [ ],
+					"groupsPermittedToEdit": [ ],
+					"watchedViaContent": false,
+					"reloadable": true
+				}
+			],
+			"eventsHidden": false,
+			"deletable": true,
+			"usersPermittedToEdit": [ ],
+			"subCalendar": {
+				"id": "55a1b320-a04f-4a52-b07f-a99d02a8ae0e",
+				"restrictable": true,
+				"spaceName": "ITB CC Call Clients",
+				"color": "subcalendar-blue2",
+				"eventInviteesSupported": true,
+				"watchable": true,
+				"name": "Release Plan Callimero",
+				"spaceKey": "ITBCallClients",
+				"disableEventTypes": [ ],
+				"customEventTypes": [ ],
+				"type": "parent",
+				"typeKey": "calendar3.subcalendar.type.parent",
+				"timeZoneId": "Europe/Berlin",
+				"creator": "8adc15404bc9e48e014bca21372a22da"
+			},
+			"editable": true,
+			"watched": false,
+			"eventsViewable": true,
+			"eventsEditable": true,
+			"hidden": false,
+			"groupsPermittedToView": [ ],
+			"administrable": true,
+			"subscribedByCurrentUser": false,
+			"warnings": [ ],
+			"groupsPermittedToEdit": [ ],
+			"watchedViaContent": false,
+			"reloadable": true
+		}
+	],
+	"success": true
+}

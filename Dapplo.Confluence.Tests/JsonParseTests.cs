@@ -28,7 +28,7 @@
 using System.IO;
 using Dapplo.Confluence.Entities;
 using Dapplo.HttpExtensions;
-using Dapplo.Log.Facade;
+using Dapplo.Log;
 using Dapplo.Log.XUnit;
 using Xunit;
 using Xunit.Abstractions;

@@ -46,7 +46,7 @@ namespace Dapplo.Confluence
 		///     Store the specific HttpBehaviour, which contains a IHttpSettings and also some additional logic for making a
 		///     HttpClient which works with Confluence
 		/// </summary>
-		private readonly HttpBehaviour _behaviour;
+		private readonly IHttpBehaviour _behaviour;
 
 		private string _password;
 
@@ -66,20 +66,35 @@ namespace Dapplo.Confluence
 			ConfluenceDownloadBaseUri = baseUri;
 			ConfluenceApiBaseUri = baseUri.AppendSegments("rest", "api");
 
-			_behaviour = new HttpBehaviour
-			{
-				HttpSettings = httpSettings,
-				OnHttpRequestMessageCreated = httpMessage =>
-				{
-					httpMessage?.Headers.TryAddWithoutValidation("X-Atlassian-Token", "nocheck");
-					if (!string.IsNullOrEmpty(_user) && _password != null)
-					{
-						httpMessage?.SetBasicAuthorization(_user, _password);
-					}
-					return httpMessage;
-				}
-			};
+			_behaviour = ConfigureBehaviour(new HttpBehaviour(), httpSettings);
 		}
+
+		/// <summary>
+		/// Helper method to configure the IChangeableHttpBehaviour
+		/// </summary>
+		/// <param name="behaviour">IChangeableHttpBehaviour</param>
+		/// <param name="httpSettings">IHttpSettings</param>
+		/// <returns>the behaviour, but configured as IHttpBehaviour </returns>
+		private IHttpBehaviour ConfigureBehaviour(IChangeableHttpBehaviour behaviour, IHttpSettings httpSettings = null)
+		{
+			behaviour.HttpSettings = httpSettings ?? HttpExtensionsGlobals.HttpSettings;
+			behaviour.OnHttpRequestMessageCreated = httpMessage =>
+			{
+				httpMessage?.Headers.TryAddWithoutValidation("X-Atlassian-Token", "no-check");
+				if (!string.IsNullOrEmpty(_user) && _password != null)
+				{
+					httpMessage?.SetBasicAuthorization(_user, _password);
+				}
+				return httpMessage;
+			};
+			return behaviour;
+		}
+
+		/// <summary>
+		/// The IHttpBehaviour for this Confluence instance
+		/// </summary>
+		public IHttpBehaviour HttpBehaviour => _behaviour;
+
 
 		#region Read
 

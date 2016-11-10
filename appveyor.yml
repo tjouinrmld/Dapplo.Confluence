@@ -6,7 +6,7 @@ clone_depth: 2
 branches:
   only:
   - master
-nstall:
+install:
 - choco install gitlink -y
 before_build:
 - ps: .\SetVersion.ps1

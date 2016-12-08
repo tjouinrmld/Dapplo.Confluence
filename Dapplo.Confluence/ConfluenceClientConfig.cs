@@ -26,9 +26,11 @@
 namespace Dapplo.Confluence
 {
 	/// <summary>
-	///     Use this class to configure some of the behaviour
+	///     Use this class to configure some of the behaviour.
+	///     This stores the "expand" settings for the different REST calls, and defines what additional information is
+	///     requested.
 	/// </summary>
-	public static class ConfluenceConfig
+	public static class ConfluenceClientConfig
 	{
 		/// <summary>
 		///     The values that are expanded in the GetAttachments result

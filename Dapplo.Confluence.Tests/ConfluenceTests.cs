@@ -45,20 +45,20 @@ namespace Dapplo.Confluence.Tests
 		public ConfluenceTests(ITestOutputHelper testOutputHelper)
 		{
 			LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
-			_confluenceApi = new ConfluenceApi(TestConfluenceUri);
+			_confluenceClient = ConfluenceClient.Create(TestConfluenceUri);
 
 			var username = Environment.GetEnvironmentVariable("confluence_test_username");
 			var password = Environment.GetEnvironmentVariable("confluence_test_password");
 			if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
 			{
-				_confluenceApi.SetBasicAuthentication(username, password);
+				_confluenceClient.SetBasicAuthentication(username, password);
 			}
 		}
 
 		// Test against a well known Confluence
 		private static readonly Uri TestConfluenceUri = new Uri("https://greenshot.atlassian.net/wiki");
 
-		private readonly ConfluenceApi _confluenceApi;
+		private readonly IConfluenceClient _confluenceClient;
 
 		/// <summary>
 		///     Doesn't work yet, as deleting an attachment is not supported
@@ -69,37 +69,37 @@ namespace Dapplo.Confluence.Tests
 		public async Task TestAttach()
 		{
 			const string testPageId = "950274";
-			var attachments = await _confluenceApi.GetAttachmentsAsync(testPageId);
+			var attachments = await _confluenceClient.GetAttachmentsAsync(testPageId);
 			Assert.NotNull(attachments);
 
 			// Delete all attachments
 			foreach (var attachment in attachments.Results)
 			{
 				// Attachments are content!!
-				await _confluenceApi.DeleteAttachmentAsync(attachment);
+				await _confluenceClient.DeleteAttachmentAsync(attachment);
 			}
 
 			const string attachmentContent = "Testing 1 2 3";
-			attachments = await _confluenceApi.AttachAsync(testPageId, attachmentContent, "test.txt", "This is a test");
+			attachments = await _confluenceClient.AttachAsync(testPageId, attachmentContent, "test.txt", "This is a test");
 			Assert.NotNull(attachments);
 
-			attachments = await _confluenceApi.GetAttachmentsAsync(testPageId);
+			attachments = await _confluenceClient.GetAttachmentsAsync(testPageId);
 			Assert.NotNull(attachments);
 			Assert.True(attachments.Results.Count > 0);
 
 			// Test if the content is correct
 			foreach (var attachment in attachments.Results)
 			{
-				var content = await _confluenceApi.GetAttachmentContentAsync<string>(attachment);
+				var content = await _confluenceClient.GetAttachmentContentAsync<string>(attachment);
 				Assert.Equal(attachmentContent, content);
 			}
 			// Delete all attachments
 			foreach (var attachment in attachments.Results)
 			{
 				// Attachments are content!!
-				await _confluenceApi.DeleteContentAsync(attachment.Id);
+				await _confluenceClient.DeleteContentAsync(attachment.Id);
 			}
-			attachments = await _confluenceApi.GetAttachmentsAsync(testPageId);
+			attachments = await _confluenceClient.GetAttachmentsAsync(testPageId);
 			Assert.NotNull(attachments);
 			Assert.True(attachments.Results.Count == 0);
 		}
@@ -110,7 +110,7 @@ namespace Dapplo.Confluence.Tests
 		//[Fact]
 		public async Task TestGetContent()
 		{
-			var content = await _confluenceApi.GetContentAsync("950274");
+			var content = await _confluenceClient.GetContentAsync("950274");
 			Assert.NotNull(content);
 			Assert.NotNull(content.Version);
 		}
@@ -121,7 +121,7 @@ namespace Dapplo.Confluence.Tests
 		//[Fact]
 		public async Task TestGetContentHistory()
 		{
-			var history = await _confluenceApi.GetContentHistoryAsync("950274");
+			var history = await _confluenceClient.GetContentHistoryAsync("950274");
 			Assert.NotNull(history);
 			Assert.NotNull(history.CreatedBy);
 		}
@@ -129,14 +129,14 @@ namespace Dapplo.Confluence.Tests
 		//[Fact]
 		public async Task TestCreateContent()
 		{
-			var attachment = await _confluenceApi.CreateContentAsync("page", "Testing 1 2 3", "TEST", "<p>This is a test</p>");
+			var attachment = await _confluenceClient.CreateContentAsync("page", "Testing 1 2 3", "TEST", "<p>This is a test</p>");
 			Assert.NotNull(attachment);
 		}
 
 		//[Fact]
 		public async Task TestDeleteContent()
 		{
-			await _confluenceApi.DeleteContentAsync("30375945");
+			await _confluenceClient.DeleteContentAsync("30375945");
 		}
 
 		/// <summary>
@@ -146,18 +146,18 @@ namespace Dapplo.Confluence.Tests
 		[Fact]
 		public async Task TestCurrentUserAndPicture()
 		{
-			var currentUser = await _confluenceApi.GetCurrentUserAsync();
+			var currentUser = await _confluenceClient.GetCurrentUserAsync();
 			Assert.NotNull(currentUser);
 			Assert.NotNull(currentUser.ProfilePicture);
 
-			var bitmapSource = await _confluenceApi.GetPictureAsync<MemoryStream>(currentUser.ProfilePicture);
+			var bitmapSource = await _confluenceClient.GetPictureAsync<MemoryStream>(currentUser.ProfilePicture);
 			Assert.NotNull(bitmapSource);
 		}
 
 		[Fact]
 		public async Task TestGetAttachments()
 		{
-			var attachments = await _confluenceApi.GetAttachmentsAsync("950274");
+			var attachments = await _confluenceClient.GetAttachmentsAsync("950274");
 			Assert.NotNull(attachments);
 			Assert.NotNull(attachments.Results.Count > 0);
 		}
@@ -168,7 +168,7 @@ namespace Dapplo.Confluence.Tests
 		[Fact]
 		public async Task TestGetSpace()
 		{
-			var space = await _confluenceApi.GetSpaceAsync("TEST");
+			var space = await _confluenceClient.GetSpaceAsync("TEST");
 			Assert.NotNull(space);
 			Assert.NotNull(space.Description);
 		}
@@ -179,7 +179,7 @@ namespace Dapplo.Confluence.Tests
 		[Fact]
 		public async Task TestGetSpaces()
 		{
-			var spaces = await _confluenceApi.GetSpacesAsync();
+			var spaces = await _confluenceClient.GetSpacesAsync();
 			Assert.NotNull(spaces);
 			Assert.NotNull(spaces.Count > 0);
 		}
@@ -187,9 +187,9 @@ namespace Dapplo.Confluence.Tests
 		[Fact]
 		public async Task TestSearch()
 		{
-			ConfluenceConfig.ExpandSearch = new[] {"version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated"};
+			ConfluenceClientConfig.ExpandSearch = new[] {"version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated"};
 
-			var searchResult = await _confluenceApi.SearchAsync("text ~ \"Test Home\"");
+			var searchResult = await _confluenceClient.SearchAsync("text ~ \"Test Home\"");
 			Assert.NotNull(searchResult);
 			Assert.True(searchResult.Results.Count > 0);
 

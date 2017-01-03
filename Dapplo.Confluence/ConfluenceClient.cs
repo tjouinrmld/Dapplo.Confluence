@@ -26,6 +26,7 @@
 #region Usings
 
 using System;
+using Dapplo.Confluence.Internals;
 using Dapplo.HttpExtensions;
 
 #endregion
@@ -68,6 +69,10 @@ namespace Dapplo.Confluence
 			ConfluenceApiUri = confluenceUri.AppendSegments("rest", "api");
 
 			_behaviour = ConfigureBehaviour(new HttpBehaviour(), httpSettings);
+
+			Content = new ContentApi(this);
+			User = new UserApi(this);
+			Space = new SpaceApi(this);
 		}
 
 		/// <summary>
@@ -145,5 +150,17 @@ namespace Dapplo.Confluence
 			};
 			return behaviour;
 		}
+
+		/// <inheritdoc />
+		public IAttachmentApi Attachment { get; }
+
+		/// <inheritdoc />
+		public IContentApi Content { get; }
+
+		/// <inheritdoc />
+		public IUserApi User { get; }
+
+		/// <inheritdoc />
+		public ISpaceApi Space { get; }
 	}
 }

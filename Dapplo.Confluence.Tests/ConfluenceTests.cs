@@ -69,59 +69,59 @@ namespace Dapplo.Confluence.Tests
 		public async Task TestAttach()
 		{
 			const string testPageId = "950274";
-			var attachments = await _confluenceClient.GetAttachmentsAsync(testPageId);
+			var attachments = await _confluenceClient.Content.GetAttachmentsAsync(testPageId);
 			Assert.NotNull(attachments);
 
 			// Delete all attachments
 			foreach (var attachment in attachments.Results)
 			{
 				// Attachments are content!!
-				await _confluenceClient.DeleteAttachmentAsync(attachment);
+				await _confluenceClient.Attachment.DeleteAsync(attachment);
 			}
 
 			const string attachmentContent = "Testing 1 2 3";
-			attachments = await _confluenceClient.AttachAsync(testPageId, attachmentContent, "test.txt", "This is a test");
+			attachments = await _confluenceClient.Content.AttachAsync(testPageId, attachmentContent, "test.txt", "This is a test");
 			Assert.NotNull(attachments);
 
-			attachments = await _confluenceClient.GetAttachmentsAsync(testPageId);
+			attachments = await _confluenceClient.Content.GetAttachmentsAsync(testPageId);
 			Assert.NotNull(attachments);
 			Assert.True(attachments.Results.Count > 0);
 
 			// Test if the content is correct
 			foreach (var attachment in attachments.Results)
 			{
-				var content = await _confluenceClient.GetAttachmentContentAsync<string>(attachment);
+				var content = await _confluenceClient.Attachment.GetContentAsync<string>(attachment);
 				Assert.Equal(attachmentContent, content);
 			}
 			// Delete all attachments
 			foreach (var attachment in attachments.Results)
 			{
 				// Attachments are content!!
-				await _confluenceClient.DeleteContentAsync(attachment.Id);
+				await _confluenceClient.Content.DeleteAsync(attachment.Id);
 			}
-			attachments = await _confluenceClient.GetAttachmentsAsync(testPageId);
+			attachments = await _confluenceClient.Content.GetAttachmentsAsync(testPageId);
 			Assert.NotNull(attachments);
 			Assert.True(attachments.Results.Count == 0);
 		}
 
 		/// <summary>
-		///     Test GetContentAsync
+		///     Test GetAsync
 		/// </summary>
 		//[Fact]
 		public async Task TestGetContent()
 		{
-			var content = await _confluenceClient.GetContentAsync("950274");
+			var content = await _confluenceClient.Content.GetAsync("950274");
 			Assert.NotNull(content);
 			Assert.NotNull(content.Version);
 		}
 
 		/// <summary>
-		///     Test GetContentHistoryAsync
+		///     Test GetHistoryAsync
 		/// </summary>
 		//[Fact]
 		public async Task TestGetContentHistory()
 		{
-			var history = await _confluenceClient.GetContentHistoryAsync("950274");
+			var history = await _confluenceClient.Content.GetHistoryAsync("950274");
 			Assert.NotNull(history);
 			Assert.NotNull(history.CreatedBy);
 		}
@@ -129,14 +129,14 @@ namespace Dapplo.Confluence.Tests
 		//[Fact]
 		public async Task TestCreateContent()
 		{
-			var attachment = await _confluenceClient.CreateContentAsync("page", "Testing 1 2 3", "TEST", "<p>This is a test</p>");
+			var attachment = await _confluenceClient.Content.CreateAsync("page", "Testing 1 2 3", "TEST", "<p>This is a test</p>");
 			Assert.NotNull(attachment);
 		}
 
 		//[Fact]
 		public async Task TestDeleteContent()
 		{
-			await _confluenceClient.DeleteContentAsync("30375945");
+			await _confluenceClient.Content.DeleteAsync("30375945");
 		}
 
 		/// <summary>
@@ -146,7 +146,7 @@ namespace Dapplo.Confluence.Tests
 		[Fact]
 		public async Task TestCurrentUserAndPicture()
 		{
-			var currentUser = await _confluenceClient.GetCurrentUserAsync();
+			var currentUser = await _confluenceClient.User.GetCurrentUserAsync();
 			Assert.NotNull(currentUser);
 			Assert.NotNull(currentUser.ProfilePicture);
 
@@ -157,29 +157,29 @@ namespace Dapplo.Confluence.Tests
 		[Fact]
 		public async Task TestGetAttachments()
 		{
-			var attachments = await _confluenceClient.GetAttachmentsAsync("950274");
+			var attachments = await _confluenceClient.Content.GetAttachmentsAsync("950274");
 			Assert.NotNull(attachments);
 			Assert.NotNull(attachments.Results.Count > 0);
 		}
 
 		/// <summary>
-		///     Test GetSpaceAsync
+		///     Test GetAsync
 		/// </summary>
 		[Fact]
 		public async Task TestGetSpace()
 		{
-			var space = await _confluenceClient.GetSpaceAsync("TEST");
+			var space = await _confluenceClient.Space.GetAsync("TEST");
 			Assert.NotNull(space);
 			Assert.NotNull(space.Description);
 		}
 
 		/// <summary>
-		///     Test GetSpacesAsync
+		///     Test GetAllAsync
 		/// </summary>
 		[Fact]
 		public async Task TestGetSpaces()
 		{
-			var spaces = await _confluenceClient.GetSpacesAsync();
+			var spaces = await _confluenceClient.Space.GetAllAsync();
 			Assert.NotNull(spaces);
 			Assert.NotNull(spaces.Count > 0);
 		}
@@ -189,7 +189,7 @@ namespace Dapplo.Confluence.Tests
 		{
 			ConfluenceClientConfig.ExpandSearch = new[] {"version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated"};
 
-			var searchResult = await _confluenceClient.SearchAsync("text ~ \"Test Home\"");
+			var searchResult = await _confluenceClient.Content.SearchAsync("text ~ \"Test Home\"");
 			Assert.NotNull(searchResult);
 			Assert.True(searchResult.Results.Count > 0);
 

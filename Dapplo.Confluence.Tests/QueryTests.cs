@@ -153,5 +153,54 @@ namespace Dapplo.Confluence.Tests
 			var clause = Where.Created.On.DateTime(DateTime.Today);
 			Assert.Equal($"created = \"{DateTime.Today:yyyy-MM-dd}\"", clause.ToString());
 		}
+
+		[Fact]
+		public void TestClause_Space_Is()
+		{
+			var clause = Where.Space.Is("DEV");
+			Assert.Equal("space = \"DEV\"", clause.ToString());
+		}
+
+		[Fact]
+		public void TestClause_Space_Not_Is()
+		{
+			var clause = Where.Space.Not.Is("DEV");
+			Assert.Equal("space != \"DEV\"", clause.ToString());
+		}
+
+		[Fact]
+		public void TestClause_Space_In()
+		{
+			var clause = Where.Space.In("DEV", "PRODUCTION");
+			Assert.Equal("space in (\"DEV\", \"PRODUCTION\")", clause.ToString());
+		}
+
+		[Fact]
+		public void TestClause_Space_Not_In()
+		{
+			var clause = Where.Space.Not.In("DEV", "PRODUCTION");
+			Assert.Equal("space not in (\"DEV\", \"PRODUCTION\")", clause.ToString());
+		}
+
+		[Fact]
+		public void TestClause_Space_InFavouriteSpacesAnd()
+		{
+			var clause = Where.Space.InFavouriteSpacesAnd("DEV", "PRODUCTION");
+			Assert.Equal("space in (favouriteSpaces(), \"DEV\", \"PRODUCTION\")", clause.ToString());
+		}
+
+		[Fact]
+		public void TestClause_Space_Not_InFavouriteSpacesAnd()
+		{
+			var clause = Where.Space.Not.InFavouriteSpacesAnd("DEV", "PRODUCTION");
+			Assert.Equal("space not in (favouriteSpaces(), \"DEV\", \"PRODUCTION\")", clause.ToString());
+		}
+
+		[Fact]
+		public void TestClause_Text_Contains()
+		{
+			var clause = Where.Text.Contains("hello");
+			Assert.Equal("text ~ \"hello\"", clause.ToString());
+		}
 	}
 }

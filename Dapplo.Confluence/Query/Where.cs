@@ -116,5 +116,64 @@ namespace Dapplo.Confluence.Query
 		}
 
 		#endregion
+
+		#region text
+		/// <summary>
+		///     Create a clause for the Text field
+		/// </summary>
+		public static ITextClause Text => new TextClause(Fields.Text);
+
+		/// <summary>
+		///     Create a clause for the Title field
+		/// </summary>
+		public static ITextClause Title => new TextClause(Fields.Title);
+		#endregion
+
+		#region content id based
+
+		/// <summary>
+		///     Create a clause for the Id field
+		/// </summary>
+		public static IContentClause Id => new ContentClause(Fields.Id);
+
+		/// <summary>
+		///     Create a clause for the Ancestor field
+		/// </summary>
+		public static IContentClause Ancestor => new ContentClause(Fields.Ancestor);
+
+		/// <summary>
+		///     Create a clause for the Content field
+		/// </summary>
+		public static IContentClause Content => new ContentClause(Fields.Content);
+
+		/// <summary>
+		///     Create a clause for the Parent field
+		/// </summary>
+		public static IContentClause Parent => new ContentClause(Fields.Parent);
+		#endregion
+
+		#region simple values
+		/// <summary>
+		///     Create a clause for the Label field
+		/// </summary>
+		public static ISimpleValueClause Label => new SimpleValueClause(Fields.Label);
+
+
+		/// <summary>
+		///     Create a clause for the Container field
+		/// </summary>
+		public static ISimpleValueClause Container => new SimpleValueClause(Fields.Container);
+
+		/// <summary>
+		///     Create a clause for the Macro field
+		/// </summary>
+		public static ISimpleValueClause Macro => new SimpleValueClause(Fields.Macro);
+		#endregion
+
+
+		/// <summary>
+		///     Create a clause for the Space field
+		/// </summary>
+		public static ISpaceClause Space => new SpaceClause();
 	}
 }

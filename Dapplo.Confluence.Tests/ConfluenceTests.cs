@@ -28,6 +28,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Dapplo.Confluence.Query;
 using Dapplo.Log;
 using Dapplo.Log.XUnit;
 using Xunit;
@@ -47,11 +48,17 @@ namespace Dapplo.Confluence.Tests
 			LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
 			_confluenceClient = ConfluenceClient.Create(TestConfluenceUri);
 
-			_confluenceClient.SetBasicAuthentication("05018085", "kaySul3k0");
+			var username = Environment.GetEnvironmentVariable("confluence_test_username");
+			var password = Environment.GetEnvironmentVariable("confluence_test_password");
+			if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+			{
+				_confluenceClient.SetBasicAuthentication(username, password);
+			}
 		}
 
 		// Test against a well known Confluence
-		private static readonly Uri TestConfluenceUri = new Uri("https://confluence");
+		private static readonly Uri TestConfluenceUri = new Uri("https://greenshot.atlassian.net/wiki");
+
 
 		private readonly IConfluenceClient _confluenceClient;
 
@@ -184,7 +191,7 @@ namespace Dapplo.Confluence.Tests
 		{
 			ConfluenceClientConfig.ExpandSearch = new[] {"version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated"};
 
-			var searchResult = await _confluenceClient.Content.SearchAsync("text ~ \"Virtuelle Telefonnummer\"", limit:1);
+			var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit:1);
 			Assert.NotNull(searchResult);
 			Assert.True(searchResult.Results.Count > 0);
 

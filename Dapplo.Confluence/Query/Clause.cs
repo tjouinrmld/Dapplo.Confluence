@@ -1,189 +1,123 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿#region Dapplo 2016 - GNU Lesser General Public License
+
+// Dapplo - building blocks for .NET applications
+// Copyright (C) 2017 Dapplo
+// 
+// For more information see: http://dapplo.net/
+// Dapplo repositories are hosted on GitHub: https://github.com/dapplo
+// 
+// This file is part of Dapplo.Confluence
+// 
+// Dapplo.Confluence is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// Dapplo.Confluence is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have a copy of the GNU Lesser General Public License
+// along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
+
+#endregion
+
+#region Usings
+
+using System;
+using System.Text;
+using Dapplo.HttpExtensions.Extensions;
+
+#endregion
 
 namespace Dapplo.Confluence.Query
 {
-	public class Clause
+	/// <summary>
+	///     A clause which cannot be modified anymore, only ToString() makes sense
+	/// </summary>
+	public interface IFinalClause
+	{
+	}
+
+	/// <summary>
+	///     This stores the information for a CQL where clause
+	/// </summary>
+	public class Clause : IFinalClause
 	{
 		/// <summary>
-		/// The field to compare
+		///     The field to compare
 		/// </summary>
 		public Fields Field { get; set; }
 
 		/// <summary>
-		/// The operator
+		///     The operator
 		/// </summary>
 		public Operators Operator { get; set; }
 
 		/// <summary>
-		/// Value to compare with the operator
+		///     Value to compare with the operator
 		/// </summary>
 		public string Value { get; set; }
 
 		/// <summary>
-		/// Use the currentUser function as the value to compare 
+		/// Change the operator to the negative version ( equals becomes not equals becomes equals)
 		/// </summary>
-		/// <returns>this</returns>
-		public Clause CurrentUser()
+		public void Negate()
 		{
-			ValidateField(new[] { Fields.Creator,  Fields.Contributor,  Fields.Mention,  Fields.Watcher,  Fields.Favourite});
-			Value = "currentUser()";
-			return this;
-		}
-
-		/// <summary>
-		/// Validate if the field is allowed for a certain operation/function
-		/// </summary>
-		/// <param name="fields">IEnumerable with the allowed fields</param>
-		private void ValidateField(IEnumerable<Fields> fields)
-		{
-			if (!fields.Contains(Field))
+			switch (Operator)
 			{
-				throw new InvalidOperationException("Can't add function for the field {Field}");
+				case Operators.Contains:
+					Operator = Operators.DoesNotContain;
+					break;
+				case Operators.DoesNotContain:
+					Operator = Operators.Contains;
+					break;
+				case Operators.EqualTo:
+					Operator = Operators.NotEqualTo;
+					break;
+				case Operators.NotEqualTo:
+					Operator = Operators.EqualTo;
+					break;
+				case Operators.In:
+					Operator = Operators.NotIn;
+					break;
+				case Operators.NotIn:
+					Operator = Operators.NotIn;
+					break;
+				case Operators.GreaterThan:
+					Operator = Operators.LessThan;
+					break;
+				case Operators.GreaterThanEqualTo:
+					Operator = Operators.LessThanEqualTo;
+					break;
+				case Operators.LessThan:
+					Operator = Operators.GreaterThan;
+					break;
+				case Operators.LessThanEqualTo:
+					Operator = Operators.GreaterThanEqualTo;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
 		}
 
-		/// <summary>
-		/// Use the endOfDay function as the value to compare 
-		/// </summary>
-		/// <param name="increment">inc is an optional increment of (+/-)nn(y|M|w|d|h|m)
-		/// If the plus/minus(+/-) sign is omitted, plus is assumed.
-		/// nn: number; y: year, M: month; w: week; d: day; h: hour; m: minute.</param>
-		/// <returns>this</returns>
-		public Clause EndOfDay(string increment = "")
+		public override string ToString()
 		{
-			ValidateField(new []{ Fields.Created, Fields.LastModified});
-			Value = $"endOfDay({increment})";
-			return this;
+			var clauseBuilder = new StringBuilder();
+			clauseBuilder.Append(Field.EnumValueOf()).Append(' ');
+			clauseBuilder.Append(Operator.EnumValueOf()).Append(' ');
+			clauseBuilder.Append(Value);
+			return clauseBuilder.ToString();
 		}
 
 		/// <summary>
-		/// Use the endOfMonth function as the value to compare 
+		///     Add implicit casting to string
 		/// </summary>
-		/// <param name="increment">inc is an optional increment of (+/-)nn(y|M|w|d|h|m)
-		/// If the plus/minus(+/-) sign is omitted, plus is assumed.
-		/// nn: number; y: year, M: month; w: week; d: day; h: hour; m: minute.</param>
-		/// <returns>this</returns>
-		public Clause EndOfMonth(string increment = "")
+		/// <param name="clause">Clause</param>
+		public static implicit operator string(Clause clause)
 		{
-			ValidateField(new[] { Fields.Created, Fields.LastModified });
-			Value = $"endOfMonth({increment})";
-			return this;
-		}
-
-		/// <summary>
-		/// Use the endOfWeek function as the value to compare 
-		/// </summary>
-		/// <param name="increment">inc is an optional increment of (+/-)nn(y|M|w|d|h|m)
-		/// If the plus/minus(+/-) sign is omitted, plus is assumed.
-		/// nn: number; y: year, M: month; w: week; d: day; h: hour; m: minute.</param>
-		/// <returns>this</returns>
-		public Clause EndOfWeek(string increment = "")
-		{
-			ValidateField(new[] { Fields.Created, Fields.LastModified });
-			Value = $"endOfWeek({increment})";
-			return this;
-		}
-
-		/// <summary>
-		/// Use the endOfYear function as the value to compare 
-		/// </summary>
-		/// <param name="increment">inc is an optional increment of (+/-)nn(y|M|w|d|h|m)
-		/// If the plus/minus(+/-) sign is omitted, plus is assumed.
-		/// nn: number; y: year, M: month; w: week; d: day; h: hour; m: minute.</param>
-		/// <returns>this</returns>
-		public Clause EndOfYear(string increment = "")
-		{
-			ValidateField(new[] { Fields.Created, Fields.LastModified });
-			Value = $"endOfYear({increment})";
-			return this;
-		}
-
-		/// <summary>
-		/// Use the startOfDay function as the value to compare 
-		/// </summary>
-		/// <param name="increment">inc is an optional increment of (+/-)nn(y|M|w|d|h|m)
-		/// If the plus/minus(+/-) sign is omitted, plus is assumed.
-		/// nn: number; y: year, M: month; w: week; d: day; h: hour; m: minute.</param>
-		/// <returns>this</returns>
-		public Clause StartOfDay(string increment = "")
-		{
-			ValidateField(new[] { Fields.Created, Fields.LastModified });
-			Value = $"startOfDay({increment})";
-			return this;
-		}
-
-		/// <summary>
-		/// Use the startOfMonth function as the value to compare 
-		/// </summary>
-		/// <param name="increment">inc is an optional increment of (+/-)nn(y|M|w|d|h|m)
-		/// If the plus/minus(+/-) sign is omitted, plus is assumed.
-		/// nn: number; y: year, M: month; w: week; d: day; h: hour; m: minute.</param>
-		/// <returns>this</returns>
-		public Clause StartOfMonth(string increment = "")
-		{
-			ValidateField(new[] { Fields.Created, Fields.LastModified });
-			Value = $"startOfMonth({increment})";
-			return this;
-		}
-
-		/// <summary>
-		/// Use the startOfWeek function as the value to compare 
-		/// </summary>
-		/// <param name="increment">inc is an optional increment of (+/-)nn(y|M|w|d|h|m)
-		/// If the plus/minus(+/-) sign is omitted, plus is assumed.
-		/// nn: number; y: year, M: month; w: week; d: day; h: hour; m: minute.</param>
-		/// <returns>this</returns>
-		public Clause StartOfWeek(string increment = "")
-		{
-			ValidateField(new[] { Fields.Created, Fields.LastModified });
-			Value = $"startOfWeek({increment})";
-			return this;
-		}
-
-		/// <summary>
-		/// Use the startOfYear function as the value to compare 
-		/// </summary>
-		/// <param name="increment">inc is an optional increment of (+/-)nn(y|M|w|d|h|m)
-		/// If the plus/minus(+/-) sign is omitted, plus is assumed.
-		/// nn: number; y: year, M: month; w: week; d: day; h: hour; m: minute.</param>
-		/// <returns>this</returns>
-		public Clause StartOfYear(string increment = "")
-		{
-			ValidateField(new[] { Fields.Created, Fields.LastModified });
-			Value = $"startOfYear({increment})";
-			return this;
-		}
-
-		/// <summary>
-		/// Use the favouriteSpaces function as the value to compare 
-		/// </summary>
-		/// <returns>this</returns>
-		public Clause FavouriteSpaces()
-		{
-			Value = "favouriteSpaces()";
-			return this;
-		}
-
-		/// <summary>
-		/// Use the recentlyViewedContent function as the value to compare 
-		/// </summary>
-		/// <returns>this</returns>
-		public Clause RecentlyViewedContent()
-		{
-			Value = "recentlyViewedContent()";
-			return this;
-		}
-
-		/// <summary>
-		/// Use the recentlyViewedSpaces function as the value to compare 
-		/// </summary>
-		/// <returns>this</returns>
-		public Clause RecentlyViewedSpaces()
-		{
-			Value = "recentlyViewedSpaces()";
-			return this;
+			return clause.ToString();
 		}
 	}
 }

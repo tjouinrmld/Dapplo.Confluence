@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
+using Dapplo.Confluence.Query;
 using Dapplo.HttpExtensions;
 
 #endregion
@@ -144,6 +145,12 @@ namespace Dapplo.Confluence.Internals
 				throw new Exception(response.ErrorResponse.Message);
 			}
 			return response.Response.Result.Results;
+		}
+
+		/// <inheritdoc />
+		public async Task<Result<Content>> SearchAsync(IFinalClause clause, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return await SearchAsync(clause.ToString(), cqlContext, limit, cancellationToken);
 		}
 
 		/// <inheritdoc />

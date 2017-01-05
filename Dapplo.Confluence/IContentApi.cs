@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
+using Dapplo.Confluence.Query;
 
 #endregion
 
@@ -99,6 +100,21 @@ namespace Dapplo.Confluence
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Result with content items</returns>
 		Task<Result<Content>> SearchAsync(string cql, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		///     Possible since 5.7
+		///     Search for issues, with a CQL (e.g. from a filter) see
+		///     <a href="https://docs.atlassian.com/confluence/REST/latest/#d2e4539">here</a>
+		/// </summary>
+		/// <param name="cqlClause">Confluence Query Language clause, created via Where</param>
+		/// <param name="cqlContext">
+		///     the execution context for CQL functions, provides current space key and content id. If this is
+		///     not provided some CQL functions will not be available.
+		/// </param>
+		/// <param name="limit">Maximum number of results returned, default is 20</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Result with content items</returns>
+		Task<Result<Content>> SearchAsync(IFinalClause cqlClause, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		///     Get content by title

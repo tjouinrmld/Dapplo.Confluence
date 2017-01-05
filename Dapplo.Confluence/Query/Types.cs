@@ -31,25 +31,11 @@ using System.Runtime.Serialization;
 
 namespace Dapplo.Confluence.Query
 {
-	public enum Fields
+	public enum Types
 	{
-		[EnumMember(Value = "ancestor")] Ancestor,
-		[EnumMember(Value = "container")] Container,
-		[EnumMember(Value = "content")] Content,
-		[EnumMember(Value = "created")] Created,
-		[EnumMember(Value = "creator")] Creator,
-		[EnumMember(Value = "contributor")] Contributor,
-		[EnumMember(Value = "favourite")] Favourite,
-		[EnumMember(Value = "id")] Id,
-		[EnumMember(Value = "label")] Label,
-		[EnumMember(Value = "lastModified")] LastModified,
-		[EnumMember(Value = "macro")] Macro,
-		[EnumMember(Value = "mention")] Mention,
-		[EnumMember(Value = "parent")] Parent,
-		[EnumMember(Value = "space")] Space,
-		[EnumMember(Value = "text")] Text,
-		[EnumMember(Value = "title")] Title,
-		[EnumMember(Value = "type")] Type,
-		[EnumMember(Value = "watcher")] Watcher
+		[EnumMember(Value = "page")] Page,
+		[EnumMember(Value = "blogpost")] BlogPost,
+		[EnumMember(Value = "comment")] Comment,
+		[EnumMember(Value = "attachment")] Attachment
 	}
 }

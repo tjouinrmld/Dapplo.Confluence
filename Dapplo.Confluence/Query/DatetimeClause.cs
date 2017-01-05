@@ -37,12 +37,86 @@ namespace Dapplo.Confluence.Query
 	/// </summary>
 	public interface IDatetimeClause
 	{
+		IDatetimeClauseWithoutValue On { get; }
+		IDatetimeClauseWithoutValue Before { get; }
+		IDatetimeClauseWithoutValue BeforeOrOn { get; }
+		IDatetimeClauseWithoutValue After { get; }
+		IDatetimeClauseWithoutValue AfterOrOn { get; }
+	}
+
+	/// <summary>
+	/// An interface for a date time calculations clause
+	/// </summary>
+	public interface IDatetimeClauseWithoutValue
+	{
+		/// <summary>
+		///     Specify a DateTime to compare against
+		/// </summary>
+		/// <param name="dateTime">DateTime</param>
+		/// <returns>this</returns>
+		IFinalClause DateTime(DateTime dateTime);
+
+		/// <summary>
+		///     Use the endOfDay function as the value to compare
+		/// </summary>
+		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
+		/// <returns>this</returns>
+		IFinalClause EndOfDay(TimeSpan? timeSpan = null);
+
+		/// <summary>
+		///     Use the endOfMonth function as the value to compare
+		/// </summary>
+		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
+		/// <returns>this</returns>
+		IFinalClause EndOfMonth(TimeSpan? timeSpan = null);
+
+		/// <summary>
+		///     Use the endOfWeek function as the value to compare
+		/// </summary>
+		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
+		/// <returns>this</returns>
+		IFinalClause EndOfWeek(TimeSpan? timeSpan = null);
+
+		/// <summary>
+		///     Use the endOfYear function as the value to compare
+		/// </summary>
+		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
+		/// <returns>this</returns>
+		IFinalClause EndOfYear(TimeSpan? timeSpan = null);
+
+		/// <summary>
+		///     Use the startOfDay function as the value to compare
+		/// </summary>
+		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
+		/// <returns>this</returns>
+		IFinalClause StartOfDay(TimeSpan? timeSpan = null);
+
+		/// <summary>
+		///     Use the startOfMonth function as the value to compare
+		/// </summary>
+		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
+		/// <returns>this</returns>
+		IFinalClause StartOfMonth(TimeSpan? timeSpan = null);
+
+		/// <summary>
+		///     Use the startOfWeek function as the value to compare
+		/// </summary>
+		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
+		/// <returns>this</returns>
+		IFinalClause StartOfWeek(TimeSpan? timeSpan = null);
+
+		/// <summary>
+		///     Use the startOfYear function as the value to compare
+		/// </summary>
+		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
+		/// <returns>this</returns>
+		IFinalClause StartOfYear(TimeSpan? timeSpan = null);
 	}
 
 	/// <summary>
 	/// A clause for date time calculations
 	/// </summary>
-	public class DatetimeClause : IDatetimeClause
+	public class DatetimeClause : IDatetimeClause, IDatetimeClauseWithoutValue
 	{
 		private readonly Clause _clause;
 
@@ -69,102 +143,144 @@ namespace Dapplo.Confluence.Query
 		/// </summary>
 		/// <param name="timeSpan">TimeSpan to convert</param>
 		/// <returns>string</returns>
-		private string TimeSpanToIncrement(TimeSpan? timeSpan)
+		private static string TimeSpanToIncrement(TimeSpan? timeSpan = null)
 		{
-			if (timeSpan.HasValue)
+			if (!timeSpan.HasValue)
 			{
-				// TODO: negative values and fractures
-				return $"{timeSpan.Value.TotalMinutes}m";
+				return "";
 			}
-			return "";
+			TimeSpan increment = timeSpan.Value;
+			var days = increment.TotalDays;
+			if ((days > double.Epsilon || days < double.Epsilon) && days % 1 < double.Epsilon)
+			{
+				return $"\"{days}d\"";
+			}
+			var hours = increment.TotalHours;
+			if ((hours > double.Epsilon || hours < double.Epsilon) && hours % 1 < double.Epsilon)
+			{
+				return $"\"{hours}h\"";
+			}
+			return $"\"{(int)timeSpan.Value.TotalMinutes}m\"";
 		}
 
-		/// <summary>
-		///     Use the endOfDay function as the value to compare
-		/// </summary>
-		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
-		/// <returns>this</returns>
-		public IFinalClause EndOfDay(TimeSpan? timeSpan)
+		/// <inheritDoc />
+		public IFinalClause DateTime(DateTime dateTime)
+		{
+			if (dateTime.Minute == 0 && dateTime.Hour == 0)
+			{
+				_clause.Value = $"\"{dateTime:yyyy-MM-dd}\"";
+			}
+			else
+			{
+				_clause.Value = $"\"{dateTime:yyyy-MM-dd HH-mm}\"";
+			}
+			return _clause;
+		}
+
+		/// <inheritDoc />
+		public IFinalClause EndOfDay(TimeSpan? timeSpan = null)
 		{
 			_clause.Value = $"endOfDay({TimeSpanToIncrement(timeSpan)})";
 			return _clause;
 		}
 
-		/// <summary>
-		///     Use the endOfMonth function as the value to compare
-		/// </summary>
-		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
-		/// <returns>this</returns>
-		public IFinalClause EndOfMonth(TimeSpan? timeSpan)
+		/// <inheritDoc />
+		public IFinalClause EndOfMonth(TimeSpan? timeSpan = null)
 		{
 			_clause.Value = $"endOfMonth({TimeSpanToIncrement(timeSpan)})";
 			return _clause;
 		}
 
-		/// <summary>
-		///     Use the endOfWeek function as the value to compare
-		/// </summary>
-		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
-		/// <returns>this</returns>
-		public IFinalClause EndOfWeek(TimeSpan? timeSpan)
+		/// <inheritDoc />
+		public IFinalClause EndOfWeek(TimeSpan? timeSpan = null)
 		{
 			_clause.Value = $"endOfWeek({TimeSpanToIncrement(timeSpan)})";
 			return _clause;
 		}
 
-		/// <summary>
-		///     Use the endOfYear function as the value to compare
-		/// </summary>
-		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
-		/// <returns>this</returns>
-		public IFinalClause EndOfYear(TimeSpan? timeSpan)
+		/// <inheritDoc />
+		public IFinalClause EndOfYear(TimeSpan? timeSpan = null)
 		{
 			_clause.Value = $"endOfYear({TimeSpanToIncrement(timeSpan)})";
 			return _clause;
 		}
 
-		/// <summary>
-		///     Use the startOfDay function as the value to compare
-		/// </summary>
-		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
-		/// <returns>this</returns>
-		public IFinalClause StartOfDay(TimeSpan? timeSpan)
+		/// <inheritDoc />
+		public IFinalClause StartOfDay(TimeSpan? timeSpan = null)
 		{
 			_clause.Value = $"startOfDay({TimeSpanToIncrement(timeSpan)})";
 			return _clause;
 		}
 
-		/// <summary>
-		///     Use the startOfMonth function as the value to compare
-		/// </summary>
-		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
-		/// <returns>this</returns>
-		public IFinalClause StartOfMonth(TimeSpan? timeSpan)
+		/// <inheritDoc />
+		public IFinalClause StartOfMonth(TimeSpan? timeSpan = null)
 		{
 			_clause.Value = $"startOfMonth({TimeSpanToIncrement(timeSpan)})";
 			return _clause;
 		}
 
-		/// <summary>
-		///     Use the startOfWeek function as the value to compare
-		/// </summary>
-		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
-		/// <returns>this</returns>
-		public IFinalClause StartOfWeek(TimeSpan? timeSpan)
+		/// <inheritDoc />
+		public IFinalClause StartOfWeek(TimeSpan? timeSpan = null)
 		{
 			_clause.Value = $"startOfWeek({TimeSpanToIncrement(timeSpan)})";
 			return _clause;
 		}
 
-		/// <summary>
-		///     Use the startOfYear function as the value to compare
-		/// </summary>
-		/// <param name="timeSpan">optional TimeSpan to offset the comparison</param>
-		/// <returns>this</returns>
-		public IFinalClause StartOfYear(TimeSpan? timeSpan)
+		/// <inheritDoc />
+		public IFinalClause StartOfYear(TimeSpan? timeSpan = null)
 		{
 			_clause.Value = $"startOfYear({TimeSpanToIncrement(timeSpan)})";
 			return _clause;
+		}
+
+		/// <inheritDoc />
+		public IDatetimeClauseWithoutValue On
+		{
+			get
+			{
+				_clause.Operator = Operators.EqualTo;
+				return this;
+			}
+		}
+
+		/// <inheritDoc />
+		public IDatetimeClauseWithoutValue Before
+		{
+			get
+			{
+				_clause.Operator = Operators.LessThan;
+				return this;
+			}
+		}
+
+		/// <inheritDoc />
+		public IDatetimeClauseWithoutValue BeforeOrOn
+		{
+			get
+			{
+				_clause.Operator = Operators.LessThanEqualTo;
+				return this;
+			}
+		}
+
+		/// <inheritDoc />
+		public IDatetimeClauseWithoutValue After
+		{
+			get
+			{
+				_clause.Operator = Operators.GreaterThan;
+				return this;
+			}
+		}
+
+		/// <inheritDoc />
+		public IDatetimeClauseWithoutValue AfterOrOn
+		{
+			get
+			{
+				_clause.Operator = Operators.GreaterThanEqualTo;
+				return this;
+			}
 		}
 	}
 }

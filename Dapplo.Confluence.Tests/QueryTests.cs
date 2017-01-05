@@ -25,6 +25,7 @@
 
 #region Usings
 
+using System;
 using Dapplo.Confluence.Query;
 using Dapplo.Log;
 using Dapplo.Log.XUnit;
@@ -124,6 +125,33 @@ namespace Dapplo.Confluence.Tests
 		{
 			var clause = Where.Creator.Not.Is("jsmith");
 			Assert.Equal("creator != \"jsmith\"", clause.ToString());
+		}
+
+		[Fact]
+		public void TestClause_Created_StartOfYear()
+		{
+			var clause = Where.Created.Before.StartOfYear();
+			Assert.Equal("created < startOfYear()", clause.ToString());
+		}
+
+		[Fact]
+		public void TestClause_Created_StartOfDay_WithNegativeIncrement()
+		{
+			// Find content created in the last 7 days
+			// created > startOfDay("-7d")
+
+			var clause = Where.Created.After.StartOfDay(TimeSpan.FromDays(-7));
+			Assert.Equal("created > startOfDay(\"-7d\")", clause.ToString());
+		}
+
+		[Fact]
+		public void TestClause_Created_On()
+		{
+			// Find content created today
+			// created = yyyy-mm-dd
+
+			var clause = Where.Created.On.DateTime(DateTime.Today);
+			Assert.Equal($"created = \"{DateTime.Today:yyyy-MM-dd}\"", clause.ToString());
 		}
 	}
 }

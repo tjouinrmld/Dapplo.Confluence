@@ -23,6 +23,8 @@
 
 #endregion
 
+using System.Linq;
+
 namespace Dapplo.Confluence.Query
 {
 	/// <summary>
@@ -75,44 +77,14 @@ namespace Dapplo.Confluence.Query
 
 		#region BooleanLogic
 
-		public static string And(IFinalClause clause1, string clause2)
+		public static IFinalClause And(params IFinalClause[] clauses)
 		{
-			return $"({clause1} and {clause2})";
+			return new Clause("(" + string.Join(" and ", clauses.ToList()) + ")");
 		}
 
-		public static string Or(IFinalClause clause1, string clause2)
+		public static IFinalClause Or(params IFinalClause[] clauses)
 		{
-			return $"({clause1} or {clause2})";
-		}
-
-		public static string And(IFinalClause clause1, IFinalClause clause2)
-		{
-			return $"({clause1} and {clause2})";
-		}
-
-		public static string Or(IFinalClause clause1, IFinalClause clause2)
-		{
-			return $"({clause1} or {clause2})";
-		}
-
-		public static string And(string clause1, IFinalClause clause2)
-		{
-			return $"({clause1} and {clause2})";
-		}
-
-		public static string Or(string clause1, IFinalClause clause2)
-		{
-			return $"({clause1} or {clause2})";
-		}
-
-		public static string And(string clause1, string clause2)
-		{
-			return $"({clause1} and {clause2})";
-		}
-
-		public static string Or(string clause1, string clause2)
-		{
-			return $"({clause1} or {clause2})";
+			return new Clause("(" + string.Join(" or ", clauses.ToList()) + ")");
 		}
 
 		#endregion

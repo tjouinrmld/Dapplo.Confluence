@@ -52,7 +52,7 @@ namespace Dapplo.Confluence.Tests
 		{
 			var clause1 = Where.Creator.IsCurrentUser;
 			var clause2 = Where.Mention.Not.IsCurrentUser;
-			Assert.Equal("(creator = currentUser() and mention != currentUser())", Where.And(clause1, clause2));
+			Assert.Equal("(creator = currentUser() and mention != currentUser())", Where.And(clause1, clause2).ToString());
 		}
 
 		[Fact]
@@ -60,7 +60,7 @@ namespace Dapplo.Confluence.Tests
 		{
 			var clause1 = Where.Creator.IsCurrentUser;
 			var clause2 = Where.Mention.Not.IsCurrentUser;
-			Assert.Equal("(creator = currentUser() or mention != currentUser())", Where.Or(clause1, clause2));
+			Assert.Equal("(creator = currentUser() or mention != currentUser())", Where.Or(clause1, clause2).ToString());
 		}
 
 		[Fact]
@@ -201,6 +201,13 @@ namespace Dapplo.Confluence.Tests
 		{
 			var clause = Where.Text.Contains("hello");
 			Assert.Equal("text ~ \"hello\"", clause.ToString());
+		}
+
+		[Fact]
+		public void TestClause_OrderBy()
+		{
+			var clause = Where.Creator.Is("jsmith").OrderBy(Fields.Space).OrderByAscending(Fields.Title);
+			Assert.Equal("creator = \"jsmith\" order by space, title asc", clause.ToString());
 		}
 	}
 }

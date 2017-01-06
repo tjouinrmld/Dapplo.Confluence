@@ -166,7 +166,7 @@ namespace Dapplo.Confluence
 		public ISpaceApi Space { get; }
 
 		/// <inheritdoc />
-		public Uri WebUiUri(Links links)
+		public Uri CreateWebUiUri(Links links)
 		{
 			if (links == null)
 			{
@@ -180,7 +180,7 @@ namespace Dapplo.Confluence
 		}
 
 		/// <inheritdoc />
-		public Uri TinyUiUri(Links links)
+		public Uri CreateTinyUiUri(Links links)
 		{
 			if (links == null)
 			{
@@ -194,7 +194,7 @@ namespace Dapplo.Confluence
 		}
 
 		/// <inheritdoc />
-		public Uri DownloadUri(Links links)
+		public Uri CreateDownloadUri(Links links)
 		{
 			if (links == null)
 			{

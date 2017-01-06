@@ -199,7 +199,7 @@ namespace Dapplo.Confluence.Tests
 
 			var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit:1);
 			Assert.Equal("page", searchResult.First().Type);
-			var uri = _confluenceClient.WebUiUri(searchResult.FirstOrDefault()?.Links);
+			var uri = _confluenceClient.CreateWebUiUri(searchResult.FirstOrDefault()?.Links);
 			Assert.NotNull(uri);
 		}
 	}

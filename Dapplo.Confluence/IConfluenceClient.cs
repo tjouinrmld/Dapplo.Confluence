@@ -50,21 +50,21 @@ namespace Dapplo.Confluence
 		/// </summary>
 		/// <param name="links">Links</param>
 		/// <returns>Uri</returns>
-		Uri WebUiUri(Links links);
+		Uri CreateWebUiUri(Links links);
 
 		/// <summary>
 		/// Retrieve the TinyUi as Uri from the supplied links object
 		/// </summary>
 		/// <param name="links">Links</param>
 		/// <returns>Uri</returns>
-		Uri TinyUiUri(Links links);
+		Uri CreateTinyUiUri(Links links);
 
 		/// <summary>
 		/// Retrieve the Download as Uri from the supplied links object
 		/// </summary>
 		/// <param name="links">Links</param>
 		/// <returns>Uri</returns>
-		Uri DownloadUri(Links links);
+		Uri CreateDownloadUri(Links links);
 
 		/// <summary>
 		/// The attachment domain

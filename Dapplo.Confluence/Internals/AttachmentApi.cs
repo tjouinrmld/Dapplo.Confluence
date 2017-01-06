@@ -65,7 +65,7 @@ namespace Dapplo.Confluence.Internals
 		{
 			_confluenceClientPlugins.PromoteContext();
 
-			var attachmentUri = _confluenceClient.DownloadUri(attachment.Links);
+			var attachmentUri = _confluenceClient.CreateDownloadUri(attachment.Links);
 			var response = await attachmentUri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{

@@ -54,9 +54,9 @@ namespace Dapplo.Confluence.Query
 	}
 
 	/// <summary>
-	/// A clause for simple values like container, macro and label
+	/// A clause for simple fields like container, macro and label
 	/// </summary>
-	public class SimpleValueClause : ISimpleValueClause
+	internal class SimpleValueClause : ISimpleValueClause
 	{
 		private readonly Clause _clause;
 

@@ -68,9 +68,9 @@ namespace Dapplo.Confluence.Query
 	}
 
 	/// <summary>
-	/// A clause for space
+	/// A clause for the space field
 	/// </summary>
-	public class SpaceClause : ISpaceClause
+	internal class SpaceClause : ISpaceClause
 	{
 		private readonly Clause _clause;
 

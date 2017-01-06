@@ -27,6 +27,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Query;
 using Dapplo.Log;
@@ -192,13 +193,7 @@ namespace Dapplo.Confluence.Tests
 			ConfluenceClientConfig.ExpandSearch = new[] {"version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated"};
 
 			var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit:1);
-			Assert.NotNull(searchResult);
-			Assert.True(searchResult.Results.Count > 0);
-
-			foreach (var content in searchResult.Results)
-			{
-				Assert.NotNull(content.Type);
-			}
+			Assert.Equal("page", searchResult.First().Type);
 		}
 	}
 }

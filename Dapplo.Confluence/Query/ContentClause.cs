@@ -62,7 +62,7 @@ namespace Dapplo.Confluence.Query
 	/// <summary>
 	/// A clause for content identifying values like ancestor, content, id and parent
 	/// </summary>
-	public class ContentClause : IContentClause
+	internal class ContentClause : IContentClause
 	{
 		private readonly Clause _clause;
 

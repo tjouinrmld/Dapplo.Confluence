@@ -25,6 +25,7 @@
 
 #region Usings
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -37,7 +38,7 @@ namespace Dapplo.Confluence.Entities
 	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class Result<TResult>
+	public class Result<TResult> : IEnumerable<TResult>
 	{
 		/// <summary>
 		///     The result is limited by
@@ -68,5 +69,15 @@ namespace Dapplo.Confluence.Entities
 		/// </summary>
 		[DataMember(Name = "start")]
 		public int Start { get; set; }
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		public IEnumerator<TResult> GetEnumerator()
+		{
+			return Results.GetEnumerator();
+		}
 	}
 }

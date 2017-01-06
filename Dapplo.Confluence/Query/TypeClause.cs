@@ -59,11 +59,16 @@ namespace Dapplo.Confluence.Query
 		/// </summary>
 		ITypeClause Not { get; }
 
-		IFinalClause In(params Types[] type);
+		/// <summary>
+		/// Test if the type is one of the specified types
+		/// </summary>
+		/// <param name="types">array of types</param>
+		/// <returns>IFinalClause</returns>
+		IFinalClause In(params Types[] types);
 	}
 
-	///
-	public class TypeClause : ITypeClause
+	/// <inheritDoc />
+	internal class TypeClause : ITypeClause
 	{
 		private readonly Clause _clause;
 		private bool _negate;
@@ -76,10 +81,7 @@ namespace Dapplo.Confluence.Query
 			};
 		}
 
-		/// <summary>
-		///     check if the type of the content is an attachment
-		/// </summary>
-		/// <returns>IFinalClause</returns>
+		/// <inheritDoc />
 		public IFinalClause IsAttachment
 		{
 			get
@@ -94,10 +96,7 @@ namespace Dapplo.Confluence.Query
 			}
 		}
 
-		/// <summary>
-		///     check if the type of the content is a page
-		/// </summary>
-		/// <returns>IFinalClause</returns>
+		/// <inheritDoc />
 		public IFinalClause IsPage
 		{
 			get
@@ -112,10 +111,7 @@ namespace Dapplo.Confluence.Query
 			}
 		}
 
-		/// <summary>
-		///     check if the type of the content is a blogpost
-		/// </summary>
-		/// <returns>IFinalClause</returns>
+		/// <inheritDoc />
 		public IFinalClause IsBlogPost
 		{
 			get
@@ -130,10 +126,7 @@ namespace Dapplo.Confluence.Query
 			}
 		}
 
-		/// <summary>
-		///     check if the type of the content is a comment
-		/// </summary>
-		/// <returns>IFinalClause</returns>
+		/// <inheritDoc />
 		public IFinalClause IsComment
 		{
 			get
@@ -148,6 +141,7 @@ namespace Dapplo.Confluence.Query
 			}
 		}
 
+		/// <inheritDoc />
 		public ITypeClause Not
 		{
 			get
@@ -157,11 +151,7 @@ namespace Dapplo.Confluence.Query
 			}
 		}
 
-		/// <summary>
-		///     Test if the type of the content is one of the specified types
-		/// </summary>
-		/// <param name="types">Types</param>
-		/// <returns>IFinalClause</returns>
+		/// <inheritDoc />
 		public IFinalClause In(params Types[] types)
 		{
 			_clause.Operator = Operators.In;

@@ -116,7 +116,7 @@ namespace Dapplo.Confluence.Query
 	/// <summary>
 	/// A clause for date time calculations
 	/// </summary>
-	public class DatetimeClause : IDatetimeClause, IDatetimeClauseWithoutValue
+	internal class DatetimeClause : IDatetimeClause, IDatetimeClauseWithoutValue
 	{
 		private readonly Clause _clause;
 

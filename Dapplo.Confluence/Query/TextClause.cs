@@ -51,7 +51,7 @@ namespace Dapplo.Confluence.Query
 	/// <summary>
 	/// A clause for simple values like ancestor, Id, label, space and more
 	/// </summary>
-	public class TextClause : ITextClause
+	internal class TextClause : ITextClause
 	{
 		private readonly Clause _clause;
 

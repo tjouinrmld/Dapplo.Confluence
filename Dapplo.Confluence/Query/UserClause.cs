@@ -32,6 +32,9 @@ using System.Linq;
 
 namespace Dapplo.Confluence.Query
 {
+	/// <summary>
+	/// The clause for user related fields
+	/// </summary>
 	public interface IUserClause
 	{
 		/// <summary>
@@ -62,8 +65,8 @@ namespace Dapplo.Confluence.Query
 		IFinalClause InCurrentUserAnd(params string[] users);
 	}
 
-	///
-	public class UserClause : IUserClause
+	/// <inheritDoc />
+	internal class UserClause : IUserClause
 	{
 		private readonly Clause _clause;
 		private readonly Fields[] _allowedFields = { Fields.Creator, Fields.Contributor, Fields.Mention, Fields.Watcher, Fields.Favourite };

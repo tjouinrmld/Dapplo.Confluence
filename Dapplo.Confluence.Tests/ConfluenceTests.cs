@@ -163,6 +163,11 @@ namespace Dapplo.Confluence.Tests
 			var attachments = await _confluenceClient.Content.GetAttachmentsAsync("950274");
 			Assert.NotNull(attachments);
 			Assert.NotNull(attachments.Results.Count > 0);
+			using (var attachmentMemoryStream = await _confluenceClient.Attachment.GetContentAsync<MemoryStream>(attachments.FirstOrDefault()))
+			{
+				Assert.True(attachmentMemoryStream.Length > 0);
+			}
+
 		}
 
 		/// <summary>
@@ -194,6 +199,8 @@ namespace Dapplo.Confluence.Tests
 
 			var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit:1);
 			Assert.Equal("page", searchResult.First().Type);
+			var uri = _confluenceClient.WebUiUri(searchResult.FirstOrDefault()?.Links);
+			Assert.NotNull(uri);
 		}
 	}
 }

@@ -168,31 +168,71 @@ namespace Dapplo.Confluence
 		/// <inheritdoc />
 		public Uri WebUiUri(Links links)
 		{
-			if (links != null && links.Base == null)
+			if (links == null)
+			{
+				throw new ArgumentNullException(nameof(links));
+			}
+			if (links.Base == null)
 			{
 				links.Base = ConfluenceUri;
 			}
-			return links?.Base.AppendSegments(links.WebUi);
+			return Concat(links.Base, links.WebUi);
 		}
 
 		/// <inheritdoc />
 		public Uri TinyUiUri(Links links)
 		{
-			if (links != null && links.Base == null)
+			if (links == null)
+			{
+				throw new ArgumentNullException(nameof(links));
+			}
+			if (links.Base == null)
 			{
 				links.Base = ConfluenceUri;
 			}
-			return links?.Base.AppendSegments(links.TinyUi);
+			return Concat(links.Base, links.TinyUi);
 		}
 
 		/// <inheritdoc />
 		public Uri DownloadUri(Links links)
 		{
+			if (links == null)
+			{
+				throw new ArgumentNullException(nameof(links));
+			}
 			if (links.Base == null)
 			{
 				links.Base = ConfluenceUri;
 			}
-			return links?.Base.AppendSegments(links.Download);
+			return Concat(links.Base, links.Download);
+		}
+
+		/// <summary>
+		/// Helper method to combine an Uri with a path including optional query
+		/// </summary>
+		/// <param name="baseUri">Uri for the base</param>
+		/// <param name="pathWithQuery">Path and optional query</param>
+		/// <returns>Uri</returns>
+		private Uri Concat(Uri baseUri, string pathWithQuery)
+		{
+			if (baseUri == null)
+			{
+				throw new ArgumentNullException(nameof(baseUri));
+			}
+			if (string.IsNullOrEmpty(pathWithQuery))
+			{
+				return null;
+			}
+
+			var queryStart = pathWithQuery.IndexOf('?');
+			var path = queryStart >= 0 ? pathWithQuery.Substring(0, queryStart): pathWithQuery;
+			var query = queryStart >= 0 ? pathWithQuery.Substring(queryStart + 1) : null;
+			var uriBuilder = new UriBuilder(baseUri.AppendSegments(path))
+			{
+				Query = query
+			};
+			return uriBuilder.Uri;
+
 		}
 	}
 }

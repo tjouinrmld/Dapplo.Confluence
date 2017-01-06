@@ -23,6 +23,9 @@
 
 #endregion
 
+using System;
+using Dapplo.Confluence.Entities;
+
 namespace Dapplo.Confluence
 {
 	/// <summary>
@@ -41,6 +44,27 @@ namespace Dapplo.Confluence
 		/// <param name="user">string with the confluence user</param>
 		/// <param name="password">string with the password for the confluence user</param>
 		void SetBasicAuthentication(string user, string password);
+
+		/// <summary>
+		/// Retrieve the WebUi as Uri from the supplied links object
+		/// </summary>
+		/// <param name="links">Links</param>
+		/// <returns>Uri</returns>
+		Uri WebUiUri(Links links);
+
+		/// <summary>
+		/// Retrieve the TinyUi as Uri from the supplied links object
+		/// </summary>
+		/// <param name="links">Links</param>
+		/// <returns>Uri</returns>
+		Uri TinyUiUri(Links links);
+
+		/// <summary>
+		/// Retrieve the Download as Uri from the supplied links object
+		/// </summary>
+		/// <param name="links">Links</param>
+		/// <returns>Uri</returns>
+		Uri DownloadUri(Links links);
 
 		/// <summary>
 		/// The attachment domain

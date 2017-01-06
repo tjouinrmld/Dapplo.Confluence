@@ -26,6 +26,7 @@
 #region Usings
 
 using System;
+using Dapplo.Confluence.Entities;
 using Dapplo.Confluence.Internals;
 using Dapplo.HttpExtensions;
 
@@ -73,6 +74,7 @@ namespace Dapplo.Confluence
 			Content = new ContentApi(this);
 			User = new UserApi(this);
 			Space = new SpaceApi(this);
+			Attachment = new AttachmentApi(this);
 		}
 
 		/// <summary>
@@ -162,5 +164,35 @@ namespace Dapplo.Confluence
 
 		/// <inheritdoc />
 		public ISpaceApi Space { get; }
+
+		/// <inheritdoc />
+		public Uri WebUiUri(Links links)
+		{
+			if (links != null && links.Base == null)
+			{
+				links.Base = ConfluenceUri;
+			}
+			return links?.Base.AppendSegments(links.WebUi);
+		}
+
+		/// <inheritdoc />
+		public Uri TinyUiUri(Links links)
+		{
+			if (links != null && links.Base == null)
+			{
+				links.Base = ConfluenceUri;
+			}
+			return links?.Base.AppendSegments(links.TinyUi);
+		}
+
+		/// <inheritdoc />
+		public Uri DownloadUri(Links links)
+		{
+			if (links.Base == null)
+			{
+				links.Base = ConfluenceUri;
+			}
+			return links?.Base.AppendSegments(links.Download);
+		}
 	}
 }

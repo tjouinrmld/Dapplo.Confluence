@@ -37,9 +37,11 @@ namespace Dapplo.Confluence.Internals
 	internal class AttachmentApi : IAttachmentApi
 	{
 		private readonly IConfluenceClientPlugins _confluenceClientPlugins;
+		private readonly IConfluenceClient _confluenceClient;
 
 		internal AttachmentApi(IConfluenceClient confluenceClient)
 		{
+			_confluenceClient = confluenceClient;
 			_confluenceClientPlugins = confluenceClient.Plugins;
 		}
 
@@ -63,11 +65,8 @@ namespace Dapplo.Confluence.Internals
 		{
 			_confluenceClientPlugins.PromoteContext();
 
-			var attachmentUriBuilder = new UriBuilder(_confluenceClientPlugins.ConfluenceUri)
-			{
-				Path = attachment.Links.Download
-			};
-			var response = await attachmentUriBuilder.Uri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
+			var attachmentUri = _confluenceClient.DownloadUri(attachment.Links);
+			var response = await attachmentUri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
 				throw new Exception(response.ErrorResponse);

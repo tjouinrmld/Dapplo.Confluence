@@ -35,7 +35,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ING-DiBa AG")]
+[assembly: AssemblyCompany("Dapplo")]
 [assembly: AssemblyProduct("Dapplo.Confluence")]
 [assembly: AssemblyTrademark("")]
 

@@ -46,7 +46,7 @@ namespace Dapplo.Confluence
 		/// <param name="name">Name for the space</param>
 		/// <param name="description">Description for the space</param>
 		/// <param name="isPrivate">true if the space needs to be private</param>
-		/// <param name="cancellationToken"></param>
+		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>created Space</returns>
 		Task<Space> CreateAsync(string key, string name, string description, bool isPrivate = false, CancellationToken cancellationToken = default(CancellationToken));
 
@@ -56,7 +56,7 @@ namespace Dapplo.Confluence
 		/// <param name="key">Key for the space</param>
 		/// <param name="name">Name for the space</param>
 		/// <param name="description">Description for the space</param>
-		/// <param name="cancellationToken"></param>
+		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>updated Space</returns>
 		Task<Space> UpdateAsync(string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken));
 
@@ -64,9 +64,9 @@ namespace Dapplo.Confluence
 		///     Delete a space
 		/// </summary>
 		/// <param name="key">Key for the space</param>
-		/// <param name="cancellationToken"></param>
-		/// <returns>Long task for deleting the space</returns>
-		Task<string> DeleteAsync(string key, CancellationToken cancellationToken = default(CancellationToken));
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Long running task, which takes care of deleting the space</returns>
+		Task<LongRunningTask> DeleteAsync(string key, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		///     Get Space information see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>

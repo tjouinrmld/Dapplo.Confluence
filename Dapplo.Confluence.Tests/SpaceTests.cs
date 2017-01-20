@@ -29,6 +29,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapplo.Confluence.Entities;
 using Dapplo.Confluence.Query;
 using Dapplo.Log;
 using Dapplo.Log.XUnit;
@@ -42,9 +43,9 @@ namespace Dapplo.Confluence.Tests
 	/// <summary>
 	///     Tests
 	/// </summary>
-	public class ConfluenceTests
+	public class SpaceTests
 	{
-		public ConfluenceTests(ITestOutputHelper testOutputHelper)
+		public SpaceTests(ITestOutputHelper testOutputHelper)
 		{
 			LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
 			_confluenceClient = ConfluenceClient.Create(TestConfluenceUri);
@@ -64,18 +65,48 @@ namespace Dapplo.Confluence.Tests
 		private readonly IConfluenceClient _confluenceClient;
 
 		/// <summary>
-		///     Test only works on Confluence 6.6 and later
+		///     Test GetAsync
 		/// </summary>
-		/// <returns></returns>
 		[Fact]
-		public async Task TestCurrentUserAndPicture()
+		public async Task TestGetSpace()
 		{
-			var currentUser = await _confluenceClient.User.GetCurrentUserAsync();
-			Assert.NotNull(currentUser);
-			Assert.NotNull(currentUser.ProfilePicture);
+			var space = await _confluenceClient.Space.GetAsync("TEST");
+			Assert.NotNull(space);
+			Assert.NotNull(space.Description);
+		}
 
-			var bitmapSource = await _confluenceClient.GetPictureAsync<MemoryStream>(currentUser.ProfilePicture);
-			Assert.NotNull(bitmapSource);
+		/// <summary>
+		///     Test Space.GetAllAsync
+		/// </summary>
+		[Fact]
+		public async Task TestGetSpaces()
+		{
+			var spaces = await _confluenceClient.Space.GetAllAsync();
+			Assert.NotNull(spaces);
+			Assert.NotNull(spaces.Count > 0);
+		}
+
+		/// <summary>
+		///     Test Space.CreateAsync
+		/// </summary>
+		[Fact]
+		public async Task TestCreateAsync()
+		{
+			var key = "TESTTMP";
+			var createdSpace = await _confluenceClient.Space.CreateAsync(key, "Dummy for test", "Created and deleted during test", true);
+			Assert.NotNull(createdSpace);
+			Assert.Equal(key, createdSpace.Key);
+
+			try
+			{
+				var space = await _confluenceClient.Space.GetAsync(key);
+				Assert.NotNull(space);
+				Assert.Equal(key, space.Key);
+			}
+			finally
+			{
+				await _confluenceClient.Space.DeleteAsync(key);
+			}
 		}
 	}
 }

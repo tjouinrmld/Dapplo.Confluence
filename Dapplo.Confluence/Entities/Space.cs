@@ -49,13 +49,13 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     Icon for the space
 		/// </summary>
-		[DataMember(Name = "icon")]
+		[DataMember(Name = "icon", EmitDefaultValue = false)]
 		public Picture Icon { get; set; }
 
 		/// <summary>
 		///     Id for the space
 		/// </summary>
-		[DataMember(Name = "id")]
+		[DataMember(Name = "id", EmitDefaultValue = false)]
 		public string Id { get; set; }
 
 		/// <summary>
@@ -66,31 +66,31 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     Key for the space
 		/// </summary>
-		[DataMember(Name = "key")]
+		[DataMember(Name = "key", EmitDefaultValue = false)]
 		public string Key { get; set; }
 
 		/// <summary>
 		///     Different links for this entity, depending on the entry
 		/// </summary>
-		[DataMember(Name = "_links")]
+		[DataMember(Name = "_links", EmitDefaultValue = false)]
 		public Links Links { get; set; }
 
 		/// <summary>
 		///     The name of the space
 		/// </summary>
-		[DataMember(Name = "name")]
+		[DataMember(Name = "name", EmitDefaultValue = false)]
 		public string Name { get; set; }
 
 		/// <summary>
 		///     Type for the space, e.g. Team space or Knowledge Base space etc
 		/// </summary>
-		[DataMember(Name = "type")]
+		[DataMember(Name = "type", EmitDefaultValue = false)]
 		public string Type { get; set; }
 
 		/// <summary>
 		///     Description
 		/// </summary>
-		[DataMember(Name = "description")]
+		[DataMember(Name = "description", EmitDefaultValue = false)]
 		public Description Description { get; set; }
 	}
 }

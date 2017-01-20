@@ -39,66 +39,54 @@ namespace Dapplo.Confluence.Tests
 	/// <summary>
 	///     Tests
 	/// </summary>
-	public class QueryTests
+	public class SpaceQueryTests
 	{
-		public QueryTests(ITestOutputHelper testOutputHelper)
+		public SpaceQueryTests(ITestOutputHelper testOutputHelper)
 		{
 			LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
 		}
 
+
 		[Fact]
-		public void TestClause_Type_IsPage()
+		public void TestClause_Space_Is()
 		{
-			var clause = Where.Type.IsPage;
-			Assert.Equal("type = page", clause.ToString());
+			var clause = Where.Space.Is("DEV");
+			Assert.Equal("space = \"DEV\"", clause.ToString());
 		}
 
 		[Fact]
-		public void TestClause_Type_In()
+		public void TestClause_Space_Not_Is()
 		{
-			var clause = Where.Type.In(Types.Page, Types.BlogPost);
-			Assert.Equal("type in (page, blogpost)", clause.ToString());
+			var clause = Where.Space.Not.Is("DEV");
+			Assert.Equal("space != \"DEV\"", clause.ToString());
 		}
 
 		[Fact]
-		public void TestClause_Type_Not_In()
+		public void TestClause_Space_In()
 		{
-			var clause = Where.Type.Not.In(Types.Page, Types.BlogPost);
-			Assert.Equal("type not in (page, blogpost)", clause.ToString());
+			var clause = Where.Space.In("DEV", "PRODUCTION");
+			Assert.Equal("space in (\"DEV\", \"PRODUCTION\")", clause.ToString());
 		}
 
 		[Fact]
-		public void TestClause_Created_StartOfYear()
+		public void TestClause_Space_Not_In()
 		{
-			var clause = Where.Created.Before.StartOfYear();
-			Assert.Equal("created < startOfYear()", clause.ToString());
+			var clause = Where.Space.Not.In("DEV", "PRODUCTION");
+			Assert.Equal("space not in (\"DEV\", \"PRODUCTION\")", clause.ToString());
 		}
 
 		[Fact]
-		public void TestClause_Created_StartOfDay_WithNegativeIncrement()
+		public void TestClause_Space_InFavouriteSpacesAnd()
 		{
-			// Find content created in the last 7 days
-			// created > startOfDay("-7d")
-
-			var clause = Where.Created.After.StartOfDay(TimeSpan.FromDays(-7));
-			Assert.Equal("created > startOfDay(\"-7d\")", clause.ToString());
+			var clause = Where.Space.InFavouriteSpacesAnd("DEV", "PRODUCTION");
+			Assert.Equal("space in (favouriteSpaces(), \"DEV\", \"PRODUCTION\")", clause.ToString());
 		}
 
 		[Fact]
-		public void TestClause_Created_On()
+		public void TestClause_Space_Not_InFavouriteSpacesAnd()
 		{
-			// Find content created today
-			// created = yyyy-mm-dd
-
-			var clause = Where.Created.On.DateTime(DateTime.Today);
-			Assert.Equal($"created = \"{DateTime.Today:yyyy-MM-dd}\"", clause.ToString());
-		}
-
-		[Fact]
-		public void TestClause_Text_Contains()
-		{
-			var clause = Where.Text.Contains("hello");
-			Assert.Equal("text ~ \"hello\"", clause.ToString());
+			var clause = Where.Space.Not.InFavouriteSpacesAnd("DEV", "PRODUCTION");
+			Assert.Equal("space not in (favouriteSpaces(), \"DEV\", \"PRODUCTION\")", clause.ToString());
 		}
 	}
 }

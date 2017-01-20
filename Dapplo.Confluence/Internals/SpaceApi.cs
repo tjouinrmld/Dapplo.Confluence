@@ -27,6 +27,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
@@ -70,10 +71,10 @@ namespace Dapplo.Confluence.Internals
 			{
 				spaceUri = spaceUri.AppendSegments("_private");
 			}
-			var response = await spaceUri.PostAsync<HttpResponse<Space, string>>(space, cancellationToken).ConfigureAwait(false);
+			var response = await spaceUri.PostAsync<HttpResponse<Space, Error>>(space, cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
-				throw new Exception(response.ErrorResponse);
+				throw new Exception(response.ErrorResponse.Message);
 			}
 			return response.Response;
 		}
@@ -104,11 +105,16 @@ namespace Dapplo.Confluence.Internals
 		}
 
 		/// <inheritdoc />
-		public async Task<string> DeleteAsync(string key, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<LongRunningTask> DeleteAsync(string key, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			_confluenceClientPlugins.PromoteContext();
-			var spaceUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("space");
-			return await spaceUri.DeleteAsync<string>(cancellationToken).ConfigureAwait(false);
+			var spaceUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("space", key);
+			var response = await spaceUri.DeleteAsync<HttpResponse<LongRunningTask>>(cancellationToken).ConfigureAwait(false);
+			if (response.StatusCode == HttpStatusCode.Accepted)
+			{
+				return response.Response;
+			}
+			throw new Exception(response.StatusCode.ToString());
 		}
 
 		/// <inheritdoc />

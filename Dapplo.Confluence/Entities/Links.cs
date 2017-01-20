@@ -80,5 +80,11 @@ namespace Dapplo.Confluence.Entities
 		/// </summary>
 		[DataMember(Name = "webui")]
 		public string WebUi { get; set; }
+
+		/// <summary>
+		///     Status of a task
+		/// </summary>
+		[DataMember(Name = "status")]
+		public string Status { get; set; }
 	}
 }

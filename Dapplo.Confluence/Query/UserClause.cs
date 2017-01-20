@@ -27,6 +27,7 @@
 
 using System;
 using System.Linq;
+using Dapplo.Confluence.Entities;
 
 #endregion
 
@@ -40,29 +41,54 @@ namespace Dapplo.Confluence.Query
 		/// <summary>
 		///     This allows fluent constructs like Creator.IsCurrentUser
 		/// </summary>
+		/// <returns>IFinalClause</returns>
 		IFinalClause IsCurrentUser { get; }
 
 		/// <summary>
 		///     Negates the expression
 		/// </summary>
+		/// <returns>IFinalClause</returns>
 		IUserClause Not { get; }
 
 		/// <summary>
 		///     This allows fluent constructs like Creator.Is("smith")
 		/// </summary>
+		/// <returns>IFinalClause</returns>
 		IFinalClause Is(string user);
+
+		/// <summary>
+		///     This allows fluent constructs like Creator.Is(user1)
+		/// </summary>
+		/// <returns>IFinalClause</returns>
+		IFinalClause Is(User user);
 
 		/// <summary>
 		///     This allows fluent constructs like Creator.In("smith", "squarepants")
 		/// </summary>
+		/// <param name="users">array with usernames</param>
+		/// <returns>IFinalClause</returns>
 		IFinalClause In(params string[] users);
+
+		/// <summary>
+		///     This allows fluent constructs like Creator.In("smith", "squarepants")
+		/// </summary>
+		/// <param name="users">array with User objects</param>
+		/// <returns>IFinalClause</returns>
+		IFinalClause In(params User[] users);
 
 		/// <summary>
 		///     This allows fluent constructs like Creator.InCurrentUserAnd("smith", "squarepants")
 		/// </summary>
-		/// <param name="users"></param>
-		/// <returns></returns>
+		/// <param name="users">array with usernames</param>
+		/// <returns>IFinalClause</returns>
 		IFinalClause InCurrentUserAnd(params string[] users);
+
+		/// <summary>
+		///     This allows fluent constructs like Creator.InCurrentUserAnd("smith", "squarepants")
+		/// </summary>
+		/// <param name="users">User array</param>
+		/// <returns>IFinalClause</returns>
+		IFinalClause InCurrentUserAnd(params User[] users);
 	}
 
 	/// <inheritDoc />
@@ -122,6 +148,12 @@ namespace Dapplo.Confluence.Query
 		}
 
 		/// <inheritDoc />
+		public IFinalClause Is(User user)
+		{
+			return Is(user.Username);
+		}
+
+		/// <inheritDoc />
 		public IFinalClause In(params string[] users)
 		{
 			_clause.Operator = Operators.In;
@@ -131,6 +163,13 @@ namespace Dapplo.Confluence.Query
 				_clause.Negate();
 			}
 			return _clause;
+		}
+
+
+		/// <inheritDoc />
+		public IFinalClause In(params User[] users)
+		{
+			return In(users.Select(user => user.Username).ToArray());
 		}
 
 		/// <inheritDoc />
@@ -143,6 +182,12 @@ namespace Dapplo.Confluence.Query
 				_clause.Negate();
 			}
 			return _clause;
+		}
+
+		/// <inheritDoc />
+		public IFinalClause InCurrentUserAnd(params User[] users)
+		{
+			return InCurrentUserAnd(users.Select(user => user.Username).ToArray());
 		}
 	}
 }

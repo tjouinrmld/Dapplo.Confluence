@@ -42,13 +42,13 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     Value of the plain description
 		/// </summary>
-		[DataMember(Name = "value")]
+		[DataMember(Name = "value", EmitDefaultValue = false)]
 		public string Value { get; set; }
 
 		/// <summary>
 		///     Type of representation
 		/// </summary>
-		[DataMember(Name = "representation")]
+		[DataMember(Name = "representation", EmitDefaultValue = false)]
 		public string Representation { get; set; } = "plain";
 	}
 }

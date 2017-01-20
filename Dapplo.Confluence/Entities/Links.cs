@@ -42,49 +42,49 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     The base (hostname) for the server
 		/// </summary>
-		[DataMember(Name = "base")]
+		[DataMember(Name = "base", EmitDefaultValue = false)]
 		public Uri Base { get; set; }
 
 		/// <summary>
 		///     A path to the rest API to where this belongs, content has a collection of "/rest/api/content"
 		/// </summary>
-		[DataMember(Name = "collection")]
+		[DataMember(Name = "collection", EmitDefaultValue = false)]
 		public string Collection { get; set; }
 
 		/// <summary>
 		///     TODO: What is this?
 		/// </summary>
-		[DataMember(Name = "context")]
+		[DataMember(Name = "context", EmitDefaultValue = false)]
 		public string Context { get; set; }
 
 		/// <summary>
 		///     The link, usually for attachments, to download the content
 		/// </summary>
-		[DataMember(Name = "download")]
+		[DataMember(Name = "download", EmitDefaultValue = false)]
 		public string Download { get; set; }
 
 		/// <summary>
 		///     A link to the entity itself (so one can find it again)
 		/// </summary>
-		[DataMember(Name = "self")]
+		[DataMember(Name = "self", EmitDefaultValue = false)]
 		public Uri Self { get; set; }
 
 		/// <summary>
 		///     A short link to the content, relative to the hostname (and port)
 		/// </summary>
-		[DataMember(Name = "tinyui")]
+		[DataMember(Name = "tinyui", EmitDefaultValue = false)]
 		public string TinyUi { get; set; }
 
 		/// <summary>
 		///     A normal, but well readable, link to the content
 		/// </summary>
-		[DataMember(Name = "webui")]
+		[DataMember(Name = "webui", EmitDefaultValue = false)]
 		public string WebUi { get; set; }
 
 		/// <summary>
 		///     Status of a task
 		/// </summary>
-		[DataMember(Name = "status")]
+		[DataMember(Name = "status", EmitDefaultValue = false)]
 		public string Status { get; set; }
 	}
 }

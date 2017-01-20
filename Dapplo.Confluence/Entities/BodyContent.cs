@@ -40,13 +40,13 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     Representation
 		/// </summary>
-		[DataMember(Name = "representation")]
+		[DataMember(Name = "representation", EmitDefaultValue = false)]
 		public string Representation { get; set; }
 
 		/// <summary>
 		///     Value of the view
 		/// </summary>
-		[DataMember(Name = "value")]
+		[DataMember(Name = "value", EmitDefaultValue = false)]
 		public string Value { get; set; }
 	}
 }

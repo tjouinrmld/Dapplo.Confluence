@@ -79,6 +79,14 @@ namespace Dapplo.Confluence
 		Task<Content> CreateAsync(string type, string title, string spaceKey, string body, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
+		///     Update content
+		/// </summary>
+		/// <param name="content">Content to update</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Content</returns>
+		Task<Content> UpdateAsync(Content content, CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
 		///     Get Content information see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
 		/// </summary>
 		/// <param name="contentId">content id</param>
@@ -127,27 +135,5 @@ namespace Dapplo.Confluence
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Results with content items</returns>
 		Task<Result<Content>> GetByTitleAsync(string spaceKey, string title, int start = 0, int limit = 20, CancellationToken cancellationToken = default(CancellationToken));
-
-		/// <summary>
-		///     Add an attachment to the specified content
-		/// </summary>
-		/// <typeparam name="TContent">The content to upload</typeparam>
-		/// <param name="contentId">content to add the attachment to</param>
-		/// <param name="content">content of type TContent tfor the attachment</param>
-		/// <param name="filename">Filename of the attachment</param>
-		/// <param name="comment">Comment in the attachments information</param>
-		/// <param name="contentType">Content-Type for the content, or null</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>Result with Attachment</returns>
-		Task<Result<Attachment>> AttachAsync<TContent>(string contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default(CancellationToken))
-			where TContent : class;
-
-		/// <summary>
-		///     Retrieve the attachments for the specified content
-		/// </summary>
-		/// <param name="contentId">string with the content id</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>Result with Attachment(s)</returns>
-		Task<Result<Attachment>> GetAttachmentsAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken));
 	}
 }

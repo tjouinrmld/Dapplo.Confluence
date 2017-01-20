@@ -26,11 +26,7 @@
 #region Usings
 
 using System;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Dapplo.Confluence.Entities;
-using Dapplo.Confluence.Query;
 using Dapplo.Log;
 using Dapplo.Log.XUnit;
 using Xunit;
@@ -54,7 +50,7 @@ namespace Dapplo.Confluence.Tests
 			var password = Environment.GetEnvironmentVariable("confluence_test_password");
 			if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
 			{
-				_confluenceClient.SetBasicAuthentication(username, password);
+				_confluenceClient.SetBasicAuthentication("rkrom", "ibavdoaw73");
 			}
 		}
 
@@ -93,7 +89,7 @@ namespace Dapplo.Confluence.Tests
 		public async Task TestCreateAsync()
 		{
 			var key = "TESTTMP";
-			var createdSpace = await _confluenceClient.Space.CreateAsync(key, "Dummy for test", "Created and deleted during test", true);
+			var createdSpace = await _confluenceClient.Space.CreatePrivateAsync(key, "Dummy for test", "Created and deleted during test");
 			Assert.NotNull(createdSpace);
 			Assert.Equal(key, createdSpace.Key);
 

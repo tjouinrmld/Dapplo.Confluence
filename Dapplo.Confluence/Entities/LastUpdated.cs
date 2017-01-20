@@ -43,31 +43,31 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     User who updated
 		/// </summary>
-		[DataMember(Name = "by")]
+		[DataMember(Name = "by", EmitDefaultValue = false)]
 		public User By { get; set; }
 
 		/// <summary>
 		///     When the last update was
 		/// </summary>
-		[DataMember(Name = "when")]
+		[DataMember(Name = "when", EmitDefaultValue = false)]
 		public DateTimeOffset When { get; set; }
 
 		/// <summary>
 		///     Friendly representation for When
 		/// </summary>
-		[DataMember(Name = "friendlyWhen")]
+		[DataMember(Name = "friendlyWhen", EmitDefaultValue = false)]
 		public string FriendlyWhen { get; set; }
 
 		/// <summary>
 		///     The values that are expandable
 		/// </summary>
-		[DataMember(Name = "_expandable")]
+		[DataMember(Name = "_expandable", EmitDefaultValue = false)]
 		public IDictionary<string, string> Expandables { get; set; }
 
 		/// <summary>
 		///     Different links for this entity, depending on the entry
 		/// </summary>
-		[DataMember(Name = "_links")]
+		[DataMember(Name = "_links", EmitDefaultValue = false)]
 		public Links Links { get; set; }
 	}
 }

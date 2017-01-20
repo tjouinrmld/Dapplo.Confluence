@@ -41,7 +41,7 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     Plain text
 		/// </summary>
-		[DataMember(Name = "plain")]
+		[DataMember(Name = "plain", EmitDefaultValue = false)]
 		public Plain Plain { get; set; }
 	}
 }

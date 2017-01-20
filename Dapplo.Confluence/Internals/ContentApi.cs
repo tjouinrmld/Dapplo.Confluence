@@ -131,6 +131,20 @@ namespace Dapplo.Confluence.Internals
 		}
 
 		/// <inheritdoc />
+		public async Task<Content> UpdateAsync(Content content, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var contentUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("content", content.Id);
+
+			_confluenceClientPlugins.PromoteContext();
+			var response = await contentUri.PostAsync<HttpResponse<Content, Error>>(content, cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
+		}
+
+		/// <inheritdoc />
 		public async Task<IList<Content>> GetChildrenAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var contentUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("content", contentId, "child");
@@ -206,46 +220,6 @@ namespace Dapplo.Confluence.Internals
 			if (response.HasError)
 			{
 				throw new Exception(response.ErrorResponse.Message);
-			}
-			return response.Response;
-		}
-
-		/// <inheritdoc />
-		public async Task<Result<Attachment>> AttachAsync<TContent>(string contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default(CancellationToken))
-			where TContent : class
-		{
-			var attachment = new AttachmentContainer<TContent>
-			{
-				Comment = comment,
-				FileName = filename,
-				Content = content,
-				ContentType = contentType
-			};
-			_confluenceClientPlugins.PromoteContext();
-
-			var postAttachmentUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("content", contentId, "child", "attachment");
-			var response = await postAttachmentUri.PostAsync<HttpResponse<Result<Attachment>, string>>(attachment, cancellationToken).ConfigureAwait(false);
-			if (response.HasError)
-			{
-				throw new Exception(response.ErrorResponse);
-			}
-			return response.Response;
-		}
-
-		/// <inheritdoc />
-		public async Task<Result<Attachment>> GetAttachmentsAsync(string contentId,
-			CancellationToken cancellationToken = default(CancellationToken))
-		{
-			_confluenceClientPlugins.PromoteContext();
-			var attachmentsUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("content", contentId, "child", "attachment");
-			if (ConfluenceClientConfig.ExpandGetAttachments != null && ConfluenceClientConfig.ExpandGetAttachments.Length != 0)
-			{
-				attachmentsUri = attachmentsUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetAttachments));
-			}
-			var response = await attachmentsUri.GetAsAsync<HttpResponse<Result<Attachment>, string>>(cancellationToken).ConfigureAwait(false);
-			if (response.HasError)
-			{
-				throw new Exception(response.ErrorResponse);
 			}
 			return response.Response;
 		}

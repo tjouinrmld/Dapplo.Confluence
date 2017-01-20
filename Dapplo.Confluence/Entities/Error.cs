@@ -40,13 +40,13 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     Error message from Confluence
 		/// </summary>
-		[DataMember(Name = "message")]
+		[DataMember(Name = "message", EmitDefaultValue = false)]
 		public string Message { get; set; }
 
 		/// <summary>
 		///     Confluence status code
 		/// </summary>
-		[DataMember(Name = "statusCode")]
+		[DataMember(Name = "statusCode", EmitDefaultValue = false)]
 		public int StatusCode { get; set; }
 	}
 }

@@ -41,25 +41,25 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     Height of the picture
 		/// </summary>
-		[DataMember(Name = "height")]
+		[DataMember(Name = "height", EmitDefaultValue = false)]
 		public int Height { get; set; }
 
 		/// <summary>
 		///     Is this picture the default
 		/// </summary>
-		[DataMember(Name = "isDefault")]
+		[DataMember(Name = "isDefault", EmitDefaultValue = false)]
 		public bool IsDefault { get; set; }
 
 		/// <summary>
 		///     The path for the picture relative to the hostname (and port) of the server, this is outside the Rest API path
 		/// </summary>
-		[DataMember(Name = "path")]
+		[DataMember(Name = "path", EmitDefaultValue = false)]
 		public string Path { get; set; }
 
 		/// <summary>
 		///     Width of the picture
 		/// </summary>
-		[DataMember(Name = "width")]
+		[DataMember(Name = "width", EmitDefaultValue = false)]
 		public int Width { get; set; }
 	}
 }

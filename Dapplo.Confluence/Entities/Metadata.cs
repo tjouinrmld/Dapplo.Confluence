@@ -41,13 +41,13 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     A comment for the attachment
 		/// </summary>
-		[DataMember(Name = "comment")]
+		[DataMember(Name = "comment", EmitDefaultValue = false)]
 		public string Comment { get; set; }
 
 		/// <summary>
 		///     Type of media (content-type)
 		/// </summary>
-		[DataMember(Name = "mediaType")]
+		[DataMember(Name = "mediaType", EmitDefaultValue = false)]
 		public string MediaType { get; set; }
 	}
 }

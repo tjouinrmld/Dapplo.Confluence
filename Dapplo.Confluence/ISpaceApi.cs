@@ -45,20 +45,27 @@ namespace Dapplo.Confluence
 		/// <param name="key">Key for the space</param>
 		/// <param name="name">Name for the space</param>
 		/// <param name="description">Description for the space</param>
-		/// <param name="isPrivate">true if the space needs to be private</param>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>created Space</returns>
-		Task<Space> CreateAsync(string key, string name, string description, bool isPrivate = false, CancellationToken cancellationToken = default(CancellationToken));
+		Task<Space> CreateAsync(string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		///     Update a space
+		/// </summary>
+		/// <param name="space">Space to update</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>created Space</returns>
+		Task<Space> UpdateAsync(Space space, CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		///     Create a private space
 		/// </summary>
 		/// <param name="key">Key for the space</param>
 		/// <param name="name">Name for the space</param>
 		/// <param name="description">Description for the space</param>
 		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>updated Space</returns>
-		Task<Space> UpdateAsync(string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken));
+		/// <returns>created Space</returns>
+		Task<Space> CreatePrivateAsync(string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken));
 
 		/// <summary>
 		///     Delete a space

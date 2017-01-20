@@ -41,43 +41,43 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     The container where this attachment hangs, this is not filled unless expand=container
 		/// </summary>
-		[DataMember(Name = "container")]
+		[DataMember(Name = "container", EmitDefaultValue = false)]
 		public Content Container { get; set; }
 
 		/// <summary>
 		///     The ID of the attachment
 		/// </summary>
-		[DataMember(Name = "id")]
+		[DataMember(Name = "id", EmitDefaultValue = false)]
 		public string Id { get; set; }
 
 		/// <summary>
 		///     Different links for this entity, depending on the entry
 		/// </summary>
-		[DataMember(Name = "_links")]
+		[DataMember(Name = "_links", EmitDefaultValue = false)]
 		public Links Links { get; set; }
 
 		/// <summary>
 		///     Additional meta-data for the attachment, like the comment
 		/// </summary>
-		[DataMember(Name = "metadata")]
+		[DataMember(Name = "metadata", EmitDefaultValue = false)]
 		public Metadata Metadata { get; set; }
 
 		/// <summary>
 		///     Title for the attachment
 		/// </summary>
-		[DataMember(Name = "title")]
+		[DataMember(Name = "title", EmitDefaultValue = false)]
 		public string Title { get; set; }
 
 		/// <summary>
 		///     Type of attachment
 		/// </summary>
-		[DataMember(Name = "type")]
+		[DataMember(Name = "type", EmitDefaultValue = false)]
 		public string Type { get; set; }
 
 		/// <summary>
 		///     Version information on the attachment, this is not filled unless expand=version
 		/// </summary>
-		[DataMember(Name = "version")]
+		[DataMember(Name = "version", EmitDefaultValue = false)]
 		public Version Version { get; set; }
 	}
 }

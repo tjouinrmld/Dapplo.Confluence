@@ -42,55 +42,55 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     Body of the content
 		/// </summary>
-		[DataMember(Name = "body")]
+		[DataMember(Name = "body", EmitDefaultValue = false)]
 		public Body Body { get; set; }
 
 		/// <summary>
 		///     The values that are expandable
 		/// </summary>
-		[DataMember(Name = "_expandable")]
+		[DataMember(Name = "_expandable", EmitDefaultValue = false)]
 		public IDictionary<string, string> Expandables { get; set; }
 
 		/// <summary>
 		///     Unique ID for the content
 		/// </summary>
-		[DataMember(Name = "id")]
+		[DataMember(Name = "id", EmitDefaultValue = false)]
 		public string Id { get; set; }
 
 		/// <summary>
 		///     History information for the content, this is not filled unless expand=history
 		/// </summary>
-		[DataMember(Name = "history")]
+		[DataMember(Name = "history", EmitDefaultValue = false)]
 		public History History { get; set; }
 
 		/// <summary>
 		///     Different links for this entity, depending on the entry
 		/// </summary>
-		[DataMember(Name = "_links")]
+		[DataMember(Name = "_links", EmitDefaultValue = false)]
 		public Links Links { get; set; }
 
 		/// <summary>
 		///     The space where this content is
 		/// </summary>
-		[DataMember(Name = "space")]
+		[DataMember(Name = "space", EmitDefaultValue = false)]
 		public Space Space { get; set; }
 
 		/// <summary>
 		///     The title of the content
 		/// </summary>
-		[DataMember(Name = "title")]
+		[DataMember(Name = "title", EmitDefaultValue = false)]
 		public string Title { get; set; }
 
 		/// <summary>
 		///     The type for the content, e.g. page
 		/// </summary>
-		[DataMember(Name = "type")]
+		[DataMember(Name = "type", EmitDefaultValue = false)]
 		public string Type { get; set; }
 
 		/// <summary>
 		///     Version information for the content, this is not filled unless expand=version
 		/// </summary>
-		[DataMember(Name = "version")]
+		[DataMember(Name = "version", EmitDefaultValue = false)]
 		public Version Version { get; set; }
 	}
 }

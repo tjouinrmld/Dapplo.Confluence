@@ -40,13 +40,13 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     In this the link for the status is returned
 		/// </summary>
-		[DataMember(Name = "links")]
+		[DataMember(Name = "links", EmitDefaultValue = false)]
 		public Links Links { get; set; }
 
 		/// <summary>
 		///    Id of the task
 		/// </summary>
-		[DataMember(Name = "id")]
+		[DataMember(Name = "id", EmitDefaultValue = false)]
 		public string Id { get; set; }
 	}
 }

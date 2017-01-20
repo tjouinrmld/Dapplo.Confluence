@@ -41,13 +41,13 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     View for Body
 		/// </summary>
-		[DataMember(Name = "view")]
+		[DataMember(Name = "view", EmitDefaultValue = false)]
 		public BodyContent View { get; set; }
 
 		/// <summary>
 		///     Storage for content, used when creating
 		/// </summary>
-		[DataMember(Name = "storage")]
+		[DataMember(Name = "storage", EmitDefaultValue = false)]
 		public BodyContent Storage { get; set; }
 	}
 }

@@ -43,31 +43,31 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     The result is limited by
 		/// </summary>
-		[DataMember(Name = "limit")]
+		[DataMember(Name = "limit", EmitDefaultValue = false)]
 		public int Limit { get; set; }
 
 		/// <summary>
 		///     Different links for this entity, depending on the entry
 		/// </summary>
-		[DataMember(Name = "_links")]
+		[DataMember(Name = "_links", EmitDefaultValue = false)]
 		public Links Links { get; set; }
 
 		/// <summary>
 		///     The actual requested information
 		/// </summary>
-		[DataMember(Name = "results")]
+		[DataMember(Name = "results", EmitDefaultValue = false)]
 		public IList<TResult> Results { get; set; }
 
 		/// <summary>
 		///     How many elements
 		/// </summary>
-		[DataMember(Name = "size")]
+		[DataMember(Name = "size", EmitDefaultValue = false)]
 		public int Size { get; set; }
 
 		/// <summary>
 		///     The start of the elements, this is used for paging
 		/// </summary>
-		[DataMember(Name = "start")]
+		[DataMember(Name = "start", EmitDefaultValue = false)]
 		public int Start { get; set; }
 
 		IEnumerator IEnumerable.GetEnumerator()

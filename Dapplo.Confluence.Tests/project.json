@@ -5,15 +5,15 @@
     "copyright": "Copyright © Dapplo 2016",
     "description": "Tests for Dapplo.Confluence",
     "supports": {},
-    "dependencies": {
-        "Dapplo.Log": "1.0.22",
-        "Dapplo.Log.XUnit": "1.0.22",
-        "Dapplo.Confluence": "*",
-        "xunit.runner.visualstudio": "2.1.0",
-        "Xunit.StaFact": "0.1.36-beta",
-        "ReportGenerator": "2.5.1",
-        "Dapplo.Utils": "1.0.131"
-    },
+  "dependencies": {
+    "Dapplo.Log": "1.0.22",
+    "Dapplo.Log.XUnit": "1.0.22",
+    "Dapplo.Confluence": "*",
+    "xunit.runner.visualstudio": "2.1.0",
+    "Xunit.StaFact": "0.1.36-beta",
+    "ReportGenerator": "2.5.1",
+    "Dapplo.Utils": "1.0.131"
+  },
     "frameworks": {
          "net45": {
             "dependencies": {

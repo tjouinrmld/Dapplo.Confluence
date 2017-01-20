@@ -48,13 +48,13 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     Different links for this entity, depending on the entry
 		/// </summary>
-		[DataMember(Name = "_links")]
+		[DataMember(Name = "_links", EmitDefaultValue = false)]
 		public Links Links { get; set; }
 
 		/// <summary>
 		///     Results with pages
 		/// </summary>
-		[DataMember(Name = "page")]
+		[DataMember(Name = "page", EmitDefaultValue = false)]
 		public Result<Content> Result { get; set; }
 	}
 }

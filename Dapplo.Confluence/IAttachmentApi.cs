@@ -55,5 +55,36 @@ namespace Dapplo.Confluence
 		/// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
 		Task<TResponse> GetContentAsync<TResponse>(Attachment attachment, CancellationToken cancellationToken = default(CancellationToken))
 			where TResponse : class;
+
+		/// <summary>
+		///     Update the attachment information
+		/// </summary>
+		/// <param name="attachment">Attachment</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Attachment</returns>
+		Task<Attachment> UpdateAsync(Attachment attachment, CancellationToken cancellationToken = default(CancellationToken));
+
+		/// <summary>
+		///     Add an attachment to the specified content
+		/// </summary>
+		/// <typeparam name="TContent">The content to upload</typeparam>
+		/// <param name="contentId">content to add the attachment to</param>
+		/// <param name="content">content of type TContent for the attachment</param>
+		/// <param name="filename">Filename of the attachment</param>
+		/// <param name="comment">Comment in the attachments information</param>
+		/// <param name="contentType">Content-Type for the content, or null</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Result with Attachment</returns>
+		Task<Result<Attachment>> AttachAsync<TContent>(string contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default(CancellationToken))
+			where TContent : class;
+
+		/// <summary>
+		///     Retrieve the attachments for the specified content
+		/// </summary>
+		/// <param name="contentId">string with the content id</param>
+		/// <param name="cancellationToken">CancellationToken</param>
+		/// <returns>Result with Attachment(s)</returns>
+		Task<Result<Attachment>> GetAttachmentsAsync(string contentId, CancellationToken cancellationToken = default(CancellationToken));
+
 	}
 }

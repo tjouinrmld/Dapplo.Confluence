@@ -29,7 +29,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapplo.Confluence.Query;
 using Dapplo.Log;
 using Dapplo.Log.XUnit;
 using Xunit;
@@ -63,6 +62,20 @@ namespace Dapplo.Confluence.Tests
 
 		private readonly IConfluenceClient _confluenceClient;
 
+
+		[Fact]
+		public async Task TestGetAttachments()
+		{
+			var attachments = await _confluenceClient.Attachment.GetAttachmentsAsync("950274");
+			Assert.NotNull(attachments);
+			Assert.NotNull(attachments.Results.Count > 0);
+			using (var attachmentMemoryStream = await _confluenceClient.Attachment.GetContentAsync<MemoryStream>(attachments.FirstOrDefault()))
+			{
+				Assert.True(attachmentMemoryStream.Length > 0);
+			}
+
+		}
+
 		/// <summary>
 		///     Doesn't work yet, as deleting an attachment is not supported
 		///     See <a href="https://jira.atlassian.com/browse/CONF-36015">CONF-36015</a>
@@ -72,7 +85,7 @@ namespace Dapplo.Confluence.Tests
 		public async Task TestAttach()
 		{
 			const string testPageId = "950274";
-			var attachments = await _confluenceClient.Content.GetAttachmentsAsync(testPageId);
+			var attachments = await _confluenceClient.Attachment.GetAttachmentsAsync(testPageId);
 			Assert.NotNull(attachments);
 
 			// Delete all attachments
@@ -83,10 +96,10 @@ namespace Dapplo.Confluence.Tests
 			}
 
 			const string attachmentContent = "Testing 1 2 3";
-			attachments = await _confluenceClient.Content.AttachAsync(testPageId, attachmentContent, "test.txt", "This is a test");
+			attachments = await _confluenceClient.Attachment.AttachAsync(testPageId, attachmentContent, "test.txt", "This is a test");
 			Assert.NotNull(attachments);
 
-			attachments = await _confluenceClient.Content.GetAttachmentsAsync(testPageId);
+			attachments = await _confluenceClient.Attachment.GetAttachmentsAsync(testPageId);
 			Assert.NotNull(attachments);
 			Assert.True(attachments.Results.Count > 0);
 
@@ -102,7 +115,7 @@ namespace Dapplo.Confluence.Tests
 				// Attachments are content!!
 				await _confluenceClient.Content.DeleteAsync(attachment.Id);
 			}
-			attachments = await _confluenceClient.Content.GetAttachmentsAsync(testPageId);
+			attachments = await _confluenceClient.Attachment.GetAttachmentsAsync(testPageId);
 			Assert.NotNull(attachments);
 			Assert.True(attachments.Results.Count == 0);
 		}

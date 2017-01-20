@@ -41,31 +41,31 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     The name which is displayed in the UI, usually "firstname lastname"
 		/// </summary>
-		[DataMember(Name = "displayName")]
+		[DataMember(Name = "displayName", EmitDefaultValue = false)]
 		public string DisplayName { get; set; }
 
 		/// <summary>
 		///     Information on the profile picture
 		/// </summary>
-		[DataMember(Name = "profilePicture")]
+		[DataMember(Name = "profilePicture", EmitDefaultValue = false)]
 		public Picture ProfilePicture { get; set; }
 
 		/// <summary>
 		///     Type of user
 		/// </summary>
-		[DataMember(Name = "type")]
+		[DataMember(Name = "type", EmitDefaultValue = false)]
 		public string Type { get; set; }
 
 		/// <summary>
 		///     A unique key for the user
 		/// </summary>
-		[DataMember(Name = "userKey")]
+		[DataMember(Name = "userKey", EmitDefaultValue = false)]
 		public string UserKey { get; set; }
 
 		/// <summary>
 		///     The username
 		/// </summary>
-		[DataMember(Name = "username")]
+		[DataMember(Name = "username", EmitDefaultValue = false)]
 		public string Username { get; set; }
 	}
 }

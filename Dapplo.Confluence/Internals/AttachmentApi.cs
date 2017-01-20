@@ -22,6 +22,7 @@
 #region using
 
 using System;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
@@ -73,5 +74,64 @@ namespace Dapplo.Confluence.Internals
 			}
 			return response.Response;
 		}
+
+		/// <inheritdoc />
+		public async Task<Result<Attachment>> AttachAsync<TContent>(string contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default(CancellationToken))
+			where TContent : class
+		{
+			var attachment = new AttachmentContainer<TContent>
+			{
+				Comment = comment,
+				FileName = filename,
+				Content = content,
+				ContentType = contentType
+			};
+			_confluenceClientPlugins.PromoteContext();
+
+			var postAttachmentUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("content", contentId, "child", "attachment");
+			var response = await postAttachmentUri.PostAsync<HttpResponse<Result<Attachment>, string>>(attachment, cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse);
+			}
+			return response.Response;
+		}
+
+		/// <inheritdoc />
+		public async Task<Result<Attachment>> GetAttachmentsAsync(string contentId,
+			CancellationToken cancellationToken = default(CancellationToken))
+		{
+			_confluenceClientPlugins.PromoteContext();
+			var attachmentsUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("content", contentId, "child", "attachment");
+			if (ConfluenceClientConfig.ExpandGetAttachments != null && ConfluenceClientConfig.ExpandGetAttachments.Length != 0)
+			{
+				attachmentsUri = attachmentsUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetAttachments));
+			}
+			var response = await attachmentsUri.GetAsAsync<HttpResponse<Result<Attachment>, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
+		}
+
+		/// <inheritdoc />
+		public async Task<Attachment> UpdateAsync(Attachment attachment, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			_confluenceClientPlugins.PromoteContext();
+			var id = Regex.Replace(attachment.Id, "[a-z]*", "");
+			var attachmentsUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("content", attachment.Container.Id, "child", "attachment", id);
+			if (ConfluenceClientConfig.ExpandGetAttachments != null && ConfluenceClientConfig.ExpandGetAttachments.Length != 0)
+			{
+				attachmentsUri = attachmentsUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetAttachments));
+			}
+			var response = await attachmentsUri.GetAsAsync<HttpResponse<Attachment, Error>>(cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
+		}
+
 	}
 }

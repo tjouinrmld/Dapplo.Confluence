@@ -42,31 +42,31 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		///     Who made this version
 		/// </summary>
-		[DataMember(Name = "by")]
+		[DataMember(Name = "by", EmitDefaultValue = false)]
 		public User By { get; set; }
 
 		/// <summary>
 		///     Is it a small version change
 		/// </summary>
-		[DataMember(Name = "minorEdit")]
+		[DataMember(Name = "minorEdit", EmitDefaultValue = false)]
 		public bool IsMinorEdit { get; set; }
 
 		/// <summary>
 		///     A message for the version
 		/// </summary>
-		[DataMember(Name = "message")]
+		[DataMember(Name = "message", EmitDefaultValue = false)]
 		public string Message { get; set; }
 
 		/// <summary>
 		///     Version number
 		/// </summary>
-		[DataMember(Name = "number")]
+		[DataMember(Name = "number", EmitDefaultValue = false)]
 		public int Number { get; set; }
 
 		/// <summary>
 		///     When was this version
 		/// </summary>
-		[DataMember(Name = "when")]
+		[DataMember(Name = "when", EmitDefaultValue = false)]
 		public DateTimeOffset When { get; set; }
 	}
 }

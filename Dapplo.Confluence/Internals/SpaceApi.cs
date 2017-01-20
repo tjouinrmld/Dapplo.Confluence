@@ -50,7 +50,7 @@ namespace Dapplo.Confluence.Internals
 		}
 
 		/// <inheritdoc />
-		public async Task<Space> CreateAsync(string key, string name, string description, bool isPrivate = false, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Space> CreateAsync(string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			_confluenceClientPlugins.PromoteContext();
 			var space = new Space
@@ -66,11 +66,6 @@ namespace Dapplo.Confluence.Internals
 				}
 			};
 			var spaceUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("space");
-			// Create private space?
-			if (isPrivate)
-			{
-				spaceUri = spaceUri.AppendSegments("_private");
-			}
 			var response = await spaceUri.PostAsync<HttpResponse<Space, Error>>(space, cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
@@ -80,8 +75,9 @@ namespace Dapplo.Confluence.Internals
 		}
 
 		/// <inheritdoc />
-		public async Task<Space> UpdateAsync(string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<Space> CreatePrivateAsync(string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken))
 		{
+			_confluenceClientPlugins.PromoteContext();
 			var space = new Space
 			{
 				Key = key,
@@ -94,8 +90,20 @@ namespace Dapplo.Confluence.Internals
 					}
 				}
 			};
+			var spaceUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("space", "_private");
+			var response = await spaceUri.PostAsync<HttpResponse<Space, Error>>(space, cancellationToken).ConfigureAwait(false);
+			if (response.HasError)
+			{
+				throw new Exception(response.ErrorResponse.Message);
+			}
+			return response.Response;
+		}
+
+		/// <inheritdoc />
+		public async Task<Space> UpdateAsync(Space space, CancellationToken cancellationToken = default(CancellationToken))
+		{
 			_confluenceClientPlugins.PromoteContext();
-			var spaceUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("space");
+			var spaceUri = _confluenceClientPlugins.ConfluenceApiUri.AppendSegments("space", space.Key);
 			var response = await spaceUri.PutAsync<HttpResponse<Space, string>>(space, cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{

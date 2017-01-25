@@ -27,9 +27,7 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Dapplo.Confluence.Query;
 using Dapplo.Log;
 using Dapplo.Log.XUnit;
 using Xunit;
@@ -74,7 +72,7 @@ namespace Dapplo.Confluence.Tests
 			Assert.NotNull(currentUser);
 			Assert.NotNull(currentUser.ProfilePicture);
 
-			var bitmapSource = await _confluenceClient.GetPictureAsync<MemoryStream>(currentUser.ProfilePicture);
+			var bitmapSource = await _confluenceClient.Misc.GetPictureAsync<MemoryStream>(currentUser.ProfilePicture);
 			Assert.NotNull(bitmapSource);
 		}
 	}

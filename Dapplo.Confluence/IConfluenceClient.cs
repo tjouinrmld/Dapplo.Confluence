@@ -70,6 +70,11 @@ namespace Dapplo.Confluence
 		IUserDomain User { get; }
 
 		/// <summary>
+		///     The misc domain
+		/// </summary>
+		IMiscDomain Misc { get; }
+
+		/// <summary>
 		///     Retrieve the Download as Uri from the supplied links object
 		/// </summary>
 		/// <param name="links">Links</param>

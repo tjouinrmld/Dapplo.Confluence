@@ -32,7 +32,7 @@ namespace Dapplo.Confluence
 	/// <summary>
 	///     A Confluence client build by using Dapplo.HttpExtensions
 	/// </summary>
-	public class ConfluenceClient : IConfluenceClientPlugins, IAttachmentDomain, IUserDomain, ISpaceDomain, IContentDomain
+	public class ConfluenceClient : IConfluenceClientPlugins, IAttachmentDomain, IUserDomain, ISpaceDomain, IContentDomain, IMiscDomain
 	{
 		/// <summary>
 		///     Password for the basic authentication
@@ -109,6 +109,9 @@ namespace Dapplo.Confluence
 
 		/// <inheritdoc />
 		public ISpaceDomain Space => this;
+
+		/// <inheritdoc />
+		public IMiscDomain Misc => this;
 
 		/// <inheritdoc />
 		public Uri CreateWebUiUri(Links links)

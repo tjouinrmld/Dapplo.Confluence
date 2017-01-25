@@ -25,7 +25,6 @@
 
 #region Usings
 
-using System;
 using Dapplo.Confluence.Query;
 using Dapplo.Log;
 using Dapplo.Log.XUnit;

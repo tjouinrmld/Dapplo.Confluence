@@ -32,19 +32,27 @@ using Dapplo.HttpExtensions;
 namespace Dapplo.Confluence
 {
 	/// <summary>
+	///     Marker interface for the methods which have no direct clear domain
+	/// </summary>
+	public interface IMiscDomain : IConfluenceDomain
+	{
+		
+	}
+
+	/// <summary>
 	///     All extensions which have no direct clear domain
 	/// </summary>
-	public static class ConfluenceMiscExtensions
+	public static class MiscExtensions
 	{
 		/// <summary>
 		///     Retrieve the picture for the supplied Picture entity
 		/// </summary>
-		/// <param name="confluenceClient">Instance of a confluence client</param>
+		/// <param name="confluenceClient">IMiscDomain to bind the extension method to</param>
 		/// <typeparam name="TResponse">the type to return the result into. e.g. Bitmap,BitmapSource or MemoryStream</typeparam>
 		/// <param name="picture">Picture from User, Space, History etc</param>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
-		public static async Task<TResponse> GetPictureAsync<TResponse>(this IConfluenceDomain confluenceClient, Picture picture,
+		public static async Task<TResponse> GetPictureAsync<TResponse>(this IMiscDomain confluenceClient, Picture picture,
 			CancellationToken cancellationToken = default(CancellationToken))
 			where TResponse : class
 		{

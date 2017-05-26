@@ -1,4 +1,4 @@
-version: 0.4.{build}
+version: 0.5.{build}
 skip_tags: true
 configuration: Release
 platform: AnyCPU
@@ -6,18 +6,7 @@ clone_depth: 2
 branches:
   only:
   - master
-install:
-- choco install gitlink -y
-before_build:
-- ps: .\SetVersion.ps1
-- appveyor-retry dotnet restore -v Minimal
-- ps: if(-not $env:APPVEYOR_PULL_REQUEST_NUMBER) { $env:is_not_pr = "true"; }
-before_package:
-- ps: if(-not $env:APPVEYOR_PULL_REQUEST_NUMBER) { GitLink .\ }
-after_test: 
-- ps: .\CreateCoverage.ps1
-- pip install codecov
-- codecov -f "coverage.xml"
+test: off
 environment:
   COVERALLS_REPO_TOKEN:
     secure: 5WWUHMA6N4J56uA5Or7KTn56RYcGHDnTTIxqxGmWyoEpdhkasFIAfeOrFnCLxFPt
@@ -25,21 +14,19 @@ environment:
     secure: gdcMwbkCpbe2jH691vkZqw==
   confluence_test_password:
     secure: Ok03X5fvfNY2h61MHktUJw==
+  sonar_token:
+    secure: QIaJEHgudzCCUvtIOmDZEUVHzOUF9+d4J0ghEEbuJBj+QW3li6lK053A1kftp8CX
+  NuGetApiKey:
+    secure: xkDQ385+smLqdzhESsXBJvnUjK4FZ4Djjrqi9tFR29dwESIvPYOrQAqgri5Nf/fA
 build:
-  publish_nuget: true
-  publish_nuget_symbols: true
   verbosity: minimal
 build_script:
-- dotnet build Dapplo.Confluence -c %CONFIGURATION% --no-dependencies
-- dotnet build Dapplo.Confluence.Tests -c %CONFIGURATION% --no-dependencies
-after_build:
-- dotnet pack Dapplo.Confluence -c %CONFIGURATION% --no-build -o artifacts
-#- dotnet pack Dapplo.Confluence.PowerShell -c %CONFIGURATION% --no-build -o artifacts
-#cache:
-#- '%USERPROFILE%\.nuget\packages'
+- ps: .\build.ps1
 artifacts:
-- path: artifacts\**\*.*
-  name: NuGet package
+- path: artifacts\**\*.nupkg
+- path: artifacts\**\site.zip
+- path: artifacts\*.xml
+- path: artifacts\*.html
 notifications:
 - provider: Email
   to:
@@ -47,12 +34,3 @@ notifications:
   on_build_success: true
   on_build_failure: true
   on_build_status_changed: false
-deploy:
-- provider: NuGet
-  skip_symbols: true
-  api_key:
-    secure: xkDQ385+smLqdzhESsXBJvnUjK4FZ4Djjrqi9tFR29dwESIvPYOrQAqgri5Nf/fA
-  on:
-    branch: master
-    is_not_pr: true
-    appveyor_repo_commit_message_extended: /\[release\]/

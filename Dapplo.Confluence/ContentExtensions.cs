@@ -290,7 +290,7 @@ namespace Dapplo.Confluence
 			var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", content.Id);
 
 			confluenceClient.Behaviour.MakeCurrent();
-			var response = await contentUri.PostAsync<HttpResponse<Content, Error>>(content, cancellationToken).ConfigureAwait(false);
+			var response = await contentUri.PutAsync<HttpResponse<Content, Error>>(content, cancellationToken).ConfigureAwait(false);
 			if (response.HasError)
 			{
 				throw new Exception(response.ErrorResponse.Message);

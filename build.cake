@@ -18,7 +18,7 @@ var configuration = Argument("configuration", "release");
 var nugetApiKey = Argument("nugetApiKey", EnvironmentVariable("NuGetApiKey"));
 
 // Used to publish coverage report
-var coverallsRepoToken = Argument("nugetApiKey", EnvironmentVariable("COVERALLS_REPO_TOKEN"));
+var coverallsRepoToken = Argument("coverallsRepoToken", EnvironmentVariable("COVERALLS_REPO_TOKEN"));
 
 // where is our solution located?
 var solutionFilePath = GetFiles("./**/*.sln").First();
@@ -27,10 +27,10 @@ var solutionFilePath = GetFiles("./**/*.sln").First();
 var isPullRequest = !string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"));
 
 // Check if the commit is marked as release
-var isRelease = (EnvironmentVariable("APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED")?? "").Contains("[release]");
+var isRelease = Argument<bool>("isRelease", string.Compare("[release]", EnvironmentVariable("appveyor_repo_commit_message_extended"), true) == 0);
 
 // Used to store the version, which is needed during the build and the packaging
-var version = EnvironmentVariable("APPVEYOR_BUILD_VERSION");
+var version = EnvironmentVariable("APPVEYOR_BUILD_VERSION") ?? "1.0.0";
 
 Task("Default")
     .IsDependentOn("Publish");
@@ -65,10 +65,11 @@ Task("PublishPackages")
     .Does(()=>
 {
     var settings = new NuGetPushSettings {
+        Source = "https://www.nuget.org/api/v2/package",
         ApiKey = nugetApiKey
     };
 
-    var packages = GetFiles("./artifacts/*.nupkg");
+    var packages = GetFiles("./artifacts/*.nupkg").Where(p => !p.FullPath.Contains("symbols"));
     NuGetPush(packages, settings);
 });
 
@@ -102,7 +103,8 @@ Task("Documentation")
     .Does(() =>
 {
 	// Run DocFX
-	DocFx("./doc/docfx.json");
+    DocFxMetadata("./doc/docfx.json");
+    DocFxBuild("./doc/docfx.json");
 	
 	CreateDirectory("artifacts");
 	// Archive the generated site
@@ -149,7 +151,7 @@ Task("Coverage")
                     ShadowCopy = false,
 					XmlReport = true,
 					HtmlReport = true,
-					ReportName = "Dapplo.Jira",
+					ReportName = "Dapplo.Confluence",
 					OutputDirectory = "./artifacts",
 					WorkingDirectory = "./src"
                 });

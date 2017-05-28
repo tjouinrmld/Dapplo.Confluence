@@ -50,7 +50,7 @@ namespace Dapplo.Confluence.Tests
 			var password = Environment.GetEnvironmentVariable("confluence_test_password");
 			if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
 			{
-				_confluenceClient.SetBasicAuthentication("rkrom", "ibavdoaw73");
+				_confluenceClient.SetBasicAuthentication(username, password);
 			}
 		}
 

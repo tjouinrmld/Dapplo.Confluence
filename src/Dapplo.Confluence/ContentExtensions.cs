@@ -237,9 +237,9 @@ namespace Dapplo.Confluence
 		/// <param name="limit">Maximum number of results returned, default is 20</param>
 		/// <param name="cancellationToken">CancellationToken</param>
 		/// <returns>Result with content items</returns>
-		public static async Task<Result<Content>> SearchAsync(this IContentDomain confluenceClient, IFinalClause cqlClause, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+		public static Task<Result<Content>> SearchAsync(this IContentDomain confluenceClient, IFinalClause cqlClause, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return await confluenceClient.SearchAsync(cqlClause.ToString(), cqlContext, limit, cancellationToken);
+			return confluenceClient.SearchAsync(cqlClause.ToString(), cqlContext, limit, cancellationToken);
 		}
 
 		/// <summary>

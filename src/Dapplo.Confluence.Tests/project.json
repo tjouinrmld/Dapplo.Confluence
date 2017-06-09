@@ -9,15 +9,15 @@
     "Dapplo.Confluence": "*",
     "xunit.runner.visualstudio": "2.1.0",
     "Xunit.StaFact": "0.1.36-beta",
-    "ReportGenerator": "2.5.1",
-    "Dapplo.Utils": "1.0.131",
-    "Dapplo.Log": "1.0.23",
-    "Dapplo.Log.XUnit": "1.0.23"
+    "Dapplo.Utils": "1.0.150",
+    "Dapplo.Log": "1.0.29",
+    "Dapplo.Log.XUnit": "1.0.29",
+    "Dapplo.HttpExtensions.JsonSimple": "0.6.22"
   },
     "frameworks": {
          "net45": {
             "dependencies": {
-                "NETStandard.Library": "1.6.0"
+                "NETStandard.Library": "1.6.1"
             },
             "frameworkAssemblies": {
                 "PresentationCore": "4.0.0.0",
@@ -42,9 +42,6 @@
         }
     },
     "tools": {
-        "coveralls.io": "1.3.4",
-        "OpenCover": "4.6.519",
-        "xunit.runner.console": "2.1.0"
     },
     "buildOptions": {
         "xmlDoc": false,

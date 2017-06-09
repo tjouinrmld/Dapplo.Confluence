@@ -37,20 +37,29 @@ using Xunit.Abstractions;
 
 namespace Dapplo.Confluence.Tests
 {
-	public class JsonParseTests
-	{
-		public JsonParseTests(ITestOutputHelper testOutputHelper)
-		{
-			LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
-		}
+    public class JsonParseTests
+    {
+        private const string FilesDir = "JsonTestFiles";
+        private readonly string _testFileLocation;
 
-		[Fact]
-		public void TestParseContent()
-		{
-			var json = File.ReadAllText("JsonTestFiles/content.json");
-			var content = SimpleJson.DeserializeObject<Content>(json);
-			Assert.NotNull(content);
-			Assert.Equal("http://myhost:8080/confluence/rest/api/content/1234", content.Links.Self.AbsoluteUri);
-		}
-	}
+        public JsonParseTests(ITestOutputHelper testOutputHelper)
+        {
+            LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
+
+            _testFileLocation = FilesDir;
+            if (!Directory.Exists(FilesDir))
+            {
+                _testFileLocation = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), FilesDir);
+            }
+        }
+
+        [Fact]
+        public void TestParseContent()
+        {
+            var json = File.ReadAllText(Path.Combine(_testFileLocation, "content.json"));
+            var content = SimpleJson.DeserializeObject<Content>(json);
+            Assert.NotNull(content);
+            Assert.Equal("http://myhost:8080/confluence/rest/api/content/1234", content.Links.Self.AbsoluteUri);
+        }
+    }
 }

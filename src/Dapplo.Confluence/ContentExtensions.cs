@@ -58,6 +58,30 @@ namespace Dapplo.Confluence
         /// <returns>Content</returns>
         public static Task<Content> CreateAsync(this IContentDomain confluenceClient, string type, string title, string spaceKey, string body, long? ancestorId = null, CancellationToken cancellationToken = default(CancellationToken))
         {
+            var contentBody = new Body
+            {
+                Storage = new BodyContent
+                {
+                    Value = body,
+                    Representation = "storage"
+                }
+            };
+            return confluenceClient.CreateAsync(type, title, spaceKey, contentBody, ancestorId, cancellationToken);
+        }
+
+        /// <summary>
+        ///     Create content
+        /// </summary>
+        /// <param name="confluenceClient">IContentDomain to bind the extension method to</param>
+        /// <param name="type">Type of content, usually page</param>
+        /// <param name="title">Title for the content</param>
+        /// <param name="spaceKey">Key of the space to add the content to</param>
+        /// <param name="body">Body</param>
+        /// <param name="ancestorId">Optional ID for the ancestor (parent)</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>Content</returns>
+        public static Task<Content> CreateAsync(this IContentDomain confluenceClient, string type, string title, string spaceKey, Body body, long? ancestorId = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
             var content = new Content
             {
                 Type = type,
@@ -66,14 +90,7 @@ namespace Dapplo.Confluence
                 {
                     Key = spaceKey
                 },
-                Body = new Body
-                {
-                    Storage = new BodyContent
-                    {
-                        Value = body,
-                        Representation = "storage"
-                    }
-                },
+                Body = body,
                 Ancestors = !ancestorId.HasValue ? null : new List<Content>
                 {
                     new Content

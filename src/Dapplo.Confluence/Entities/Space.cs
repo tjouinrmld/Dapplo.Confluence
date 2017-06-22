@@ -28,65 +28,47 @@ using System.Runtime.Serialization;
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     Space information
-	///     See: https://docs.atlassian.com/confluence/REST/latest
-	///     Should be called with expand=icon,description.plain,homepage
-	/// </summary>
-	[DataContract]
-	public class Space
-	{
-		/// <summary>
-		///     Description
-		/// </summary>
-		[DataMember(Name = "description", EmitDefaultValue = false)]
-		public Description Description { get; set; }
+    /// <summary>
+    ///     Space information
+    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    ///     Should be called with expand=icon,description.plain,homepage
+    /// </summary>
+    [DataContract]
+    public class Space : BaseEntity<long>
+    {
+        /// <summary>
+        ///     Description
+        /// </summary>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public Description Description { get; set; }
 
-		/// <summary>
-		///     The values that are expandable
-		/// </summary>
-		[DataMember(Name = "_expandable")]
-		public IDictionary<string, string> Expandables { get; set; }
+        /// <summary>
+        ///     The values that are expandable
+        /// </summary>
+        [DataMember(Name = "_expandable")]
+        public IDictionary<string, string> Expandables { get; set; }
 
-		/// <summary>
-		///     Icon for the space
-		/// </summary>
-		[DataMember(Name = "icon", EmitDefaultValue = false)]
-		public Picture Icon { get; set; }
+        /// <summary>
+        ///     Icon for the space
+        /// </summary>
+        [DataMember(Name = "icon", EmitDefaultValue = false)]
+        public Picture Icon { get; set; }
 
-		/// <summary>
-		///     Id for the space
-		/// </summary>
-		[DataMember(Name = "id", EmitDefaultValue = false)]
-		public string Id { get; set; }
+        /// <summary>
+        ///     Test if this space is a personal space, this is true when the Key starts with a ~
+        /// </summary>
+        public bool IsPersonal => true == Key?.StartsWith("~");
 
-		/// <summary>
-		///     Test if this space is a personal space, this is true when the Key starts with a ~
-		/// </summary>
-		public bool IsPersonal => true == Key?.StartsWith("~");
+        /// <summary>
+        ///     Key for the space
+        /// </summary>
+        [DataMember(Name = "key", EmitDefaultValue = false)]
+        public string Key { get; set; }
 
-		/// <summary>
-		///     Key for the space
-		/// </summary>
-		[DataMember(Name = "key", EmitDefaultValue = false)]
-		public string Key { get; set; }
-
-		/// <summary>
-		///     Different links for this entity, depending on the entry
-		/// </summary>
-		[DataMember(Name = "_links", EmitDefaultValue = false)]
-		public Links Links { get; set; }
-
-		/// <summary>
-		///     The name of the space
-		/// </summary>
-		[DataMember(Name = "name", EmitDefaultValue = false)]
-		public string Name { get; set; }
-
-		/// <summary>
-		///     Type for the space, e.g. Team space or Knowledge Base space etc
-		/// </summary>
-		[DataMember(Name = "type", EmitDefaultValue = false)]
-		public string Type { get; set; }
-	}
+        /// <summary>
+        ///     The name of the space
+        /// </summary>
+        [DataMember(Name = "name", EmitDefaultValue = false)]
+        public string Name { get; set; }
+    }
 }

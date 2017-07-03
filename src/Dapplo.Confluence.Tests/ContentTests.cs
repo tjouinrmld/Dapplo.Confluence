@@ -38,73 +38,93 @@ using Xunit.Abstractions;
 
 namespace Dapplo.Confluence.Tests
 {
-	/// <summary>
-	///     Tests
-	/// </summary>
-	public class ContentTests
-	{
-		public ContentTests(ITestOutputHelper testOutputHelper)
-		{
-			LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
-			_confluenceClient = ConfluenceClient.Create(TestConfluenceUri);
+    /// <summary>
+    ///     Tests
+    /// </summary>
+    public class ContentTests
+    {
+        private static readonly LogSource Log = new LogSource();
+        public ContentTests(ITestOutputHelper testOutputHelper)
+        {
+            LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
+            _confluenceClient = ConfluenceClient.Create(TestConfluenceUri);
 
-			var username = Environment.GetEnvironmentVariable("confluence_test_username");
-			var password = Environment.GetEnvironmentVariable("confluence_test_password");
-			if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
-			{
-				_confluenceClient.SetBasicAuthentication(username, password);
-			}
-		}
+            var username = Environment.GetEnvironmentVariable("confluence_test_username");
+            var password = Environment.GetEnvironmentVariable("confluence_test_password");
+            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+            {
+                _confluenceClient.SetBasicAuthentication(username, password);
+            }
+        }
 
-		// Test against a well known Confluence
-		private static readonly Uri TestConfluenceUri = new Uri("https://greenshot.atlassian.net/wiki");
+        // Test against a well known Confluence
+        private static readonly Uri TestConfluenceUri = new Uri("https://greenshot.atlassian.net/wiki");
 
-		private readonly IConfluenceClient _confluenceClient;
+        private readonly IConfluenceClient _confluenceClient;
 
-		/// <summary>
-		///     Test GetAsync
-		/// </summary>
-		//[Fact]
-		public async Task TestGetContent()
-		{
-			var content = await _confluenceClient.Content.GetAsync("950274");
-			Assert.NotNull(content);
-			Assert.NotNull(content.Version);
-		}
+        [Fact]
+        public async Task TestVersion()
+        {
+            var query = Where.And(Where.Space.Is("TEST"), Where.Type.IsPage, Where.Title.Contains("Test Home"));
+            var searchResults = await _confluenceClient.Content.SearchAsync(query);
+            var searchResult = searchResults.Single();
+            Log.Info().WriteLine("Version = {0}", searchResult.Version.Number);
+                // => searchResult.Version.Number = 11 // !!! why 11 ?
 
-		/// <summary>
-		///     Test GetHistoryAsync
-		/// </summary>
-		//[Fact]
-		public async Task TestGetContentHistory()
-		{
-			var history = await _confluenceClient.Content.GetHistoryAsync("950274");
-			Assert.NotNull(history);
-			Assert.NotNull(history.CreatedBy);
-		}
+            query = Where.Title.Contains("Test Home");
+            searchResults = await _confluenceClient.Content.SearchAsync(query);
+            searchResult = searchResults.Single();
+            Log.Info().WriteLine("Version = {0}", searchResult.Version.Number);
+                // => searchResult.Version.Number = 8 // !!! why 10 ?
+            var id = searchResult.Id;
+            var content = await _confluenceClient.Content.GetAsync(id);
+            Log.Info().WriteLine("Version = {0}", content.Version.Number);
 
-		//[Fact]
-		public async Task TestCreateContent()
-		{
-			var attachment = await _confluenceClient.Content.CreateAsync("page", "Testing 1 2 3", "TEST", "<p>This is a test</p>");
-			Assert.NotNull(attachment);
-		}
+        }
+        /// <summary>
+        ///     Test GetAsync
+        /// </summary>
+        //[Fact]
+        public async Task TestGetContent()
+        {
+            var content = await _confluenceClient.Content.GetAsync("950274");
+            Assert.NotNull(content);
+            Assert.NotNull(content.Version);
+        }
 
-		//[Fact]
-		public async Task TestDeleteContent()
-		{
-			await _confluenceClient.Content.DeleteAsync("30375945");
-		}
+        /// <summary>
+        ///     Test GetHistoryAsync
+        /// </summary>
+        //[Fact]
+        public async Task TestGetContentHistory()
+        {
+            var history = await _confluenceClient.Content.GetHistoryAsync("950274");
+            Assert.NotNull(history);
+            Assert.NotNull(history.CreatedBy);
+        }
 
-		[Fact]
-		public async Task TestSearch()
-		{
-			ConfluenceClientConfig.ExpandSearch = new[] {"version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated"};
+        //[Fact]
+        public async Task TestCreateContent()
+        {
+            var attachment = await _confluenceClient.Content.CreateAsync("page", "Testing 1 2 3", "TEST", "<p>This is a test</p>");
+            Assert.NotNull(attachment);
+        }
 
-			var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit:1);
-			Assert.Equal("page", searchResult.First().Type);
-			var uri = _confluenceClient.CreateWebUiUri(searchResult.FirstOrDefault()?.Links);
-			Assert.NotNull(uri);
-		}
-	}
+        //[Fact]
+        public async Task TestDeleteContent()
+        {
+            await _confluenceClient.Content.DeleteAsync("30375945");
+        }
+
+        [Fact]
+        public async Task TestSearch()
+        {
+            ConfluenceClientConfig.ExpandSearch = new[] {"version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated"};
+
+            var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit:1);
+            Assert.Equal("page", searchResult.First().Type);
+            var uri = _confluenceClient.CreateWebUiUri(searchResult.FirstOrDefault()?.Links);
+            Assert.NotNull(uri);
+        }
+    }
 }

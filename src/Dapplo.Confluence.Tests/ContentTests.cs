@@ -90,6 +90,8 @@ namespace Dapplo.Confluence.Tests
             var content = await _confluenceClient.Content.GetAsync("950274");
             Assert.NotNull(content);
             Assert.NotNull(content.Version);
+            Assert.NotNull(content.Ancestors);
+            Assert.True(content.Ancestors.Count > 0);
         }
 
         /// <summary>

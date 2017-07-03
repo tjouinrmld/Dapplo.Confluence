@@ -33,7 +33,7 @@ namespace Dapplo.Confluence.Entities
 	///     See: https://docs.atlassian.com/confluence/REST/latest
 	/// </summary>
 	[DataContract]
-	public class Child
+	public class Children
 	{
 		/// <summary>
 		///     The values that are expandable

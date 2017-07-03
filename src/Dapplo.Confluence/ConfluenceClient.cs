@@ -22,6 +22,10 @@
 #region using
 
 using System;
+
+#if NET45 || NET46
+using System.Net.Cache;
+#endif
 using Dapplo.Confluence.Entities;
 using Dapplo.HttpExtensions;
 using Dapplo.HttpExtensions.JsonSimple;
@@ -192,7 +196,14 @@ namespace Dapplo.Confluence
         private IHttpBehaviour ConfigureBehaviour(IChangeableHttpBehaviour behaviour, IHttpSettings httpSettings = null)
         {
             behaviour.HttpSettings = httpSettings ?? HttpExtensionsGlobals.HttpSettings;
-
+#if NET45 || NET46
+            // Disable caching, if no HTTP settings were provided.
+            // This is needed as was detected here: https://github.com/dapplo/Dapplo.Confluence/issues/11
+            if (httpSettings == null)
+            {
+                behaviour.HttpSettings.RequestCacheLevel = RequestCacheLevel.NoCacheNoStore;
+            }
+#endif
             // Using our own Json Serializer, implemented with SimpleJson
             behaviour.JsonSerializer = new SimpleJsonSerializer();
 

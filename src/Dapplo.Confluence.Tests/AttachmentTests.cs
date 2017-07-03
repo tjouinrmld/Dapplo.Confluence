@@ -112,8 +112,8 @@ namespace Dapplo.Confluence.Tests
             // Delete all attachments
             foreach (var attachment in attachments.Results)
             {
-                // Attachments are content!!
-                await _confluenceClient.Content.DeleteAsync(attachment.Id);
+                // Btw. Attachments are content!!
+                await _confluenceClient.Attachment.DeleteAsync(attachment.Id);
             }
             attachments = await _confluenceClient.Attachment.GetAttachmentsAsync(testPageId);
             Assert.NotNull(attachments);

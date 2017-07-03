@@ -132,7 +132,7 @@ namespace Dapplo.Confluence
         ///     = true
         /// </param>
         /// <param name="cancellationToken">CancellationToken</param>
-        public static async Task DeleteAsync(this IContentDomain confluenceClient, string contentId, bool isTrashed = false, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task DeleteAsync(this IContentDomain confluenceClient, long contentId, bool isTrashed = false, CancellationToken cancellationToken = default(CancellationToken))
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId);
             if (isTrashed)
@@ -155,7 +155,7 @@ namespace Dapplo.Confluence
         /// <param name="contentId">content id</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
-        public static async Task<Content> GetAsync(this IContentDomain confluenceClient, string contentId, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Content> GetAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId);
             if (ConfluenceClientConfig.ExpandGetContent != null && ConfluenceClientConfig.ExpandGetContent.Length != 0)
@@ -223,7 +223,7 @@ namespace Dapplo.Confluence
         /// <param name="contentId">content id</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>List with Content</returns>
-        public static async Task<IList<Content>> GetChildrenAsync(this IContentDomain confluenceClient, string contentId, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<IList<Content>> GetChildrenAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child");
             if (ConfluenceClientConfig.ExpandGetChildren != null && ConfluenceClientConfig.ExpandGetChildren.Length != 0)
@@ -246,7 +246,7 @@ namespace Dapplo.Confluence
         /// <param name="contentId">content id</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
-        public static async Task<History> GetHistoryAsync(this IContentDomain confluenceClient, string contentId, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<History> GetHistoryAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var historyUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "history");
 

@@ -87,7 +87,7 @@ namespace Dapplo.Confluence.Tests
         //[Fact]
         public async Task TestGetContent()
         {
-            var content = await _confluenceClient.Content.GetAsync("950274");
+            var content = await _confluenceClient.Content.GetAsync(950274);
             Assert.NotNull(content);
             Assert.NotNull(content.Version);
             Assert.NotNull(content.Ancestors);
@@ -100,7 +100,7 @@ namespace Dapplo.Confluence.Tests
         //[Fact]
         public async Task TestGetContentHistory()
         {
-            var history = await _confluenceClient.Content.GetHistoryAsync("950274");
+            var history = await _confluenceClient.Content.GetHistoryAsync(950274);
             Assert.NotNull(history);
             Assert.NotNull(history.CreatedBy);
         }
@@ -115,7 +115,7 @@ namespace Dapplo.Confluence.Tests
         //[Fact]
         public async Task TestDeleteContent()
         {
-            await _confluenceClient.Content.DeleteAsync("30375945");
+            await _confluenceClient.Content.DeleteAsync(30375945);
         }
 
         [Fact]

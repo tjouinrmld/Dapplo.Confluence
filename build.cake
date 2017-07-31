@@ -82,7 +82,6 @@ Task("Package")
     var settings = new DotNetCorePackSettings  
     {
         OutputDirectory = "./artifacts/",
-        Verbose = true,
         Configuration = configuration
     };
 
@@ -139,7 +138,7 @@ Task("Coverage")
     OpenCover(
         // The test tool Lamdba
         tool => {
-            tool.XUnit2("./**/*.Tests.dll",
+            tool.XUnit2("./**/bin/**/*.Tests.dll",
                 new XUnit2Settings {
 					// Add AppVeyor output, this "should" take care of a report inside AppVeyor
 					ArgumentCustomization = args => {
@@ -165,8 +164,8 @@ Task("Coverage")
 
 // This starts the actual MSBuild
 Task("Build")
-    .IsDependentOn("RestoreNuGetPackages")
     .IsDependentOn("Clean")
+    .IsDependentOn("RestoreNuGetPackages")
     .IsDependentOn("Versioning")
     .Does(() =>
 {
@@ -179,10 +178,8 @@ Task("Build")
 Task("RestoreNuGetPackages")
     .Does(() =>
 {
-    DotNetCoreRestore("./", new DotNetCoreRestoreSettings
+    DotNetCoreRestore(solutionFilePath.FullPath, new DotNetCoreRestoreSettings
 	{
-		Verbose = false,
-		Verbosity = DotNetCoreRestoreVerbosity.Warning,
 		Sources = new [] {
 			"https://api.nuget.org/v3/index.json"
 		}

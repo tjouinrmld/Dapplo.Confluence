@@ -178,7 +178,7 @@ Task("Build")
 Task("RestoreNuGetPackages")
     .Does(() =>
 {
-    DotNetCoreRestore(solutionFilePath.FullPath, new DotNetCoreRestoreSettings
+    DotNetCoreRestore("./", new DotNetCoreRestoreSettings
 	{
 		Sources = new [] {
 			"https://api.nuget.org/v3/index.json"

@@ -22,6 +22,7 @@
 #region using
 
 using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -115,6 +116,7 @@ namespace Dapplo.Confluence
 
             confluenceClient.Behaviour.MakeCurrent();
             var response = await contentUri.PostAsync<HttpResponse<Content, Error>>(content, cancellationToken).ConfigureAwait(false);
+
             if (response.HasError)
             {
                 throw new Exception(response.ErrorResponse.Message);
@@ -135,6 +137,7 @@ namespace Dapplo.Confluence
         public static async Task DeleteAsync(this IContentDomain confluenceClient, long contentId, bool isTrashed = false, CancellationToken cancellationToken = default(CancellationToken))
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId);
+
             if (isTrashed)
             {
                 contentUri = contentUri.ExtendQuery("status", "trashed");
@@ -155,13 +158,16 @@ namespace Dapplo.Confluence
         public static async Task<Content> GetAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId);
+
             if (ConfluenceClientConfig.ExpandGetContent != null && ConfluenceClientConfig.ExpandGetContent.Length != 0)
             {
                 contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetContent));
             }
 
             confluenceClient.Behaviour.MakeCurrent();
+
             var response = await contentUri.GetAsAsync<HttpResponse<Content, Error>>(cancellationToken).ConfigureAwait(false);
+
             if (response.HasError)
             {
                 throw new Exception(response.ErrorResponse.Message);
@@ -183,6 +189,7 @@ namespace Dapplo.Confluence
         public static async Task<Result<Content>> GetByTitleAsync(this IContentDomain confluenceClient, string spaceKey, string title, int start = 0, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
         {
             confluenceClient.Behaviour.MakeCurrent();
+
             var searchUri = confluenceClient.ConfluenceApiUri.AppendSegments("content").ExtendQuery(new Dictionary<string, object>
             {
                 {
@@ -201,11 +208,14 @@ namespace Dapplo.Confluence
                     "title", title
                 }
             });
+
             if (ConfluenceClientConfig.ExpandGetContentByTitle != null && ConfluenceClientConfig.ExpandGetContentByTitle.Length != 0)
             {
                 searchUri = searchUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetContentByTitle));
             }
+
             var response = await searchUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
+
             if (response.HasError)
             {
                 throw new Exception(response.ErrorResponse.Message);
@@ -223,12 +233,15 @@ namespace Dapplo.Confluence
         public static async Task<IList<Content>> GetChildrenAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child");
+
             if (ConfluenceClientConfig.ExpandGetChildren != null && ConfluenceClientConfig.ExpandGetChildren.Length != 0)
             {
                 contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetChildren));
             }
             confluenceClient.Behaviour.MakeCurrent();
+
             var response = await contentUri.GetAsAsync<HttpResponse<Children, Error>>(cancellationToken).ConfigureAwait(false);
+
             if (response.HasError)
             {
                 throw new Exception(response.ErrorResponse.Message);
@@ -250,6 +263,7 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
 
             var response = await historyUri.GetAsAsync<HttpResponse<History, Error>>(cancellationToken).ConfigureAwait(false);
+
             if (response.HasError)
             {
                 throw new Exception(response.ErrorResponse.Message);
@@ -295,6 +309,7 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
 
             var searchUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", "search").ExtendQuery("cql", cql).ExtendQuery("limit", limit);
+
             if (ConfluenceClientConfig.ExpandSearch != null && ConfluenceClientConfig.ExpandSearch.Length != 0)
             {
                 searchUri = searchUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandSearch));
@@ -305,6 +320,7 @@ namespace Dapplo.Confluence
             }
 
             var response = await searchUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
+
             if (response.HasError)
             {
                 throw new Exception(response.ErrorResponse.Message);
@@ -325,6 +341,7 @@ namespace Dapplo.Confluence
 
             confluenceClient.Behaviour.MakeCurrent();
             var response = await contentUri.PutAsync<HttpResponse<Content, Error>>(content, cancellationToken).ConfigureAwait(false);
+
             if (response.HasError)
             {
                 throw new Exception(response.ErrorResponse.Message);

@@ -41,7 +41,7 @@ namespace Dapplo.Confluence.Query
 		/// <summary>
 		///     This allows fluent constructs like Id.In(1234, 45678)
 		/// </summary>
-		IFinalClause In(params int[] values);
+		IFinalClause In(params long[] values);
 
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace Dapplo.Confluence.Query
 		/// <summary>
 		///     This allows fluent constructs like Id.Is(12345)
 		/// </summary>
-		IFinalClause Is(int id);
+		IFinalClause Is(long id);
 	}
 
 	/// <summary>
@@ -89,7 +89,7 @@ namespace Dapplo.Confluence.Query
 		}
 
 		/// <inheritDoc />
-		public IFinalClause Is(int value)
+		public IFinalClause Is(long value)
 		{
 			_clause.Operator = Operators.EqualTo;
 			_clause.Value = value.ToString();
@@ -114,7 +114,7 @@ namespace Dapplo.Confluence.Query
 		}
 
 		/// <inheritDoc />
-		public IFinalClause In(params int[] values)
+		public IFinalClause In(params long[] values)
 		{
 			_clause.Operator = Operators.In;
 			_clause.Value = "(" + string.Join(", ", values) + ")";

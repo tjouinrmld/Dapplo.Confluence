@@ -89,6 +89,7 @@ namespace Dapplo.Confluence
             CancellationToken cancellationToken = default(CancellationToken))
         {
             confluenceClient.Behaviour.MakeCurrent();
+
             var contentUri = confluenceClient.ConfluenceUri
                 .AppendSegments("json", "removeattachmentversion.action")
                 .ExtendQuery("pageId", attachment.Container.Id)
@@ -116,13 +117,9 @@ namespace Dapplo.Confluence
             }
             confluenceClient.Behaviour.MakeCurrent();
 
-            var response = await contentUri.DeleteAsync<HttpResponse<Content, Error>>(cancellationToken).ConfigureAwait(false);
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse.Message);
-            }
+            var response = await contentUri.DeleteAsync<HttpResponse>(cancellationToken).ConfigureAwait(false);
+            response.HandleStatusCode(HttpStatusCode.NoContent);
         }
-
 
         /// <summary>
         ///     Retrieve the attachments for the specified content

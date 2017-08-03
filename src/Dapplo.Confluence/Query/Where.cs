@@ -80,16 +80,26 @@ namespace Dapplo.Confluence.Query
 		/// </summary>
 		public static IUserClause Favourite => new UserClause(Fields.Favourite);
 
-		#endregion
+        #endregion
 
-		#region BooleanLogic
+        #region BooleanLogic
 
-		public static IFinalClause And(params IFinalClause[] clauses)
+        /// <summary>
+        /// Create an AND clause of the specified clauses
+        /// </summary>
+        /// <param name="clauses">two or more IFinalClause</param>
+        /// <returns>IFinalClause which ands the passed clauses</returns>
+        public static IFinalClause And(params IFinalClause[] clauses)
 		{
 			return new Clause("(" + string.Join(" and ", clauses.ToList()) + ")");
 		}
 
-		public static IFinalClause Or(params IFinalClause[] clauses)
+	    /// <summary>
+	    /// Create an OR clause of the specified clauses
+	    /// </summary>
+	    /// <param name="clauses">two or more IFinalClause</param>
+	    /// <returns>IFinalClause which ors the passed clauses</returns>
+        public static IFinalClause Or(params IFinalClause[] clauses)
 		{
 			return new Clause("(" + string.Join(" or ", clauses.ToList()) + ")");
 		}

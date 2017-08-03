@@ -71,7 +71,8 @@ namespace Dapplo.Confluence.Entities
 			return GetEnumerator();
 		}
 
-		public IEnumerator<TResult> GetEnumerator()
+	    /// <inheritdoc />
+	    public IEnumerator<TResult> GetEnumerator()
 		{
 			return Results.GetEnumerator();
 		}

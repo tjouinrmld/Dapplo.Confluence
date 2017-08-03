@@ -33,10 +33,25 @@ namespace Dapplo.Confluence.Query
 	/// </summary>
 	public interface IDatetimeClause
 	{
+        /// <summary>
+        /// Used in CQL to test if a datetime is after 
+        /// </summary>
 		IDatetimeClauseWithoutValue After { get; }
+	    /// <summary>
+	    /// Used in CQL to test if a datetime is after or on
+	    /// </summary>
 		IDatetimeClauseWithoutValue AfterOrOn { get; }
+	    /// <summary>
+	    /// Used in CQL to test if a datetime is before 
+	    /// </summary>
 		IDatetimeClauseWithoutValue Before { get; }
+	    /// <summary>
+	    /// Used in CQL to test if a datetime is before or on 
+	    /// </summary>
 		IDatetimeClauseWithoutValue BeforeOrOn { get; }
+	    /// <summary>
+	    /// Used in CQL to test if a datetime is on 
+	    /// </summary>
 		IDatetimeClauseWithoutValue On { get; }
 	}
 

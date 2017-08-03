@@ -28,6 +28,9 @@ using Dapplo.HttpExtensions.Extensions;
 
 namespace Dapplo.Confluence.Query
 {
+    /// <summary>
+    /// Interface for the CQL type clauses
+    /// </summary>
 	public interface ITypeClause
 	{
 		/// <summary>

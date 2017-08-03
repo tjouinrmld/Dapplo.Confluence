@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Dapplo.Confluence", "Dapplo.Confluence\Dapplo.Confluence.xproj", "{9E5111D5-7572-4643-937E-80D59B62B9F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapplo.Confluence", "Dapplo.Confluence\Dapplo.Confluence.csproj", "{9E5111D5-7572-4643-937E-80D59B62B9F7}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Dapplo.Confluence.Tests", "Dapplo.Confluence.Tests\Dapplo.Confluence.Tests.xproj", "{2119C12B-5874-4E60-BD36-45CA1D29FDDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapplo.Confluence.Tests", "Dapplo.Confluence.Tests\Dapplo.Confluence.Tests.csproj", "{2119C12B-5874-4E60-BD36-45CA1D29FDDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

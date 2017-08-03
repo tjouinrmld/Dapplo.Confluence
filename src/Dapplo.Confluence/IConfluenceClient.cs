@@ -108,6 +108,9 @@ namespace Dapplo.Confluence
 	/// </summary>
 	public interface IConfluenceDomain : IConfluenceClient
 	{
+        /// <summary>
+        /// The IHttpBehaviour of the Confluence client
+        /// </summary>
 		IHttpBehaviour Behaviour { get; }
 	}
 }

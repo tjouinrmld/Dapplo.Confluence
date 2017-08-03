@@ -27,11 +27,26 @@ using System.Runtime.Serialization;
 
 namespace Dapplo.Confluence.Query
 {
+    /// <summary>
+    /// Possible types of content, used in CQL
+    /// </summary>
 	public enum Types
 	{
+        /// <summary>
+        /// The content is a page
+        /// </summary>
 		[EnumMember(Value = "page")] Page,
+        /// <summary>
+        /// The content is a blogpost
+        /// </summary>
 		[EnumMember(Value = "blogpost")] BlogPost,
+        /// <summary>
+        /// The content is a comment
+        /// </summary>
 		[EnumMember(Value = "comment")] Comment,
+        /// <summary>
+        /// The content is an attachment
+        /// </summary>
 		[EnumMember(Value = "attachment")] Attachment
 	}
 }

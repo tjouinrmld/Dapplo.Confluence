@@ -22,12 +22,17 @@
 #region using
 
 using System;
+using System.Collections.Generic;
 
 #if NET45 || NET46
 using System.Net.Cache;
+using Dapplo.HttpExtensions.OAuth;
+using System.Net.Http;
 #endif
+
 using Dapplo.Confluence.Entities;
 using Dapplo.HttpExtensions;
+using Dapplo.HttpExtensions.Extensions;
 using Dapplo.HttpExtensions.JsonSimple;
 
 #endregion
@@ -75,7 +80,7 @@ namespace Dapplo.Confluence
         ///     Store the specific HttpBehaviour, which contains a IHttpSettings and also some additional logic for making a
         ///     HttpClient which works with Confluence
         /// </summary>
-        public IHttpBehaviour Behaviour { get; }
+        public IHttpBehaviour Behaviour { get; protected set; }
 
         /// <summary>
         ///     Plugins dock to this property by implementing an extension method to IConfluenceClientPlugins
@@ -193,7 +198,7 @@ namespace Dapplo.Confluence
         /// <param name="behaviour">IChangeableHttpBehaviour</param>
         /// <param name="httpSettings">IHttpSettings</param>
         /// <returns>the behaviour, but configured as IHttpBehaviour </returns>
-        private IHttpBehaviour ConfigureBehaviour(IChangeableHttpBehaviour behaviour, IHttpSettings httpSettings = null)
+        protected IHttpBehaviour ConfigureBehaviour(IChangeableHttpBehaviour behaviour, IHttpSettings httpSettings = null)
         {
             behaviour.HttpSettings = httpSettings ?? HttpExtensionsGlobals.HttpSettings;
 #if NET45 || NET46
@@ -218,6 +223,45 @@ namespace Dapplo.Confluence
             };
             return behaviour;
         }
+
+#if NET45 || NET46
+        /// <summary>
+        ///     Create the JiraApi, using OAuth 1 for the communication, here the HttpClient is configured
+        /// </summary>
+        /// <param name="baseUri">Base URL, e.g. https://yourjiraserver</param>
+        /// <param name="confluenceOAuthSettings">ConfluenceOAuthSettings</param>
+        /// <param name="httpSettings">IHttpSettings or null for default</param>
+        public static IConfluenceClient Create(Uri baseUri, ConfluenceOAuthSettings confluenceOAuthSettings, IHttpSettings httpSettings = null)
+        {
+            var client = new ConfluenceClient(baseUri, httpSettings);
+            var jiraOAuthUri = client.ConfluenceUri.AppendSegments("plugins", "servlet", "oauth");
+
+            var oAuthSettings = new OAuth1Settings
+            {
+                TokenUrl = jiraOAuthUri.AppendSegments("request-token"),
+                TokenMethod = HttpMethod.Post,
+                AccessTokenUrl = jiraOAuthUri.AppendSegments("access-token"),
+                AccessTokenMethod = HttpMethod.Post,
+                CheckVerifier = false,
+                SignatureType = OAuth1SignatureTypes.RsaSha1,
+                Token = confluenceOAuthSettings.Token,
+                ClientId = confluenceOAuthSettings.ConsumerKey,
+                CloudServiceName = confluenceOAuthSettings.CloudServiceName,
+                RsaSha1Provider = confluenceOAuthSettings.RsaSha1Provider,
+                AuthorizeMode = confluenceOAuthSettings.AuthorizeMode,
+                AuthorizationUri = jiraOAuthUri.AppendSegments("authorize")
+                    .ExtendQuery(new Dictionary<string, string>
+                    {
+                        {OAuth1Parameters.Token.EnumValueOf(), "{RequestToken}"},
+                        {OAuth1Parameters.Callback.EnumValueOf(), "{RedirectUrl}"}
+                    })
+            };
+
+            // Configure the OAuth1Settings
+            client.Behaviour = client.ConfigureBehaviour(OAuth1HttpBehaviourFactory.Create(oAuthSettings), httpSettings);
+            return client;
+        }
+#endif
 
         /// <summary>
         ///     Factory method to create a ConfluenceClient

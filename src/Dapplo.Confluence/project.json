@@ -39,11 +39,15 @@
     },
     "net45": {
       "frameworkAssemblies": {},
-      "dependencies": {}
+        "dependencies": {
+            "Dapplo.HttpExtensions.OAuth": "0.6.22"
+        }
     },
     "net46": {
       "frameworkAssemblies": {},
-      "dependencies": {}
+        "dependencies": {
+            "Dapplo.HttpExtensions.OAuth": "0.6.22"
+        }
     }
   }
 }

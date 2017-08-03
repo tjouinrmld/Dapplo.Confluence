@@ -124,10 +124,7 @@ namespace Dapplo.Confluence
         /// </summary>
         /// <param name="confluenceClient">IContentDomain to bind the extension method to</param>
         /// <param name="contentId">ID for the content which needs to be deleted</param>
-        /// <param name="isTrashed">
-        ///     If the content is trashable, you will need to call DeleteAsyc twice, second time with isTrashed
-        ///     = true
-        /// </param>
+        /// <param name="isTrashed">If the content is trashable, you will need to call DeleteAsyc twice, second time with isTrashed = true</param>
         /// <param name="cancellationToken">CancellationToken</param>
         public static async Task DeleteAsync(this IContentDomain confluenceClient, long contentId, bool isTrashed = false, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -140,7 +137,7 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
 
             var response = await contentUri.DeleteAsync<HttpResponse>(cancellationToken).ConfigureAwait(false);
-            response.HandleStatusCode(HttpStatusCode.NoContent);
+            response.HandleStatusCode(isTrashed ? HttpStatusCode.OK : HttpStatusCode.NoContent);
         }
 
         /// <summary>

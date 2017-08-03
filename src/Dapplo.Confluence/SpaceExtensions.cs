@@ -22,6 +22,7 @@
 #region using
 
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
@@ -114,7 +115,7 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
             var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", key);
             var response = await spaceUri.DeleteAsync<HttpResponse<LongRunningTask>>(cancellationToken).ConfigureAwait(false);
-            return response.HandleErrors();
+            return response.HandleErrors(HttpStatusCode.Accepted);
         }
 
         /// <summary>

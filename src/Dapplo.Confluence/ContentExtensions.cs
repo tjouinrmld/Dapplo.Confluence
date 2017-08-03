@@ -21,12 +21,12 @@
 
 #region using
 
-using System;
 using System.Net;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
+using Dapplo.Confluence.Internals;
 using Dapplo.Confluence.Query;
 using Dapplo.HttpExtensions;
 
@@ -116,12 +116,7 @@ namespace Dapplo.Confluence
 
             confluenceClient.Behaviour.MakeCurrent();
             var response = await contentUri.PostAsync<HttpResponse<Content, Error>>(content, cancellationToken).ConfigureAwait(false);
-
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse.Message);
-            }
-            return response.Response;
+            return response.HandleErrors();
         }
 
         /// <summary>
@@ -167,12 +162,7 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
 
             var response = await contentUri.GetAsAsync<HttpResponse<Content, Error>>(cancellationToken).ConfigureAwait(false);
-
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse.Message);
-            }
-            return response.Response;
+            return response.HandleErrors();
         }
 
         /// <summary>
@@ -215,12 +205,7 @@ namespace Dapplo.Confluence
             }
 
             var response = await searchUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
-
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse.Message);
-            }
-            return response.Response;
+            return response.HandleErrors();
         }
 
         /// <summary>
@@ -241,12 +226,7 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
 
             var response = await contentUri.GetAsAsync<HttpResponse<Children, Error>>(cancellationToken).ConfigureAwait(false);
-
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse.Message);
-            }
-            return response.Response.Result.Results;
+            return response.HandleErrors().Result?.Results;
         }
 
         /// <summary>
@@ -263,12 +243,7 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
 
             var response = await historyUri.GetAsAsync<HttpResponse<History, Error>>(cancellationToken).ConfigureAwait(false);
-
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse.Message);
-            }
-            return response.Response;
+            return response.HandleErrors();
         }
 
         /// <summary>
@@ -320,12 +295,7 @@ namespace Dapplo.Confluence
             }
 
             var response = await searchUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
-
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse.Message);
-            }
-            return response.Response;
+            return response.HandleErrors();
         }
 
         /// <summary>
@@ -341,12 +311,7 @@ namespace Dapplo.Confluence
 
             confluenceClient.Behaviour.MakeCurrent();
             var response = await contentUri.PutAsync<HttpResponse<Content, Error>>(content, cancellationToken).ConfigureAwait(false);
-
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse.Message);
-            }
-            return response.Response;
+            return response.HandleErrors();
         }
     }
 }

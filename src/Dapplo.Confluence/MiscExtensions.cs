@@ -25,6 +25,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
+using Dapplo.Confluence.Internals;
 using Dapplo.HttpExtensions;
 
 #endregion
@@ -64,11 +65,7 @@ namespace Dapplo.Confluence
                 confluenceClient.ConfluenceUri.Port);
             var pictureUri = new Uri(pictureUriBuilder.Uri.AbsoluteUri.TrimEnd('/') + picture.Path);
             var response = await pictureUri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse);
-            }
-            return response.Response;
+            return response.HandleErrors();
         }
     }
 }

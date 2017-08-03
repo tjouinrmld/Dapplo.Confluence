@@ -21,180 +21,155 @@
 
 #region using
 
-using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
 using Dapplo.HttpExtensions;
+using Dapplo.Confluence.Internals;
 
 #endregion
 
 namespace Dapplo.Confluence
 {
-	/// <summary>
-	///     Marker interface for the space related methods
-	/// </summary>
-	public interface ISpaceDomain : IConfluenceDomain
-	{
-	}
+    /// <summary>
+    ///     Marker interface for the space related methods
+    /// </summary>
+    public interface ISpaceDomain : IConfluenceDomain
+    {
+    }
 
-	/// <summary>
-	///     All space related extension methods
-	/// </summary>
-	public static class SpaceExtensions
-	{
-		/// <summary>
-		///     Create a space
-		/// </summary>
-		/// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
-		/// <param name="key">Key for the space</param>
-		/// <param name="name">Name for the space</param>
-		/// <param name="description">Description for the space</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>created Space</returns>
-		public static async Task<Space> CreateAsync(this ISpaceDomain confluenceClient, string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			confluenceClient.Behaviour.MakeCurrent();
-			var space = new Space
-			{
-				Key = key,
-				Name = name,
-				Description = new Description
-				{
-					Plain = new Plain
-					{
-						Value = description
-					}
-				}
-			};
-			var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space");
-			var response = await spaceUri.PostAsync<HttpResponse<Space, Error>>(space, cancellationToken).ConfigureAwait(false);
-			if (response.HasError)
-			{
-				throw new Exception(response.ErrorResponse.Message);
-			}
-			return response.Response;
-		}
+    /// <summary>
+    ///     All space related extension methods
+    /// </summary>
+    public static class SpaceExtensions
+    {
+        /// <summary>
+        ///     Create a space
+        /// </summary>
+        /// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
+        /// <param name="key">Key for the space</param>
+        /// <param name="name">Name for the space</param>
+        /// <param name="description">Description for the space</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>created Space</returns>
+        public static async Task<Space> CreateAsync(this ISpaceDomain confluenceClient, string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            confluenceClient.Behaviour.MakeCurrent();
+            var space = new Space
+            {
+                Key = key,
+                Name = name,
+                Description = new Description
+                {
+                    Plain = new Plain
+                    {
+                        Value = description
+                    }
+                }
+            };
+            var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space");
+            var response = await spaceUri.PostAsync<HttpResponse<Space, Error>>(space, cancellationToken).ConfigureAwait(false);
+            return response.HandleErrors();
+        }
 
-		/// <summary>
-		///     Create a private space
-		/// </summary>
-		/// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
-		/// <param name="key">Key for the space</param>
-		/// <param name="name">Name for the space</param>
-		/// <param name="description">Description for the space</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>created Space</returns>
-		public static async Task<Space> CreatePrivateAsync(this ISpaceDomain confluenceClient, string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			confluenceClient.Behaviour.MakeCurrent();
-			var space = new Space
-			{
-				Key = key,
-				Name = name,
-				Description = new Description
-				{
-					Plain = new Plain
-					{
-						Value = description
-					}
-				}
-			};
-			var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", "_private");
-			var response = await spaceUri.PostAsync<HttpResponse<Space, Error>>(space, cancellationToken).ConfigureAwait(false);
-			if (response.HasError)
-			{
-				throw new Exception(response.ErrorResponse.Message);
-			}
-			return response.Response;
-		}
+        /// <summary>
+        ///     Create a private space
+        /// </summary>
+        /// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
+        /// <param name="key">Key for the space</param>
+        /// <param name="name">Name for the space</param>
+        /// <param name="description">Description for the space</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>created Space</returns>
+        public static async Task<Space> CreatePrivateAsync(this ISpaceDomain confluenceClient, string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            confluenceClient.Behaviour.MakeCurrent();
+            var space = new Space
+            {
+                Key = key,
+                Name = name,
+                Description = new Description
+                {
+                    Plain = new Plain
+                    {
+                        Value = description
+                    }
+                }
+            };
+            var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", "_private");
+            var response = await spaceUri.PostAsync<HttpResponse<Space, Error>>(space, cancellationToken).ConfigureAwait(false);
+            return response.HandleErrors();
+        }
 
-		/// <summary>
-		///     Delete a space
-		/// </summary>
-		/// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
-		/// <param name="key">Key for the space</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>Long running task, which takes care of deleting the space</returns>
-		public static async Task<LongRunningTask> DeleteAsync(this ISpaceDomain confluenceClient, string key, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			confluenceClient.Behaviour.MakeCurrent();
-			var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", key);
-			var response = await spaceUri.DeleteAsync<HttpResponse<LongRunningTask>>(cancellationToken).ConfigureAwait(false);
-			if (response.StatusCode == HttpStatusCode.Accepted)
-			{
-				return response.Response;
-			}
-			throw new Exception(response.StatusCode.ToString());
-		}
+        /// <summary>
+        ///     Delete a space
+        /// </summary>
+        /// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
+        /// <param name="key">Key for the space</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>Long running task, which takes care of deleting the space</returns>
+        public static async Task<LongRunningTask> DeleteAsync(this ISpaceDomain confluenceClient, string key, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            confluenceClient.Behaviour.MakeCurrent();
+            var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", key);
+            var response = await spaceUri.DeleteAsync<HttpResponse<LongRunningTask>>(cancellationToken).ConfigureAwait(false);
+            return response.HandleErrors();
+        }
 
-		/// <summary>
-		///     Get Spaces see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
-		/// </summary>
-		/// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>List of Spaces</returns>
-		public static async Task<IList<Space>> GetAllAsync(this ISpaceDomain confluenceClient, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			confluenceClient.Behaviour.MakeCurrent();
-			var spacesUri = confluenceClient.ConfluenceApiUri.AppendSegments("space");
+        /// <summary>
+        ///     Get Spaces see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
+        /// </summary>
+        /// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>List of Spaces</returns>
+        public static async Task<IList<Space>> GetAllAsync(this ISpaceDomain confluenceClient, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            confluenceClient.Behaviour.MakeCurrent();
+            var spacesUri = confluenceClient.ConfluenceApiUri.AppendSegments("space");
 
-			if (ConfluenceClientConfig.ExpandGetSpace != null && ConfluenceClientConfig.ExpandGetSpace.Length != 0)
-			{
-				spacesUri = spacesUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetSpace));
-			}
+            if (ConfluenceClientConfig.ExpandGetSpace != null && ConfluenceClientConfig.ExpandGetSpace.Length != 0)
+            {
+                spacesUri = spacesUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetSpace));
+            }
 
-			var response = await spacesUri.GetAsAsync<HttpResponse<Result<Space>, Error>>(cancellationToken).ConfigureAwait(false);
-			if (response.HasError)
-			{
-				throw new Exception(response.ErrorResponse.Message);
-			}
-			return response.Response.Results;
-		}
+            var response = await spacesUri.GetAsAsync<HttpResponse<Result<Space>, Error>>(cancellationToken).ConfigureAwait(false);
+            return response.HandleErrors()?.Results;
+        }
 
-		/// <summary>
-		///     Get Space information see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
-		/// </summary>
-		/// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
-		/// <param name="spaceKey">the space key</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>Space</returns>
-		public static async Task<Space> GetAsync(this ISpaceDomain confluenceClient, string spaceKey, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			confluenceClient.Behaviour.MakeCurrent();
-			var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", spaceKey);
-			if (ConfluenceClientConfig.ExpandGetSpace != null && ConfluenceClientConfig.ExpandGetSpace.Length != 0)
-			{
-				spaceUri = spaceUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetSpace));
-			}
+        /// <summary>
+        ///     Get Space information see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
+        /// </summary>
+        /// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
+        /// <param name="spaceKey">the space key</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>Space</returns>
+        public static async Task<Space> GetAsync(this ISpaceDomain confluenceClient, string spaceKey, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            confluenceClient.Behaviour.MakeCurrent();
+            var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", spaceKey);
+            if (ConfluenceClientConfig.ExpandGetSpace != null && ConfluenceClientConfig.ExpandGetSpace.Length != 0)
+            {
+                spaceUri = spaceUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetSpace));
+            }
 
-			var response = await spaceUri.GetAsAsync<HttpResponse<Space, Error>>(cancellationToken).ConfigureAwait(false);
-			if (response.HasError)
-			{
-				throw new Exception(response.ErrorResponse.Message);
-			}
-			return response.Response;
-		}
+            var response = await spaceUri.GetAsAsync<HttpResponse<Space, Error>>(cancellationToken).ConfigureAwait(false);
+            return response.HandleErrors();
+        }
 
-		/// <summary>
-		///     Update a space
-		/// </summary>
-		/// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
-		/// <param name="space">Space to update</param>
-		/// <param name="cancellationToken">CancellationToken</param>
-		/// <returns>created Space</returns>
-		public static async Task<Space> UpdateAsync(this ISpaceDomain confluenceClient, Space space, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			confluenceClient.Behaviour.MakeCurrent();
-			var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", space.Key);
-			var response = await spaceUri.PutAsync<HttpResponse<Space, string>>(space, cancellationToken).ConfigureAwait(false);
-			if (response.HasError)
-			{
-				throw new Exception(response.ErrorResponse);
-			}
-			return response.Response;
-		}
-	}
+        /// <summary>
+        ///     Update a space
+        /// </summary>
+        /// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
+        /// <param name="space">Space to update</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>created Space</returns>
+        public static async Task<Space> UpdateAsync(this ISpaceDomain confluenceClient, Space space, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            confluenceClient.Behaviour.MakeCurrent();
+            var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", space.Key);
+            var response = await spaceUri.PutAsync<HttpResponse<Space, string>>(space, cancellationToken).ConfigureAwait(false);
+            return response.HandleErrors();
+        }
+    }
 }

@@ -182,7 +182,7 @@ namespace Dapplo.Confluence
             var query = queryStart >= 0 ? pathWithQuery.Substring(queryStart + 1) : null;
             var uriBuilder = new UriBuilder(baseUri.AppendSegments(path))
             {
-                Query = query
+                Query = query ?? string.Empty
             };
             return uriBuilder.Uri;
         }

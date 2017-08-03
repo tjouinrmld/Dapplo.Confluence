@@ -21,7 +21,6 @@
 
 #region using
 
-using System;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -71,13 +70,8 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
 
             var postAttachmentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child", "attachment");
-            var response = await postAttachmentUri.PostAsync<HttpResponse<Result<Attachment>, string>>(attachment, cancellationToken).ConfigureAwait(false);
-
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse);
-            }
-            return response.Response;
+            var response = await postAttachmentUri.PostAsync<HttpResponse<Result<Attachment>, Error>>(attachment, cancellationToken).ConfigureAwait(false);
+            return response.HandleErrors();
         }
 
         /// <summary>
@@ -144,12 +138,7 @@ namespace Dapplo.Confluence
             }
 
             var response = await attachmentsUri.GetAsAsync<HttpResponse<Result<Attachment>, Error>>(cancellationToken).ConfigureAwait(false);
-
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse.Message);
-            }
-            return response.Response;
+            return response.HandleErrors();
         }
 
         /// <summary>
@@ -167,13 +156,8 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
 
             var attachmentUri = confluenceClient.CreateDownloadUri(attachment.Links);
-            var response = await attachmentUri.GetAsAsync<HttpResponse<TResponse, string>>(cancellationToken).ConfigureAwait(false);
-
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse);
-            }
-            return response.Response;
+            var response = await attachmentUri.GetAsAsync<HttpResponse<TResponse, Error>>(cancellationToken).ConfigureAwait(false);
+            return response.HandleErrors();
         }
 
         /// <summary>
@@ -196,12 +180,7 @@ namespace Dapplo.Confluence
             }
 
             var response = await attachmentsUri.GetAsAsync<HttpResponse<Attachment, Error>>(cancellationToken).ConfigureAwait(false);
-
-            if (response.HasError)
-            {
-                throw new Exception(response.ErrorResponse.Message);
-            }
-            return response.Response;
+            return response.HandleErrors();
         }
     }
 }

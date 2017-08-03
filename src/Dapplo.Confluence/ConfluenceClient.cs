@@ -226,21 +226,21 @@ namespace Dapplo.Confluence
 
 #if NET45 || NET46
         /// <summary>
-        ///     Create the JiraApi, using OAuth 1 for the communication, here the HttpClient is configured
+        ///     Create the IConfluenceClient, using OAuth 1 for the communication, here the HttpClient is configured
         /// </summary>
-        /// <param name="baseUri">Base URL, e.g. https://yourjiraserver</param>
+        /// <param name="baseUri">Base URL, e.g. https://yourconfluenceserver</param>
         /// <param name="confluenceOAuthSettings">ConfluenceOAuthSettings</param>
         /// <param name="httpSettings">IHttpSettings or null for default</param>
         public static IConfluenceClient Create(Uri baseUri, ConfluenceOAuthSettings confluenceOAuthSettings, IHttpSettings httpSettings = null)
         {
             var client = new ConfluenceClient(baseUri, httpSettings);
-            var jiraOAuthUri = client.ConfluenceUri.AppendSegments("plugins", "servlet", "oauth");
+            var confluenceOAuthUri = client.ConfluenceUri.AppendSegments("plugins", "servlet", "oauth");
 
             var oAuthSettings = new OAuth1Settings
             {
-                TokenUrl = jiraOAuthUri.AppendSegments("request-token"),
+                TokenUrl = confluenceOAuthUri.AppendSegments("request-token"),
                 TokenMethod = HttpMethod.Post,
-                AccessTokenUrl = jiraOAuthUri.AppendSegments("access-token"),
+                AccessTokenUrl = confluenceOAuthUri.AppendSegments("access-token"),
                 AccessTokenMethod = HttpMethod.Post,
                 CheckVerifier = false,
                 SignatureType = OAuth1SignatureTypes.RsaSha1,
@@ -249,7 +249,7 @@ namespace Dapplo.Confluence
                 CloudServiceName = confluenceOAuthSettings.CloudServiceName,
                 RsaSha1Provider = confluenceOAuthSettings.RsaSha1Provider,
                 AuthorizeMode = confluenceOAuthSettings.AuthorizeMode,
-                AuthorizationUri = jiraOAuthUri.AppendSegments("authorize")
+                AuthorizationUri = confluenceOAuthUri.AppendSegments("authorize")
                     .ExtendQuery(new Dictionary<string, string>
                     {
                         {OAuth1Parameters.Token.EnumValueOf(), "{RequestToken}"},

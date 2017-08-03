@@ -77,7 +77,7 @@ namespace Dapplo.Confluence.Tests
         }
 
         /// <summary>
-        ///     Doesn't work yet, as deleting an attachment is not supported
+        ///     Doesn't work yet, as deleting an attachment (with multiple versions) is not supported
         ///     See <a href="https://jira.atlassian.com/browse/CONF-36015">CONF-36015</a>
         /// </summary>
         /// <returns></returns>

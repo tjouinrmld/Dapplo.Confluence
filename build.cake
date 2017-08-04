@@ -3,6 +3,7 @@
 #tool "GitVersion.CommandLine"
 #tool "docfx.console"
 #tool "coveralls.io"
+#tool "gitlink"
 // Needed for Cake.Compression, as described here: https://github.com/akordowski/Cake.Compression/issues/3
 #addin "SharpZipLib"
 #addin "MagicChunks"
@@ -79,17 +80,28 @@ Task("Package")
 	.IsDependentOn("Documentation")
     .Does(()=>
 {
+	var gitLinkSettings = new GitLinkSettings {
+		IsDebug = false
+	};
+
+	// Run GitLink before packaging the files
+    foreach(var pdbFilePath in GetFiles("./**/bin/**/*.pdb"))
+    {
+        Information("Enhancing PDB: " + pdbFilePath.FullPath);
+        GitLink(pdbFilePath.FullPath, gitLinkSettings);
+    }
+
     var settings = new DotNetCorePackSettings  
     {
         OutputDirectory = "./artifacts/",
         Configuration = configuration
     };
 
-    var projectFilePaths = GetFiles("./**/*.csproj").Where(p => !p.FullPath.Contains("Test") && !p.FullPath.Contains("packages") &&!p.FullPath.Contains("tools"));
-    foreach(var projectFilePath in projectFilePaths)
+    var projectFiles = GetFiles("./**/*.csproj").Where(p => !p.FullPath.Contains("Test") && !p.FullPath.Contains("packages") &&!p.FullPath.Contains("tools"));
+    foreach(var projectFile in projectFiles)
     {
-        Information("Packaging: " + projectFilePath.FullPath);
-		DotNetCorePack(projectFilePath.GetDirectory().FullPath, settings);
+        Information("Packaging: " + projectFile.FullPath);
+        DotNetCorePack(projectFile.FullPath, settings);
     }
 });
 
@@ -97,13 +109,13 @@ Task("Package")
 Task("Documentation")
     .Does(() =>
 {
-	// Run DocFX
+    // Run DocFX
     DocFxMetadata("./doc/docfx.json");
     DocFxBuild("./doc/docfx.json");
-	
-	CreateDirectory("artifacts");
-	// Archive the generated site
-	ZipCompress("./doc/_site", "./artifacts/site.zip");
+
+    CreateDirectory("artifacts");
+    // Archive the generated site
+    ZipCompress("./doc/_site", "./artifacts/site.zip");
 });
 
 // Run the XUnit tests via OpenCover, so be get an coverage.xml report
@@ -163,8 +175,8 @@ Task("Coverage")
 // This starts the actual MSBuild
 Task("Build")
     .IsDependentOn("Clean")
-    .IsDependentOn("RestoreNuGetPackages")
     .IsDependentOn("Versioning")
+    .IsDependentOn("RestoreNuGetPackages")
     .Does(() =>
 {
 	DotNetCoreBuild(solutionFilePath.FullPath, new DotNetCoreBuildSettings 
@@ -189,16 +201,16 @@ Task("RestoreNuGetPackages")
 Task("Versioning")
     .Does(() =>
 {
-	Information("Version of this build: " + version);
-	
-	// Overwrite version if it's not set.
-	if (string.IsNullOrEmpty(version)) {
-		var gitVersion = GitVersion();
-		Information("Git Version of this build: " + gitVersion.AssemblySemVer);
-		version = gitVersion.AssemblySemVer;
-	}
+    Information("Version of this build: " + version);
+    
+    // Overwrite version if it's not set.
+    if (string.IsNullOrEmpty(version)) {
+        var gitVersion = GitVersion();
+        Information("Git Version of this build: " + gitVersion.AssemblySemVer);
+        version = gitVersion.AssemblySemVer;
+    }
     	
-	var projectFilePaths = GetFiles("./**/*.csproj").Where(p => !p.FullPath.Contains("Test") && !p.FullPath.Contains("packages") &&!p.FullPath.Contains("tools"));
+    var projectFilePaths = GetFiles("./**/*.csproj").Where(p => !p.FullPath.Contains("Test") && !p.FullPath.Contains("packages") &&!p.FullPath.Contains("tools"));
     foreach(var projectFilePath in projectFilePaths)
     {
         Information("Changing version in : " + projectFilePath.FullPath + " to " + version);

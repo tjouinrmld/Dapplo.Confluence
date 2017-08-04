@@ -1,6 +1,6 @@
 version: 0.6.{build}
 skip_tags: true
-os: Visual Studio 2017
+os: Visual Studio 2017 Preview
 configuration: Release
 platform: AnyCPU
 clone_depth: 2
@@ -23,6 +23,8 @@ build:
   verbosity: minimal
 build_script:
 - ps: .\build.ps1
+cache:
+  - tools -> build.cake, tools/packages.config
 artifacts:
 - path: artifacts\**\*.nupkg
 - path: artifacts\**\site.zip

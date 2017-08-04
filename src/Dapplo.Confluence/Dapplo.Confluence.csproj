@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>A library for accessing Atlassians Confluence from .NET</Description>
-    <Copyright>Copyright © Dapplo 2016</Copyright>
+    <Copyright>Copyright © Dapplo 2016-2017</Copyright>
     <AssemblyTitle>Dapplo.Confluence</AssemblyTitle>
-    <Authors>Robin Krom</Authors>
+    <Authors>Dapplo</Authors>
     <TargetFrameworks>netstandard1.3;net45;net46</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Dapplo.Confluence</AssemblyName>
@@ -21,20 +21,34 @@
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
+  <ItemGroup Label="dotnet pack instructions" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+    <None Include="bin/$(Configuration)/netstandard1.3/$(AssemblyName).pdb">
+      <Pack>true</Pack>
+      <PackagePath>lib/netstandard1.3</PackagePath>
+    </None>
+    <None Include="bin/$(Configuration)/net45/$(AssemblyName).pdb">
+      <Pack>true</Pack>
+      <PackagePath>lib/net45</PackagePath>
+    </None>
+    <None Include="bin/$(Configuration)/net46/$(AssemblyName).pdb">
+      <Pack>true</Pack>
+      <PackagePath>lib/net46</PackagePath>
+    </None>
+  </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.6.22" />
-    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.6.22" />
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.8.23" />
+    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.8.23" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.6.22" />
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.23" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.6.22" />
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.23" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

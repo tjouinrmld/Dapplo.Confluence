@@ -85,7 +85,7 @@ Task("Package")
 	};
 
 	// Run GitLink before packaging the files
-    foreach(var pdbFilePath in GetFiles("./**/bin/**/*.pdb"))
+    foreach(var pdbFilePath in GetFiles("./**/bin/**/*.pdb").Where(p => !p.FullPath.Contains("Test") && !p.FullPath.Contains("packages") &&!p.FullPath.Contains("tools"))
     {
         Information("Enhancing PDB: " + pdbFilePath.FullPath);
         GitLink(pdbFilePath.FullPath, gitLinkSettings);

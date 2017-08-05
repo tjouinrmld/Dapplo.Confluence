@@ -63,17 +63,17 @@ namespace Dapplo.Confluence.Tests
         private readonly IConfluenceClient _confluenceClient;
 
         [Fact]
-        public async Task TestVersion()
+        public async Task Test_ContentVersion()
         {
             var query = Where.And(Where.Space.Is("TEST"), Where.Type.IsPage, Where.Title.Contains("Test Home"));
             var searchResults = await _confluenceClient.Content.SearchAsync(query);
-            var searchResult = searchResults.Single();
+            var searchResult = searchResults.First();
             Log.Info().WriteLine("Version = {0}", searchResult.Version.Number);
                 // => searchResult.Version.Number = 11 // !!! why 11 ?
 
             query = Where.Title.Contains("Test Home");
             searchResults = await _confluenceClient.Content.SearchAsync(query);
-            searchResult = searchResults.Single();
+            searchResult = searchResults.First();
             Log.Info().WriteLine("Version = {0}", searchResult.Version.Number);
                 // => searchResult.Version.Number = 8 // !!! why 10 ?
             var id = searchResult.Id;

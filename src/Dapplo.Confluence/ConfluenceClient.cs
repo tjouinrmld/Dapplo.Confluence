@@ -244,6 +244,9 @@ namespace Dapplo.Confluence
                 AccessTokenMethod = HttpMethod.Post,
                 CheckVerifier = false,
                 SignatureType = OAuth1SignatureTypes.RsaSha1,
+                // According to <a href="https://community.atlassian.com/t5/Questions/Confluence-Oauth-Authentication/qaq-p/331326#M51385">here</a>
+                // the OAuth arguments need to be passed in the query
+                SignatureTransport = OAuth1SignatureTransports.QueryParameters,
                 Token = confluenceOAuthSettings.Token,
                 ClientId = confluenceOAuthSettings.ConsumerKey,
                 CloudServiceName = confluenceOAuthSettings.CloudServiceName,

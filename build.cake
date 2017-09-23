@@ -223,7 +223,6 @@ Task("Versioning")
     }
 });
 
-
 // Clean all unneeded files, so we build on a clean file system
 Task("Clean")
     .Does(() =>

@@ -28,6 +28,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapplo.Confluence.Entities;
 using Dapplo.Confluence.Query;
 using Dapplo.Log;
 using Dapplo.Log.XUnit;
@@ -79,8 +80,8 @@ namespace Dapplo.Confluence.Tests
             var id = searchResult.Id;
             var content = await _confluenceClient.Content.GetAsync(id);
             Log.Info().WriteLine("Version = {0}", content.Version.Number);
-
         }
+
         /// <summary>
         ///     Test GetAsync
         /// </summary>
@@ -127,6 +128,24 @@ namespace Dapplo.Confluence.Tests
             Assert.Equal("page", searchResult.First().Type);
             var uri = _confluenceClient.CreateWebUiUri(searchResult.FirstOrDefault()?.Links);
             Assert.NotNull(uri);
+        }
+
+        [Fact]
+        public async Task TestLabels()
+        {
+            var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit: 1);
+            var contentId = searchResult.First().Id;
+
+            var labels = new[] {"test1", "test2"};
+            await _confluenceClient.Content.AddLabelsAsync(contentId, labels.Select(s => new Label{Name = s}));
+            var labelsForContent = await _confluenceClient.Content.GetLabelsAsync(contentId);
+            Assert.Equal(labels.Length, labelsForContent.Count(label => labels.Contains(label.Name)));
+
+            // Delete all
+            foreach (var label in labelsForContent)
+            {
+                await _confluenceClient.Content.DeleteLabelAsync(contentId, label.Name);
+            }
         }
     }
 }

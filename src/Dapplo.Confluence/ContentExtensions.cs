@@ -310,5 +310,55 @@ namespace Dapplo.Confluence
             var response = await contentUri.PutAsync<HttpResponse<Content, Error>>(content, cancellationToken).ConfigureAwait(false);
             return response.HandleErrors();
         }
+
+        /// <summary>
+        ///     Get Labels for content see <a href="https://docs.atlassian.com/confluence/REST/latest/#content/{id}/label">here</a>
+        /// </summary>
+        /// <param name="confluenceClient">IContentDomain to bind the extension method to</param>
+        /// <param name="contentId">content id</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>Result with labels</returns>
+        public static async Task<Result<Label>> GetLabelsAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var labelUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "label");
+            confluenceClient.Behaviour.MakeCurrent();
+
+            var response = await labelUri.GetAsAsync<HttpResponse<Result<Label>, Error>>(cancellationToken).ConfigureAwait(false);
+            return response.HandleErrors();
+        }
+
+        /// <summary>
+        ///     Add Labels to content see <a href="https://docs.atlassian.com/confluence/REST/latest/#content/{id}/label">here</a>
+        /// </summary>
+        /// <param name="confluenceClient">IContentDomain to bind the extension method to</param>
+        /// <param name="contentId">content id</param>
+        /// <param name="labels">IEnumerable labels</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>Task</returns>
+        public static async Task AddLabelsAsync(this IContentDomain confluenceClient, long contentId, IEnumerable<Label> labels, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var labelUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "label");
+            confluenceClient.Behaviour.MakeCurrent();
+
+            var response = await labelUri.PostAsync<HttpResponseWithError<Error>>(labels, cancellationToken).ConfigureAwait(false);
+            response.HandleStatusCode();
+        }
+
+        /// <summary>
+        ///     Delete Label for content see <a href="https://docs.atlassian.com/confluence/REST/latest/#content/{id}/label">here</a>
+        /// </summary>
+        /// <param name="confluenceClient">IContentDomain to bind the extension method to</param>
+        /// <param name="contentId">content id</param>
+        /// <param name="label">Name of label</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>Task</returns>
+        public static async Task DeleteLabelAsync(this IContentDomain confluenceClient, long contentId, string label, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var labelUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "label", label);
+            confluenceClient.Behaviour.MakeCurrent();
+
+            var response = await labelUri.DeleteAsync<HttpResponse>(cancellationToken).ConfigureAwait(false);
+            response.HandleStatusCode(HttpStatusCode.NoContent);
+        }
     }
 }

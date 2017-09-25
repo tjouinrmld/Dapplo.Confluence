@@ -130,7 +130,7 @@ namespace Dapplo.Confluence.Tests
             Assert.NotNull(uri);
         }
 
-        [Fact]
+        //[Fact]
         public async Task TestLabels()
         {
             var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit: 1);

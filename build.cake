@@ -2,12 +2,10 @@
 #tool "OpenCover"
 #tool "GitVersion.CommandLine"
 #tool "docfx.console"
-#tool "coveralls.io"
+#tool "coveralls.net"
 #tool "gitlink"
 // Needed for Cake.Compression, as described here: https://github.com/akordowski/Cake.Compression/issues/3
 #addin "SharpZipLib"
-#addin "MagicChunks"
-#addin "Cake.FileHelpers"
 #addin "Cake.DocFx"
 #addin "Cake.Coveralls"
 #addin "Cake.Compression"
@@ -50,7 +48,7 @@ Task("PublishCoverage")
     .WithCriteria(() => !isPullRequest)
     .Does(()=>
 {
-	CoverallsIo("./artifacts/coverage.xml", new CoverallsIoSettings()
+	CoverallsNet("./artifacts/coverage.xml", CoverallsNetReportType.OpenCover, new CoverallsNetSettings
     {
         RepoToken = coverallsRepoToken
     });
@@ -214,12 +212,10 @@ Task("Versioning")
     foreach(var projectFilePath in projectFilePaths)
     {
         Information("Changing version in : " + projectFilePath.FullPath + " to " + version);
-        TransformConfig(projectFilePath.FullPath, 
-            new TransformationCollection {
-                { "Project/PropertyGroup/Version", version },
-                { "Project/PropertyGroup/AssemblyVersion", version },
-                { "Project/PropertyGroup/FileVersion", version }
-            });
+		var xmlFile = File(projectFilePath.FullPath);
+		XmlPoke(xmlFile, "/Project/PropertyGroup/Version", version);
+		XmlPoke(xmlFile, "/Project/PropertyGroup/AssemblyVersion", version);
+		XmlPoke(xmlFile, "/Project/PropertyGroup/FileVersion", version);
     }
 });
 

@@ -5,12 +5,12 @@
         {
 		  "src": "../src",
           "files": [
-            "Dapplo.Confluence*/project.json"
+            "Dapplo.Confluence*/Dapplo.Confluence.csproj"
           ],
           "exclude": [
 			"**/bin/**",
 			"**/obj/**",
-			"**Tests/project.json",
+			"**Tests/*.csproj",
           ]
         }
       ],

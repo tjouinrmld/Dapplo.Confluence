@@ -144,7 +144,7 @@ namespace Dapplo.Confluence
         ///     Get Content information see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
         /// </summary>
         /// <param name="confluenceClient">IContentDomain to bind the extension method to</param>
-        /// <param name="contentId">content id</param>
+        /// <param name="contentId">content id (as content implements an implicit cast, you can also pass the content instance)</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
         public static async Task<Content> GetAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default(CancellationToken))

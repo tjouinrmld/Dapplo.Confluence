@@ -70,15 +70,12 @@ namespace Dapplo.Confluence.Tests
             var searchResults = await _confluenceClient.Content.SearchAsync(query);
             var searchResult = searchResults.First();
             Log.Info().WriteLine("Version = {0}", searchResult.Version.Number);
-                // => searchResult.Version.Number = 11 // !!! why 11 ?
-
             query = Where.Title.Contains("Test Home");
             searchResults = await _confluenceClient.Content.SearchAsync(query);
             searchResult = searchResults.First();
             Log.Info().WriteLine("Version = {0}", searchResult.Version.Number);
-                // => searchResult.Version.Number = 8 // !!! why 10 ?
-            var id = searchResult.Id;
-            var content = await _confluenceClient.Content.GetAsync(id);
+
+            var content = await _confluenceClient.Content.GetAsync(searchResult);
             Log.Info().WriteLine("Version = {0}", content.Version.Number);
         }
 

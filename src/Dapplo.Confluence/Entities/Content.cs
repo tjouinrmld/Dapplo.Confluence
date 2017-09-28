@@ -76,5 +76,15 @@ namespace Dapplo.Confluence.Entities
         /// </summary>
         [DataMember(Name = "version", EmitDefaultValue = false)]
         public Version Version { get; set; }
+
+        /// <summary>
+        ///     Cast Content to long (contentId)
+        /// </summary>
+        /// <param name="content">Content</param>
+        /// <returns>long</returns>
+        public static implicit operator long(Content content)
+        {
+            return content.Id;
+        }
     }
 }

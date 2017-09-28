@@ -25,5 +25,15 @@ namespace Dapplo.Confluence.Entities
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = false)]
         public string Type { get; set; }
+
+        /// <summary>
+        ///     Implicit cast of BaseEntity to the ID type (e.g. Content -> long for contentId)
+        /// </summary>
+        /// <param name="entity">BaseEntity of type TId</param>
+        /// <returns>TId</returns>
+        public static implicit operator TId(BaseEntity<TId> entity)
+        {
+            return entity.Id;
+        }
     }
 }

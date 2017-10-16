@@ -26,6 +26,7 @@
 #region Usings
 
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
@@ -106,7 +107,7 @@ namespace Dapplo.Confluence.Tests
         //[Fact]
         public async Task TestCreateContent()
         {
-            var attachment = await _confluenceClient.Content.CreateAsync("page", "Testing 1 2 3", "TEST", "<p>This is a test</p>");
+            var attachment = await _confluenceClient.Content.CreateAsync(ContentTypes.Page, "Testing 1 2 3", "TEST", "<p>This is a test</p>");
             Assert.NotNull(attachment);
         }
 
@@ -122,13 +123,29 @@ namespace Dapplo.Confluence.Tests
             ConfluenceClientConfig.ExpandSearch = new[] {"version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated"};
 
             var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit:1);
-            Assert.Equal("page", searchResult.First().Type);
+            Assert.Equal(ContentTypes.Page, searchResult.First().Type);
             var uri = _confluenceClient.CreateWebUiUri(searchResult.FirstOrDefault()?.Links);
             Assert.NotNull(uri);
         }
 
-        //[Fact]
-        public async Task TestLabels()
+	    [Fact]
+	    public async Task TestSearchAttachment()
+	    {
+		    ConfluenceClientConfig.ExpandSearch = new[] { "version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated" };
+
+		    var query = Where.And(Where.Type.IsAttachment, Where.Text.Contains("404"));
+
+			var searchResult = await _confluenceClient.Content.SearchAsync(query, limit: 1);
+		    var attachment = searchResult.First();
+		    Assert.Equal(ContentTypes.Attachment, attachment.Type);
+		    _confluenceClient.Attachment.CreateDownloadUri(attachment.Links);
+			// I know the attachment is a bitmap, this should work
+		    var bitmap = await _confluenceClient.Attachment.GetContentAsync<Bitmap>(attachment);
+			Assert.True(bitmap.Width > 0);
+	    }
+
+		//[Fact]
+		public async Task TestLabels()
         {
             var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit: 1);
             var contentId = searchResult.First().Id;

@@ -67,7 +67,7 @@ namespace Dapplo.Confluence.Query
 
 		internal ContentClause(Fields contentField)
 		{
-			if (!_allowedFields.Any(field => contentField == field))
+			if (_allowedFields.All(field => contentField != field))
 			{
 				throw new InvalidOperationException($"Can't add function for the field {contentField}");
 			}

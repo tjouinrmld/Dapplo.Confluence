@@ -56,14 +56,14 @@ namespace Dapplo.Confluence.Tests
 		[Fact]
 		public void TestClause_Type_In()
 		{
-			var clause = Where.Type.In(Types.Page, Types.BlogPost);
+			var clause = Where.Type.In(ContentTypes.Page, ContentTypes.BlogPost);
 			Assert.Equal("type in (page, blogpost)", clause.ToString());
 		}
 
 		[Fact]
 		public void TestClause_Type_Not_In()
 		{
-			var clause = Where.Type.Not.In(Types.Page, Types.BlogPost);
+			var clause = Where.Type.Not.In(ContentTypes.Page, ContentTypes.BlogPost);
 			Assert.Equal("type not in (page, blogpost)", clause.ToString());
 		}
 

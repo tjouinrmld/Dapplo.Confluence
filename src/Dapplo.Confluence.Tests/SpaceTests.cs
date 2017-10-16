@@ -79,7 +79,7 @@ namespace Dapplo.Confluence.Tests
 		{
 			var spaces = await _confluenceClient.Space.GetAllAsync();
 			Assert.NotNull(spaces);
-			Assert.NotNull(spaces.Count > 0);
+			Assert.True(spaces.Count > 0);
 		}
 
 		/// <summary>

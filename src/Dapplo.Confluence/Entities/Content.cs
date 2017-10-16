@@ -29,28 +29,40 @@ using System.Runtime.Serialization;
 namespace Dapplo.Confluence.Entities
 {
     /// <summary>
-    ///     Content information, this can be many things e.g a page
+    ///     Content, this can be many things e.g a page or an attachment
     ///     See: https://docs.atlassian.com/confluence/REST/latest
     /// </summary>
     [DataContract]
     public class Content : BaseEntity<long>
     {
-        /// <summary>
-        ///     Body of the content
-        /// </summary>
-        [DataMember(Name = "body", EmitDefaultValue = false)]
-        public Body Body { get; set; }
+	    /// <summary>
+	    ///     The container where this content hangs, this is not filled unless expand=container
+	    /// </summary>
+	    [DataMember(Name = "container", EmitDefaultValue = false)]
+	    public Content Container { get; set; }
 
-        /// <summary>
-        ///     Ancestors for the content
-        /// </summary>
-        [DataMember(Name = "ancestors", EmitDefaultValue = false)]
-        public IList<Content> Ancestors { get; set; }
+	    /// <summary>
+	    ///     Additional meta-data for the attachment, like the comment
+	    /// </summary>
+	    [DataMember(Name = "metadata", EmitDefaultValue = false)]
+	    public Metadata Metadata { get; set; }
 
-        /// <summary>
-        ///     The values that are expandable
-        /// </summary>
-        [DataMember(Name = "_expandable", EmitDefaultValue = false)]
+		/// <summary>
+		///     Body of the content
+		/// </summary>
+		[DataMember(Name = "body", EmitDefaultValue = false)]
+	    public Body Body { get; set; }
+
+		/// <summary>
+		///     Ancestors for the content
+		/// </summary>
+		[DataMember(Name = "ancestors", EmitDefaultValue = false)]
+	    public IList<Content> Ancestors { get; set; }
+
+		/// <summary>
+		///     The values that are expandable
+		/// </summary>
+		[DataMember(Name = "_expandable", EmitDefaultValue = false)]
         public IDictionary<string, string> Expandables { get; set; }
 
         /// <summary>

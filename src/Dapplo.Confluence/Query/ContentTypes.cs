@@ -25,37 +25,32 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Dapplo.Confluence.Entities
+namespace Dapplo.Confluence.Query
 {
     /// <summary>
-    ///     Attachment information
-    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    /// Possible types of content, used in CQL
     /// </summary>
-    [DataContract]
-    public class Attachment : BaseEntity<string>
-    {
+	public enum ContentTypes
+	{
+		/// <summary>
+		/// The content is global content
+		/// </summary>
+		[EnumMember(Value = "global")] Global,
         /// <summary>
-        ///     The container where this attachment hangs, this is not filled unless expand=container
-        /// </summary>
-        [DataMember(Name = "container", EmitDefaultValue = false)]
-        public Content Container { get; set; }
-
+		/// The content is a page
+		/// </summary>
+		[EnumMember(Value = "page")] Page,
         /// <summary>
-        ///     Additional meta-data for the attachment, like the comment
+        /// The content is a blogpost
         /// </summary>
-        [DataMember(Name = "metadata", EmitDefaultValue = false)]
-        public Metadata Metadata { get; set; }
-
+		[EnumMember(Value = "blogpost")] BlogPost,
         /// <summary>
-        ///     Title for the attachment
+        /// The content is a comment
         /// </summary>
-        [DataMember(Name = "title", EmitDefaultValue = false)]
-        public string Title { get; set; }
-
+		[EnumMember(Value = "comment")] Comment,
         /// <summary>
-        ///     Version information on the attachment, this is not filled unless expand=version
+        /// The content is an attachment
         /// </summary>
-        [DataMember(Name = "version", EmitDefaultValue = false)]
-        public Version Version { get; set; }
-    }
+		[EnumMember(Value = "attachment")] Attachment
+	}
 }

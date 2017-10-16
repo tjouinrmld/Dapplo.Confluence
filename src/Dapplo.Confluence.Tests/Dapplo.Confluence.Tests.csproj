@@ -42,8 +42,8 @@
     <PackageReference Include="Dapplo.Log.XUnit" Version="1.0.29">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="xunit" Version="2.2.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="xunit" Version="2.3.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0" />
     <PackageReference Include="Dapplo.Utils" Version="1.0.150">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>

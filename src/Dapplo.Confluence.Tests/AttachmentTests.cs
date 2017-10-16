@@ -68,7 +68,7 @@ namespace Dapplo.Confluence.Tests
         {
             var attachments = await _confluenceClient.Attachment.GetAttachmentsAsync("950274");
             Assert.NotNull(attachments);
-            Assert.NotNull(attachments.Results.Count > 0);
+            Assert.True(attachments.Results.Count > 0);
             using (var attachmentMemoryStream = await _confluenceClient.Attachment.GetContentAsync<MemoryStream>(attachments.FirstOrDefault()))
             {
                 Assert.True(attachmentMemoryStream.Length > 0);

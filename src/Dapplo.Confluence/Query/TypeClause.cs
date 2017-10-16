@@ -61,9 +61,9 @@ namespace Dapplo.Confluence.Query
 		/// <summary>
 		///     Test if the type is one of the specified types
 		/// </summary>
-		/// <param name="types">array of types</param>
+		/// <param name="contentTypes">array of types</param>
 		/// <returns>IFinalClause</returns>
-		IFinalClause In(params Types[] types);
+		IFinalClause In(params ContentTypes[] contentTypes);
 	}
 
 	/// <inheritDoc />
@@ -86,7 +86,7 @@ namespace Dapplo.Confluence.Query
 			get
 			{
 				_clause.Operator = Operators.EqualTo;
-				_clause.Value = Types.Attachment.EnumValueOf();
+				_clause.Value = ContentTypes.Attachment.EnumValueOf();
 				if (_negate)
 				{
 					_clause.Negate();
@@ -101,7 +101,7 @@ namespace Dapplo.Confluence.Query
 			get
 			{
 				_clause.Operator = Operators.EqualTo;
-				_clause.Value = Types.Page.EnumValueOf();
+				_clause.Value = ContentTypes.Page.EnumValueOf();
 				if (_negate)
 				{
 					_clause.Negate();
@@ -116,7 +116,7 @@ namespace Dapplo.Confluence.Query
 			get
 			{
 				_clause.Operator = Operators.EqualTo;
-				_clause.Value = Types.BlogPost.EnumValueOf();
+				_clause.Value = ContentTypes.BlogPost.EnumValueOf();
 				if (_negate)
 				{
 					_clause.Negate();
@@ -131,7 +131,7 @@ namespace Dapplo.Confluence.Query
 			get
 			{
 				_clause.Operator = Operators.EqualTo;
-				_clause.Value = Types.Comment.EnumValueOf();
+				_clause.Value = ContentTypes.Comment.EnumValueOf();
 				if (_negate)
 				{
 					_clause.Negate();
@@ -151,10 +151,10 @@ namespace Dapplo.Confluence.Query
 		}
 
 		/// <inheritDoc />
-		public IFinalClause In(params Types[] types)
+		public IFinalClause In(params ContentTypes[] contentTypes)
 		{
 			_clause.Operator = Operators.In;
-			_clause.Value = "(" + string.Join(", ", types.Select(type => type.EnumValueOf())) + ")";
+			_clause.Value = "(" + string.Join(", ", contentTypes.Select(type => type.EnumValueOf())) + ")";
 			if (_negate)
 			{
 				_clause.Negate();

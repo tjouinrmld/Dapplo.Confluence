@@ -50,14 +50,14 @@ namespace Dapplo.Confluence
         ///     Create content
         /// </summary>
         /// <param name="confluenceClient">IContentDomain to bind the extension method to</param>
-        /// <param name="type">Type of content, usually page</param>
+        /// <param name="contentType">Type of content, usually page</param>
         /// <param name="title">Title for the content</param>
         /// <param name="spaceKey">Key of the space to add the content to</param>
         /// <param name="body">the complete body (HTML)</param>
         /// <param name="ancestorId">Optional ID for the ancestor (parent)</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
-        public static Task<Content> CreateAsync(this IContentDomain confluenceClient, string type, string title, string spaceKey, string body, long? ancestorId = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<Content> CreateAsync(this IContentDomain confluenceClient, ContentTypes contentType, string title, string spaceKey, string body, long? ancestorId = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var contentBody = new Body
             {
@@ -67,25 +67,25 @@ namespace Dapplo.Confluence
                     Representation = "storage"
                 }
             };
-            return confluenceClient.CreateAsync(type, title, spaceKey, contentBody, ancestorId, cancellationToken);
+            return confluenceClient.CreateAsync(contentType, title, spaceKey, contentBody, ancestorId, cancellationToken);
         }
 
         /// <summary>
         ///     Create content
         /// </summary>
         /// <param name="confluenceClient">IContentDomain to bind the extension method to</param>
-        /// <param name="type">Type of content, usually page</param>
+        /// <param name="contentType">Type of content, usually page</param>
         /// <param name="title">Title for the content</param>
         /// <param name="spaceKey">Key of the space to add the content to</param>
         /// <param name="body">Body</param>
         /// <param name="ancestorId">Optional ID for the ancestor (parent)</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
-        public static Task<Content> CreateAsync(this IContentDomain confluenceClient, string type, string title, string spaceKey, Body body, long? ancestorId = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<Content> CreateAsync(this IContentDomain confluenceClient, ContentTypes contentType, string title, string spaceKey, Body body, long? ancestorId = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var content = new Content
             {
-                Type = type,
+                Type = contentType,
                 Title = title,
                 Space = new Space
                 {

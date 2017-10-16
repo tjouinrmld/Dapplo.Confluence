@@ -21,12 +21,14 @@
 
 #region using
 
+using System;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
 using Dapplo.Confluence.Internals;
+using Dapplo.Confluence.Query;
 using Dapplo.HttpExtensions;
 
 #endregion
@@ -57,7 +59,7 @@ namespace Dapplo.Confluence
         /// <param name="contentType">Content-Type for the content, or null</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Result with Attachment</returns>
-        public static async Task<Result<Attachment>> AttachAsync<TContent>(this IAttachmentDomain confluenceClient, string contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Result<Content>> AttachAsync<TContent>(this IAttachmentDomain confluenceClient, string contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default(CancellationToken))
             where TContent : class
         {
             var attachment = new AttachmentContainer<TContent>
@@ -70,7 +72,7 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
 
             var postAttachmentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child", "attachment");
-            var response = await postAttachmentUri.PostAsync<HttpResponse<Result<Attachment>, Error>>(attachment, cancellationToken).ConfigureAwait(false);
+            var response = await postAttachmentUri.PostAsync<HttpResponse<Result<Content>, Error>>(attachment, cancellationToken).ConfigureAwait(false);
             return response.HandleErrors();
         }
 
@@ -81,9 +83,13 @@ namespace Dapplo.Confluence
         /// <param name="confluenceClient">IAttachmentDomain to bind the extension method to</param>
         /// <param name="attachment">Attachment which needs to be deleted</param>
         /// <param name="cancellationToken">cancellationToken</param>
-        public static async Task DeleteAsync(this IAttachmentDomain confluenceClient, Attachment attachment,
+        public static async Task DeleteAsync(this IAttachmentDomain confluenceClient, Content attachment,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+	        if (attachment.Type != ContentTypes.Attachment)
+	        {
+		        throw new ArgumentException("Not an attachment", nameof(attachment));
+	        }
             confluenceClient.Behaviour.MakeCurrent();
 
             var contentUri = confluenceClient.ConfluenceUri
@@ -101,9 +107,9 @@ namespace Dapplo.Confluence
         /// <param name="attachtmentId">ID for the content which needs to be deleted</param>
         /// <param name="isTrashed">If the content is trashable, you will need to call DeleteAsyc twice, second time with isTrashed = true</param>
         /// <param name="cancellationToken">CancellationToken</param>
-        public static async Task DeleteAsync(this IAttachmentDomain confluenceClient, string attachtmentId, bool isTrashed = false, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task DeleteAsync(this IAttachmentDomain confluenceClient, long attachtmentId, bool isTrashed = false, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", attachtmentId);
+            var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", $"att{attachtmentId}");
 
             if (isTrashed)
             {
@@ -122,7 +128,7 @@ namespace Dapplo.Confluence
         /// <param name="contentId">string with the content id</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Result with Attachment(s)</returns>
-        public static async Task<Result<Attachment>> GetAttachmentsAsync(this IAttachmentDomain confluenceClient, string contentId,
+        public static async Task<Result<Content>> GetAttachmentsAsync(this IAttachmentDomain confluenceClient, string contentId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             confluenceClient.Behaviour.MakeCurrent();
@@ -134,7 +140,7 @@ namespace Dapplo.Confluence
                 attachmentsUri = attachmentsUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetAttachments));
             }
 
-            var response = await attachmentsUri.GetAsAsync<HttpResponse<Result<Attachment>, Error>>(cancellationToken).ConfigureAwait(false);
+            var response = await attachmentsUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
             return response.HandleErrors();
         }
 
@@ -146,11 +152,15 @@ namespace Dapplo.Confluence
         /// <param name="attachment">Attachment</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
-        public static async Task<TResponse> GetContentAsync<TResponse>(this IAttachmentDomain confluenceClient, Attachment attachment,
+        public static async Task<TResponse> GetContentAsync<TResponse>(this IAttachmentDomain confluenceClient, Content attachment,
             CancellationToken cancellationToken = default(CancellationToken))
             where TResponse : class
         {
-            confluenceClient.Behaviour.MakeCurrent();
+	        if (attachment.Type != ContentTypes.Attachment)
+	        {
+		        throw new ArgumentException("Not an attachment", nameof(attachment));
+	        }
+			confluenceClient.Behaviour.MakeCurrent();
 
             var attachmentUri = confluenceClient.CreateDownloadUri(attachment.Links);
             var response = await attachmentUri.GetAsAsync<HttpResponse<TResponse, Error>>(cancellationToken).ConfigureAwait(false);
@@ -164,19 +174,18 @@ namespace Dapplo.Confluence
         /// <param name="attachment">Attachment</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Attachment</returns>
-        public static async Task<Attachment> UpdateAsync(this IAttachmentDomain confluenceClient, Attachment attachment, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Content> UpdateAsync(this IAttachmentDomain confluenceClient, Content attachment, CancellationToken cancellationToken = default(CancellationToken))
         {
             confluenceClient.Behaviour.MakeCurrent();
 
-            var id = Regex.Replace(attachment.Id, "[a-z]*", "");
-            var attachmentsUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", attachment.Container.Id, "child", "attachment", id);
+            var attachmentsUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", attachment.Container.Id, "child", "attachment", attachment.Id);
 
             if (ConfluenceClientConfig.ExpandGetAttachments != null && ConfluenceClientConfig.ExpandGetAttachments.Length != 0)
             {
                 attachmentsUri = attachmentsUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetAttachments));
             }
 
-            var response = await attachmentsUri.GetAsAsync<HttpResponse<Attachment, Error>>(cancellationToken).ConfigureAwait(false);
+            var response = await attachmentsUri.GetAsAsync<HttpResponse<Content, Error>>(cancellationToken).ConfigureAwait(false);
             return response.HandleErrors();
         }
     }

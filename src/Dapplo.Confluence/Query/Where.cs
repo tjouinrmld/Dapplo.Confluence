@@ -53,12 +53,17 @@ namespace Dapplo.Confluence.Query
 		/// </summary>
 		public static ITypeClause Type => new TypeClause();
 
-		#region User based clauses
+        /// <summary>
+        ///     Create a clause for the Title field
+        /// </summary>
+        public static ITitleClause Title => new TitleClause(Fields.Title);
 
-		/// <summary>
-		///     Create a clause for the creator
-		/// </summary>
-		public static IUserClause Creator => new UserClause(Fields.Creator);
+        #region User based clauses
+
+        /// <summary>
+        ///     Create a clause for the creator
+        /// </summary>
+        public static IUserClause Creator => new UserClause(Fields.Creator);
 
 		/// <summary>
 		///     Create a clause for the contributor
@@ -112,11 +117,6 @@ namespace Dapplo.Confluence.Query
 		///     Create a clause for the Text field
 		/// </summary>
 		public static ITextClause Text => new TextClause(Fields.Text);
-
-		/// <summary>
-		///     Create a clause for the Title field
-		/// </summary>
-		public static ITextClause Title => new TextClause(Fields.Title);
 
 		#endregion
 

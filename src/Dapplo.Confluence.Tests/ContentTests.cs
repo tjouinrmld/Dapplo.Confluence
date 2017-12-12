@@ -104,11 +104,13 @@ namespace Dapplo.Confluence.Tests
             Assert.NotNull(history.CreatedBy);
         }
 
-        //[Fact]
+        [Fact]
         public async Task TestCreateContent()
         {
-            var attachment = await _confluenceClient.Content.CreateAsync(ContentTypes.Page, "Testing 1 2 3", "TEST", "<p>This is a test</p>");
-            Assert.NotNull(attachment);
+            var page = await _confluenceClient.Content.CreateAsync(ContentTypes.Page, "Testing 1 2 3", "TEST", "<p>This is a test</p>");
+            Assert.NotNull(page);
+            Assert.True(page.Id > 0);
+            await _confluenceClient.Content.DeleteAsync(page);
         }
 
         //[Fact]

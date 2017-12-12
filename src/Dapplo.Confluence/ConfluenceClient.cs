@@ -22,17 +22,17 @@
 #region using
 
 using System;
-using System.Collections.Generic;
 
 #if NET45 || NET46
+using System.Collections.Generic;
 using System.Net.Cache;
 using Dapplo.HttpExtensions.OAuth;
 using System.Net.Http;
+using Dapplo.HttpExtensions.Extensions;
 #endif
 
 using Dapplo.Confluence.Entities;
 using Dapplo.HttpExtensions;
-using Dapplo.HttpExtensions.Extensions;
 using Dapplo.HttpExtensions.JsonSimple;
 
 #endregion
@@ -61,11 +61,7 @@ namespace Dapplo.Confluence
         /// <param name="httpSettings">IHttpSettings or null for default</param>
         private ConfluenceClient(Uri confluenceUri, IHttpSettings httpSettings = null)
         {
-            if (confluenceUri == null)
-            {
-                throw new ArgumentNullException(nameof(confluenceUri));
-            }
-            ConfluenceUri = confluenceUri;
+            ConfluenceUri = confluenceUri ?? throw new ArgumentNullException(nameof(confluenceUri));
             ConfluenceApiUri = confluenceUri.AppendSegments("rest", "api");
 
             Behaviour = ConfigureBehaviour(new HttpBehaviour(), httpSettings);

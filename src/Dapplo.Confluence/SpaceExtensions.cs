@@ -159,6 +159,27 @@ namespace Dapplo.Confluence
         }
 
         /// <summary>
+        ///     Get Contents in a space, see <a href="https://developer.atlassian.com/cloud/confluence/rest/?_ga=2.79668370.74649793.1513115044-949371064.1513115044#api-space-spaceKey-content-get">here</a>
+        /// </summary>
+        /// <param name="confluenceClient">IContentDomain to bind the extension method to</param>
+        /// <param name="space">space key to get the content for</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>List with Content</returns>
+        public static async Task<SpaceContents> GetContentsAsync(this ISpaceDomain confluenceClient, string space, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", space, "content");
+
+            if (ConfluenceClientConfig.ExpandSpaceGetContents != null && ConfluenceClientConfig.ExpandSpaceGetContents.Length != 0)
+            {
+                contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandSpaceGetContents));
+            }
+            confluenceClient.Behaviour.MakeCurrent();
+
+            var response = await contentUri.GetAsAsync<HttpResponse<SpaceContents, Error>>(cancellationToken).ConfigureAwait(false);
+            return response.HandleErrors();
+        }
+
+        /// <summary>
         ///     Update a space
         /// </summary>
         /// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>

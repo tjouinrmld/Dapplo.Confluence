@@ -26,6 +26,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapplo.Log;
 using Dapplo.Log.XUnit;
@@ -82,10 +83,23 @@ namespace Dapplo.Confluence.Tests
 			Assert.True(spaces.Count > 0);
 		}
 
-		/// <summary>
-		///     Test Space.CreateAsync
-		/// </summary>
-		[Fact]
+
+        /// <summary>
+        ///     Test GetContentsAsync
+        /// </summary>
+        [Fact]
+        public async Task TestGetContentsAsync()
+	    {
+	        var spaceContents = await _confluenceClient.Space.GetContentsAsync("TEST");
+	        Assert.NotNull(spaceContents);
+	        Assert.NotNull(spaceContents.Pages);
+	        Assert.True(spaceContents.Pages.Any());
+	    }
+
+        /// <summary>
+        ///     Test Space.CreateAsync
+        /// </summary>
+        [Fact]
 		public async Task TestCreateAsync()
 		{
 			var key = "TESTTMP";

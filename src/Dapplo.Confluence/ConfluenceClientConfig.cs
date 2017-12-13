@@ -48,10 +48,16 @@ namespace Dapplo.Confluence
 		/// </summary>
 		public static string[] ExpandGetContentByTitle { get; set; }
 
-		/// <summary>
-		///     The values that are expanded in the GetSpace result
-		/// </summary>
-		public static string[] ExpandGetSpace { get; set; } = {"icon", "description.plain", "homepage"};
+
+	    /// <summary>
+	    ///     The values that are expanded in the Space.GetContentsAsync results
+	    /// </summary>
+	    public static string[] ExpandSpaceGetContents { get; set; }
+
+        /// <summary>
+        ///     The values that are expanded in the GetSpace result
+        /// </summary>
+        public static string[] ExpandGetSpace { get; set; } = {"icon", "description.plain", "homepage"};
 
 
 		/// <summary>

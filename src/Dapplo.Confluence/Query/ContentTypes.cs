@@ -51,6 +51,10 @@ namespace Dapplo.Confluence.Query
         /// <summary>
         /// The content is an attachment
         /// </summary>
-		[EnumMember(Value = "attachment")] Attachment
-	}
+		[EnumMember(Value = "attachment")] Attachment,
+	    /// <summary>
+	    /// The content is a personal page
+	    /// </summary>
+	    [EnumMember(Value = "personal")] Personal
+    }
 }

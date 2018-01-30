@@ -145,15 +145,17 @@ namespace Dapplo.Confluence
         /// </summary>
         /// <param name="confluenceClient">IContentDomain to bind the extension method to</param>
         /// <param name="contentId">content id (as content implements an implicit cast, you can also pass the content instance)</param>
+        /// <param name="expandGetContent">Specify the expand values, if null the default from the configuration is used</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
-        public static async Task<Content> GetAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Content> GetAsync(this IContentDomain confluenceClient, long contentId, IList<string> expandGetContent = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId);
 
-            if (ConfluenceClientConfig.ExpandGetContent != null && ConfluenceClientConfig.ExpandGetContent.Length != 0)
+            var expand = string.Join(",", expandGetContent ?? ConfluenceClientConfig.ExpandGetContent);
+            if (!string.IsNullOrEmpty(expand))
             {
-                contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetContent));
+                contentUri = contentUri.ExtendQuery("expand", expand);
             }
 
             confluenceClient.Behaviour.MakeCurrent();
@@ -196,9 +198,10 @@ namespace Dapplo.Confluence
                 }
             });
 
-            if (ConfluenceClientConfig.ExpandGetContentByTitle != null && ConfluenceClientConfig.ExpandGetContentByTitle.Length != 0)
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetContentByTitle);
+            if (!string.IsNullOrEmpty(expand))
             {
-                searchUri = searchUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetContentByTitle));
+                searchUri = searchUri.ExtendQuery("expand", expand);
             }
 
             var response = await searchUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
@@ -216,9 +219,10 @@ namespace Dapplo.Confluence
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child");
 
-            if (ConfluenceClientConfig.ExpandGetChildren != null && ConfluenceClientConfig.ExpandGetChildren.Length != 0)
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetChildren);
+            if (!string.IsNullOrEmpty(expand))
             {
-                contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetChildren));
+                contentUri = contentUri.ExtendQuery("expand", expand);
             }
             confluenceClient.Behaviour.MakeCurrent();
 
@@ -255,11 +259,12 @@ namespace Dapplo.Confluence
         ///     not provided some CQL functions will not be available.
         /// </param>
         /// <param name="limit">Maximum number of results returned, default is 20</param>
+        /// <param name="expandSearch">The expand value for the search, when null the value from the ConfluenceClientConfig.ExpandSearch is taken</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Result with content items</returns>
-        public static Task<Result<Content>> SearchAsync(this IContentDomain confluenceClient, IFinalClause cqlClause, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<Result<Content>> SearchAsync(this IContentDomain confluenceClient, IFinalClause cqlClause, string cqlContext = null, int limit = 20, IEnumerable<string> expandSearch = null,CancellationToken cancellationToken = default(CancellationToken))
         {
-            return confluenceClient.SearchAsync(cqlClause.ToString(), cqlContext, limit, cancellationToken);
+            return confluenceClient.SearchAsync(cqlClause.ToString(), cqlContext, limit, expandSearch, cancellationToken);
         }
 
         /// <summary>
@@ -274,18 +279,21 @@ namespace Dapplo.Confluence
         ///     not provided some CQL functions will not be available.
         /// </param>
         /// <param name="limit">Maximum number of results returned, default is 20</param>
+        /// <param name="expandSearch">The expand value for the search, when null the value from the ConfluenceClientConfig.ExpandSearch is taken</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Result with content items</returns>
-        public static async Task<Result<Content>> SearchAsync(this IContentDomain confluenceClient, string cql, string cqlContext = null, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Result<Content>> SearchAsync(this IContentDomain confluenceClient, string cql, string cqlContext = null, int limit = 20, IEnumerable<string> expandSearch = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             confluenceClient.Behaviour.MakeCurrent();
 
             var searchUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", "search").ExtendQuery("cql", cql).ExtendQuery("limit", limit);
 
-            if (ConfluenceClientConfig.ExpandSearch != null && ConfluenceClientConfig.ExpandSearch.Length != 0)
+            var expand = string.Join(",", expandSearch ?? ConfluenceClientConfig.ExpandSearch);
+            if (!string.IsNullOrEmpty(expand))
             {
-                searchUri = searchUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandSearch));
+                searchUri = searchUri.ExtendQuery("expand", expand);
             }
+
             if (cqlContext != null)
             {
                 searchUri = searchUri.ExtendQuery("cqlcontext", cqlContext);

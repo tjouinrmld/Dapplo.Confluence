@@ -76,7 +76,7 @@ namespace Dapplo.Confluence.Tests
             searchResult = searchResults.First();
             Log.Info().WriteLine("Version = {0}", searchResult.Version.Number);
 
-            var content = await _confluenceClient.Content.GetAsync(searchResult);
+            var content = await _confluenceClient.Content.GetAsync(searchResult, ConfluenceClientConfig.ExpandGetContentWithStorage);
             Log.Info().WriteLine("Version = {0}", content.Version.Number);
         }
 

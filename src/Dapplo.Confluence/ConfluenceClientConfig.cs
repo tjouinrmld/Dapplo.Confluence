@@ -28,10 +28,15 @@ namespace Dapplo.Confluence
 	/// </summary>
 	public static class ConfluenceClientConfig
 	{
-		/// <summary>
-		///     The values that are expanded in the GetAttachments result
-		/// </summary>
-		public static string[] ExpandGetAttachments { get; set; } = {"version", "container"};
+	    /// <summary>
+	    ///     These expand values can be used when getting the content with storage, instead of view
+	    /// </summary>
+	    public static string[] ExpandGetContentWithStorage { get; set; } = { "body", "body.storage", "version" };
+
+        /// <summary>
+        ///     The values that are expanded in the GetAttachments result
+        /// </summary>
+        public static string[] ExpandGetAttachments { get; set; } = {"version", "container"};
 
 		/// <summary>
 		///     The values that are expanded in the GetChildren results
@@ -47,7 +52,6 @@ namespace Dapplo.Confluence
 		///     The values that are expanded in the GetContentByTitle results
 		/// </summary>
 		public static string[] ExpandGetContentByTitle { get; set; }
-
 
 	    /// <summary>
 	    ///     The values that are expanded in the Space.GetContentsAsync results

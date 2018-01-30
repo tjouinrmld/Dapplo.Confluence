@@ -23,7 +23,6 @@
 
 using System;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
@@ -135,9 +134,10 @@ namespace Dapplo.Confluence
 
             var attachmentsUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child", "attachment");
 
-            if (ConfluenceClientConfig.ExpandGetAttachments != null && ConfluenceClientConfig.ExpandGetAttachments.Length != 0)
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetAttachments);
+            if (!string.IsNullOrEmpty(expand))
             {
-                attachmentsUri = attachmentsUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetAttachments));
+                attachmentsUri = attachmentsUri.ExtendQuery("expand", expand);
             }
 
             var response = await attachmentsUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
@@ -180,9 +180,10 @@ namespace Dapplo.Confluence
 
             var attachmentsUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", attachment.Container.Id, "child", "attachment", attachment.Id);
 
-            if (ConfluenceClientConfig.ExpandGetAttachments != null && ConfluenceClientConfig.ExpandGetAttachments.Length != 0)
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetAttachments);
+            if (!string.IsNullOrEmpty(expand))
             {
-                attachmentsUri = attachmentsUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetAttachments));
+                attachmentsUri = attachmentsUri.ExtendQuery("expand", expand);
             }
 
             var response = await attachmentsUri.GetAsAsync<HttpResponse<Content, Error>>(cancellationToken).ConfigureAwait(false);

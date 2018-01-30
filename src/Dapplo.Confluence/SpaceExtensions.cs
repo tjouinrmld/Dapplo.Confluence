@@ -129,9 +129,10 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
             var spacesUri = confluenceClient.ConfluenceApiUri.AppendSegments("space");
 
-            if (ConfluenceClientConfig.ExpandGetSpace != null && ConfluenceClientConfig.ExpandGetSpace.Length != 0)
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetSpace);
+            if (!string.IsNullOrEmpty(expand))
             {
-                spacesUri = spacesUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetSpace));
+                spacesUri = spacesUri.ExtendQuery("expand", expand);
             }
 
             var response = await spacesUri.GetAsAsync<HttpResponse<Result<Space>, Error>>(cancellationToken).ConfigureAwait(false);
@@ -149,9 +150,11 @@ namespace Dapplo.Confluence
         {
             confluenceClient.Behaviour.MakeCurrent();
             var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", spaceKey);
-            if (ConfluenceClientConfig.ExpandGetSpace != null && ConfluenceClientConfig.ExpandGetSpace.Length != 0)
+
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetSpace);
+            if (!string.IsNullOrEmpty(expand))
             {
-                spaceUri = spaceUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandGetSpace));
+                spaceUri = spaceUri.ExtendQuery("expand", expand);
             }
 
             var response = await spaceUri.GetAsAsync<HttpResponse<Space, Error>>(cancellationToken).ConfigureAwait(false);
@@ -169,10 +172,12 @@ namespace Dapplo.Confluence
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", space, "content");
 
-            if (ConfluenceClientConfig.ExpandSpaceGetContents != null && ConfluenceClientConfig.ExpandSpaceGetContents.Length != 0)
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandSpaceGetContents);
+            if (!string.IsNullOrEmpty(expand))
             {
-                contentUri = contentUri.ExtendQuery("expand", string.Join(",", ConfluenceClientConfig.ExpandSpaceGetContents));
+                contentUri = contentUri.ExtendQuery("expand", expand);
             }
+
             confluenceClient.Behaviour.MakeCurrent();
 
             var response = await contentUri.GetAsAsync<HttpResponse<SpaceContents, Error>>(cancellationToken).ConfigureAwait(false);

@@ -94,7 +94,8 @@ namespace Dapplo.Confluence.Tests
 	        Assert.NotNull(spaceContents);
 	        Assert.NotNull(spaceContents.Pages);
 	        Assert.True(spaceContents.Pages.Any());
-	    }
+	        Assert.True(spaceContents.Pages.First().Ancestors.Any());
+        }
 
         /// <summary>
         ///     Test Space.CreateAsync

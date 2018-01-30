@@ -29,6 +29,7 @@ using Dapplo.Confluence.Entities;
 using Dapplo.Confluence.Internals;
 using Dapplo.Confluence.Query;
 using Dapplo.HttpExtensions;
+using Enumerable = System.Linq.Enumerable;
 
 #endregion
 
@@ -134,7 +135,7 @@ namespace Dapplo.Confluence
 
             var attachmentsUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child", "attachment");
 
-            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetAttachments);
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetAttachments ?? Enumerable.Empty<string>());
             if (!string.IsNullOrEmpty(expand))
             {
                 attachmentsUri = attachmentsUri.ExtendQuery("expand", expand);
@@ -180,7 +181,7 @@ namespace Dapplo.Confluence
 
             var attachmentsUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", attachment.Container.Id, "child", "attachment", attachment.Id);
 
-            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetAttachments);
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetAttachments ?? Enumerable.Empty<string>());
             if (!string.IsNullOrEmpty(expand))
             {
                 attachmentsUri = attachmentsUri.ExtendQuery("expand", expand);

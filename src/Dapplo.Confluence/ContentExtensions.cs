@@ -23,6 +23,7 @@
 
 using System.Net;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
@@ -152,7 +153,7 @@ namespace Dapplo.Confluence
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId);
 
-            var expand = string.Join(",", expandGetContent ?? ConfluenceClientConfig.ExpandGetContent);
+            var expand = string.Join(",", expandGetContent ?? ConfluenceClientConfig.ExpandGetContent ?? Enumerable.Empty<string>());
             if (!string.IsNullOrEmpty(expand))
             {
                 contentUri = contentUri.ExtendQuery("expand", expand);
@@ -198,7 +199,7 @@ namespace Dapplo.Confluence
                 }
             });
 
-            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetContentByTitle);
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetContentByTitle ?? Enumerable.Empty<string>());
             if (!string.IsNullOrEmpty(expand))
             {
                 searchUri = searchUri.ExtendQuery("expand", expand);
@@ -219,7 +220,7 @@ namespace Dapplo.Confluence
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child");
 
-            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetChildren);
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetChildren ?? Enumerable.Empty<string>());
             if (!string.IsNullOrEmpty(expand))
             {
                 contentUri = contentUri.ExtendQuery("expand", expand);
@@ -288,7 +289,7 @@ namespace Dapplo.Confluence
 
             var searchUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", "search").ExtendQuery("cql", cql).ExtendQuery("limit", limit);
 
-            var expand = string.Join(",", expandSearch ?? ConfluenceClientConfig.ExpandSearch);
+            var expand = string.Join(",", expandSearch ?? ConfluenceClientConfig.ExpandSearch ?? Enumerable.Empty<string>());
             if (!string.IsNullOrEmpty(expand))
             {
                 searchUri = searchUri.ExtendQuery("expand", expand);

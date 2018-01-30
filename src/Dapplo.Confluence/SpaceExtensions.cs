@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Dapplo.Confluence.Entities;
 using Dapplo.HttpExtensions;
 using Dapplo.Confluence.Internals;
+using Enumerable = System.Linq.Enumerable;
 
 #endregion
 
@@ -129,7 +130,7 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
             var spacesUri = confluenceClient.ConfluenceApiUri.AppendSegments("space");
 
-            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetSpace);
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetSpace ?? Enumerable.Empty<string>());
             if (!string.IsNullOrEmpty(expand))
             {
                 spacesUri = spacesUri.ExtendQuery("expand", expand);
@@ -151,7 +152,7 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
             var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", spaceKey);
 
-            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetSpace);
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandGetSpace ?? Enumerable.Empty<string>());
             if (!string.IsNullOrEmpty(expand))
             {
                 spaceUri = spaceUri.ExtendQuery("expand", expand);
@@ -172,7 +173,7 @@ namespace Dapplo.Confluence
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", space, "content");
 
-            var expand = string.Join(",", ConfluenceClientConfig.ExpandSpaceGetContents);
+            var expand = string.Join(",", ConfluenceClientConfig.ExpandSpaceGetContents ?? Enumerable.Empty<string>());
             if (!string.IsNullOrEmpty(expand))
             {
                 contentUri = contentUri.ExtendQuery("expand", expand);

@@ -132,7 +132,7 @@ Task("Coverage")
 		.Where(p => !p.FullPath.ToLower().Contains("tools"))
 		.Where(p => !p.FullPath.ToLower().Contains("example"));
 
-    foreach(var projectFile in projectFiles)
+    foreach(var projectFile in projectFilePaths)
     {
         var projectName = projectFile.GetDirectory().GetDirectoryName();
         if (projectName.ToLower().Contains("test")) {

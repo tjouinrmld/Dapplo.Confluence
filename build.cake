@@ -94,7 +94,7 @@ Task("Package")
 		.Where(p => !p.FullPath.ToLower().Contains("diagnostics"))
 		.Where(p => !p.FullPath.ToLower().Contains("power"))
 		.Where(p => !p.FullPath.ToLower().Contains("example"));
-    foreach(var projectFile in projectFiles)
+    foreach(var projectFile in projectFilePaths)
     {
         Information("Packaging: " + projectFile.FullPath);
         DotNetCorePack(projectFile.FullPath, settings);

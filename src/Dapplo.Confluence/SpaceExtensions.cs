@@ -55,7 +55,7 @@ namespace Dapplo.Confluence
         /// <param name="description">Description for the space</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>created Space</returns>
-        public static async Task<Space> CreateAsync(this ISpaceDomain confluenceClient, string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Space> CreateAsync(this ISpaceDomain confluenceClient, string key, string name, string description, CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
             var space = new Space
@@ -84,7 +84,7 @@ namespace Dapplo.Confluence
         /// <param name="description">Description for the space</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>created Space</returns>
-        public static async Task<Space> CreatePrivateAsync(this ISpaceDomain confluenceClient, string key, string name, string description, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Space> CreatePrivateAsync(this ISpaceDomain confluenceClient, string key, string name, string description, CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
             var space = new Space
@@ -111,7 +111,7 @@ namespace Dapplo.Confluence
         /// <param name="key">Key for the space</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Long running task, which takes care of deleting the space</returns>
-        public static async Task<LongRunningTask> DeleteAsync(this ISpaceDomain confluenceClient, string key, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<LongRunningTask> DeleteAsync(this ISpaceDomain confluenceClient, string key, CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
             var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", key);
@@ -125,7 +125,7 @@ namespace Dapplo.Confluence
         /// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>List of Spaces</returns>
-        public static async Task<IList<Space>> GetAllAsync(this ISpaceDomain confluenceClient, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<IList<Space>> GetAllAsync(this ISpaceDomain confluenceClient, CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
             var spacesUri = confluenceClient.ConfluenceApiUri.AppendSegments("space");
@@ -147,7 +147,7 @@ namespace Dapplo.Confluence
         /// <param name="spaceKey">the space key</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Space</returns>
-        public static async Task<Space> GetAsync(this ISpaceDomain confluenceClient, string spaceKey, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Space> GetAsync(this ISpaceDomain confluenceClient, string spaceKey, CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
             var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", spaceKey);
@@ -169,7 +169,7 @@ namespace Dapplo.Confluence
         /// <param name="space">space key to get the content for</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>List with Content</returns>
-        public static async Task<SpaceContents> GetContentsAsync(this ISpaceDomain confluenceClient, string space, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<SpaceContents> GetContentsAsync(this ISpaceDomain confluenceClient, string space, CancellationToken cancellationToken = default)
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", space, "content");
 
@@ -192,7 +192,7 @@ namespace Dapplo.Confluence
         /// <param name="space">Space to update</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>created Space</returns>
-        public static async Task<Space> UpdateAsync(this ISpaceDomain confluenceClient, Space space, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Space> UpdateAsync(this ISpaceDomain confluenceClient, Space space, CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
             var spaceUri = confluenceClient.ConfluenceApiUri.AppendSegments("space", space.Key);

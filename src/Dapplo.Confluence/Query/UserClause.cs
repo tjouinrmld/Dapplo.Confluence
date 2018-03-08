@@ -96,9 +96,9 @@ namespace Dapplo.Confluence.Query
 
 		internal UserClause(Fields userField)
 		{
-			if (!_allowedFields.Any(field => userField == field))
+			if (_allowedFields.All(field => userField != field))
 			{
-				throw new InvalidOperationException("Can't add function for the field {Field}");
+				throw new InvalidOperationException($"Can't add function for the field {userField}");
 			}
 			_clause = new Clause
 			{

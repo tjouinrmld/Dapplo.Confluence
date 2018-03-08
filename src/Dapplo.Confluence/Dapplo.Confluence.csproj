@@ -20,6 +20,9 @@
     <FileVersion>0.6.0.0</FileVersion>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>True</DebugSymbols>
+	<LangVersion>latest</LangVersion>
+    <Optimize>true</Optimize>
+	<IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup Label="dotnet pack instructions" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
     <None Include="bin/$(Configuration)/netstandard1.3/$(AssemblyName).pdb">
@@ -36,19 +39,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.8.25" />
-    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.8.25" />
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.8.28" />
+    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.8.28" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.25" />
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.28" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.25" />
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.28" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

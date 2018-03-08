@@ -56,7 +56,7 @@ namespace Dapplo.Confluence.Query
 
 		internal TextClause(Fields textField)
 		{
-			if (!_allowedFields.Any(field => textField == field))
+			if (_allowedFields.All(field => textField != field))
 			{
 				throw new InvalidOperationException($"Can't add function for the field {textField}");
 			}

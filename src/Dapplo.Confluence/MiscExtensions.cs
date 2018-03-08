@@ -54,7 +54,7 @@ namespace Dapplo.Confluence
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
         public static async Task<TResponse> GetPictureAsync<TResponse>(this IMiscDomain confluenceClient, Picture picture,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
             where TResponse : class
         {
             confluenceClient.Behaviour.MakeCurrent();

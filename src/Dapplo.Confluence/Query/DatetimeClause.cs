@@ -134,9 +134,9 @@ namespace Dapplo.Confluence.Query
 
 		internal DatetimeClause(Fields datetimeField)
 		{
-			if (!_allowedFields.Any(field => datetimeField == field))
+			if (_allowedFields.All(field => datetimeField != field))
 			{
-				throw new InvalidOperationException("Can't add function for the field {Field}");
+				throw new InvalidOperationException($"Can't add function for the field {datetimeField}");
 			}
 			_clause = new Clause
 			{

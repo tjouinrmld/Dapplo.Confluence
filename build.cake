@@ -3,7 +3,7 @@
 #tool "GitVersion.CommandLine"
 #tool "docfx.console"
 #tool "coveralls.net"
-#tool "gitlink"
+#tool "PdbGit"
 // Needed for Cake.Compression, as described here: https://github.com/akordowski/Cake.Compression/issues/3
 #addin "SharpZipLib"
 #addin "Cake.DocFx"
@@ -17,10 +17,11 @@ var configuration = Argument("configuration", "release");
 var nugetApiKey = Argument("nugetApiKey", EnvironmentVariable("NuGetApiKey"));
 
 // Used to publish coverage report
-var coverallsRepoToken = Argument("coverallsRepoToken", EnvironmentVariable("COVERALLS_REPO_TOKEN"));
+var coverallsRepoToken = Argument("coverallsRepoToken", EnvironmentVariable("CoverallsRepoToken"));
 
 // where is our solution located?
 var solutionFilePath = GetFiles("src/*.sln").First();
+var solutionName = solutionFilePath.GetDirectory().GetDirectoryName();
 
 // Check if we are in a pull request, publishing of packages and coverage should be skipped
 var isPullRequest = !string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"));
@@ -75,27 +76,24 @@ Task("PublishPackages")
 // Package the results of the build, if the tests worked, into a NuGet Package
 Task("Package")
 	.IsDependentOn("Build")
+	.IsDependentOn("GitLink")
 	.IsDependentOn("Documentation")
     .Does(()=>
 {
-	var gitLinkSettings = new GitLinkSettings {
-		IsDebug = false
-	};
-
-	// Run GitLink before packaging the files
-    foreach(var pdbFilePath in GetFiles("./**/bin/**/*.pdb").Where(p => !p.FullPath.Contains("Test") && !p.FullPath.Contains("packages") &&!p.FullPath.Contains("tools")))
-    {
-        Information("Enhancing PDB: " + pdbFilePath.FullPath);
-        GitLink(pdbFilePath.FullPath, gitLinkSettings);
-    }
-
     var settings = new DotNetCorePackSettings  
     {
         OutputDirectory = "./artifacts/",
         Configuration = configuration
     };
 
-    var projectFiles = GetFiles("./**/*.csproj").Where(p => !p.FullPath.Contains("Test") && !p.FullPath.Contains("packages") &&!p.FullPath.Contains("tools"));
+    var projectFilePaths = GetFiles("./**/*.csproj")
+		.Where(p => !p.FullPath.ToLower().Contains("test"))
+		.Where(p => !p.FullPath.ToLower().Contains("packages"))
+		.Where(p => !p.FullPath.ToLower().Contains("tools"))
+		.Where(p => !p.FullPath.ToLower().Contains("demo"))
+		.Where(p => !p.FullPath.ToLower().Contains("diagnostics"))
+		.Where(p => !p.FullPath.ToLower().Contains("power"))
+		.Where(p => !p.FullPath.ToLower().Contains("example"));
     foreach(var projectFile in projectFiles)
     {
         Information("Packaging: " + projectFile.FullPath);
@@ -128,11 +126,16 @@ Task("Coverage")
         ReturnTargetCodeOffset = 0
     };
 
-    var projectFiles = GetFiles("./**/*.csproj").Where(p => !p.FullPath.Contains("packages") &&!p.FullPath.Contains("tools"));
+    var projectFilePaths = GetFiles("./**/*.csproj")
+		.Where(p => !p.FullPath.ToLower().Contains("demo"))
+		.Where(p => !p.FullPath.ToLower().Contains("packages"))
+		.Where(p => !p.FullPath.ToLower().Contains("tools"))
+		.Where(p => !p.FullPath.ToLower().Contains("example"));
+
     foreach(var projectFile in projectFiles)
     {
         var projectName = projectFile.GetDirectory().GetDirectoryName();
-        if (projectName.Contains("Test")) {
+        if (projectName.ToLower().Contains("test")) {
             openCoverSettings.WithFilter("-["+projectName+"]*");
             Information("OpenCover added filter -" + projectName);
         }
@@ -158,7 +161,7 @@ Task("Coverage")
                     ShadowCopy = false,
                     XmlReport = true,
                     HtmlReport = true,
-                    ReportName = "Dapplo.Confluence",
+                    ReportName = solutionName,
                     OutputDirectory = "./artifacts",
                     WorkingDirectory = "./src"
                 });
@@ -181,6 +184,24 @@ Task("Build")
 	{
 		Configuration = configuration
 	});
+});
+
+// Generate Git links in the PDB files
+Task("GitLink")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+	FilePath pdbGitPath = Context.Tools.Resolve("PdbGit.exe");
+	var pdbFiles = GetFiles("./**/*.pdb")
+		.Where(p => !p.FullPath.ToLower().Contains("test"))
+		.Where(p => !p.FullPath.ToLower().Contains("tools"))
+		.Where(p => !p.FullPath.ToLower().Contains("packages"))
+		.Where(p => !p.FullPath.ToLower().Contains("example"));
+    foreach(var pdbFile in pdbFiles)
+    {
+		Information("Processing: " + pdbFile.FullPath);
+		StartProcess(pdbGitPath, new ProcessSettings { Arguments = new ProcessArgumentBuilder().Append(pdbFile.FullPath)});
+	}
 });
 
 // Load the needed NuGet packages to make the build work

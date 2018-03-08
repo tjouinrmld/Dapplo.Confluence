@@ -102,7 +102,7 @@ namespace Dapplo.Confluence.Tests
         [Fact]
 		public async Task TestCreateAsync()
 		{
-			var key = "TESTTMP";
+			const string key = "TESTTMP";
 			var createdSpace = await _confluenceClient.Space.CreatePrivateAsync(key, "Dummy for test", "Created and deleted during test");
 			Assert.NotNull(createdSpace);
 			Assert.Equal(key, createdSpace.Key);

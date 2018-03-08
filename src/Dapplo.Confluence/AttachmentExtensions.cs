@@ -59,7 +59,7 @@ namespace Dapplo.Confluence
         /// <param name="contentType">Content-Type for the content, or null</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Result with Attachment</returns>
-        public static async Task<Result<Content>> AttachAsync<TContent>(this IAttachmentDomain confluenceClient, string contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Result<Content>> AttachAsync<TContent>(this IAttachmentDomain confluenceClient, string contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default)
             where TContent : class
         {
             var attachment = new AttachmentContainer<TContent>
@@ -84,7 +84,7 @@ namespace Dapplo.Confluence
         /// <param name="attachment">Attachment which needs to be deleted</param>
         /// <param name="cancellationToken">cancellationToken</param>
         public static async Task DeleteAsync(this IAttachmentDomain confluenceClient, Content attachment,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
 	        if (attachment.Type != ContentTypes.Attachment)
 	        {
@@ -107,7 +107,7 @@ namespace Dapplo.Confluence
         /// <param name="attachtmentId">ID for the content which needs to be deleted</param>
         /// <param name="isTrashed">If the content is trashable, you will need to call DeleteAsyc twice, second time with isTrashed = true</param>
         /// <param name="cancellationToken">CancellationToken</param>
-        public static async Task DeleteAsync(this IAttachmentDomain confluenceClient, long attachtmentId, bool isTrashed = false, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task DeleteAsync(this IAttachmentDomain confluenceClient, long attachtmentId, bool isTrashed = false, CancellationToken cancellationToken = default)
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", $"att{attachtmentId}");
 
@@ -129,7 +129,7 @@ namespace Dapplo.Confluence
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Result with Attachment(s)</returns>
         public static async Task<Result<Content>> GetAttachmentsAsync(this IAttachmentDomain confluenceClient, string contentId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
 
@@ -154,7 +154,7 @@ namespace Dapplo.Confluence
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Bitmap,BitmapSource or MemoryStream (etc) depending on TResponse</returns>
         public static async Task<TResponse> GetContentAsync<TResponse>(this IAttachmentDomain confluenceClient, Content attachment,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
             where TResponse : class
         {
 	        if (attachment.Type != ContentTypes.Attachment)
@@ -175,7 +175,7 @@ namespace Dapplo.Confluence
         /// <param name="attachment">Attachment</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Attachment</returns>
-        public static async Task<Content> UpdateAsync(this IAttachmentDomain confluenceClient, Content attachment, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Content> UpdateAsync(this IAttachmentDomain confluenceClient, Content attachment, CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
 

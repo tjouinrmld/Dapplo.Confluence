@@ -61,9 +61,9 @@ namespace Dapplo.Confluence.Query
 
 		internal SimpleValueClause(Fields simpleField)
 		{
-			if (!_allowedFields.Any(field => simpleField == field))
+			if (_allowedFields.All(field => simpleField != field))
 			{
-				throw new InvalidOperationException("Can't add function for the field {Field}");
+				throw new InvalidOperationException($"Can't add function for the field {simpleField}");
 			}
 			_clause = new Clause
 			{

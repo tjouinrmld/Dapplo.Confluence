@@ -58,7 +58,7 @@ namespace Dapplo.Confluence
         /// <param name="ancestorId">Optional ID for the ancestor (parent)</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
-        public static Task<Content> CreateAsync(this IContentDomain confluenceClient, ContentTypes contentType, string title, string spaceKey, string body, long? ancestorId = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<Content> CreateAsync(this IContentDomain confluenceClient, ContentTypes contentType, string title, string spaceKey, string body, long? ancestorId = null, CancellationToken cancellationToken = default)
         {
             var contentBody = new Body
             {
@@ -82,7 +82,7 @@ namespace Dapplo.Confluence
         /// <param name="ancestorId">Optional ID for the ancestor (parent)</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
-        public static Task<Content> CreateAsync(this IContentDomain confluenceClient, ContentTypes contentType, string title, string spaceKey, Body body, long? ancestorId = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<Content> CreateAsync(this IContentDomain confluenceClient, ContentTypes contentType, string title, string spaceKey, Body body, long? ancestorId = null, CancellationToken cancellationToken = default)
         {
             var content = new Content
             {
@@ -111,7 +111,7 @@ namespace Dapplo.Confluence
         /// <param name="content">Content (e.g. Page) to create</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
-        public static async Task<Content> CreateAsync(this IContentDomain confluenceClient, Content content, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Content> CreateAsync(this IContentDomain confluenceClient, Content content, CancellationToken cancellationToken = default)
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content");
 
@@ -127,7 +127,7 @@ namespace Dapplo.Confluence
         /// <param name="contentId">ID for the content which needs to be deleted</param>
         /// <param name="isTrashed">If the content is trashable, you will need to call DeleteAsyc twice, second time with isTrashed = true</param>
         /// <param name="cancellationToken">CancellationToken</param>
-        public static async Task DeleteAsync(this IContentDomain confluenceClient, long contentId, bool isTrashed = false, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task DeleteAsync(this IContentDomain confluenceClient, long contentId, bool isTrashed = false, CancellationToken cancellationToken = default)
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId);
 
@@ -149,7 +149,7 @@ namespace Dapplo.Confluence
         /// <param name="expandGetContent">Specify the expand values, if null the default from the configuration is used</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
-        public static async Task<Content> GetAsync(this IContentDomain confluenceClient, long contentId, IList<string> expandGetContent = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Content> GetAsync(this IContentDomain confluenceClient, long contentId, IEnumerable<string> expandGetContent = null, CancellationToken cancellationToken = default)
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId);
 
@@ -176,7 +176,7 @@ namespace Dapplo.Confluence
         /// <param name="limit">Maximum number of results returned, default is 20</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Results with content items</returns>
-        public static async Task<Result<Content>> GetByTitleAsync(this IContentDomain confluenceClient, string spaceKey, string title, int start = 0, int limit = 20, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Result<Content>> GetByTitleAsync(this IContentDomain confluenceClient, string spaceKey, string title, int start = 0, int limit = 20, CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
 
@@ -216,7 +216,7 @@ namespace Dapplo.Confluence
         /// <param name="contentId">content id</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>List with Content</returns>
-        public static async Task<IList<Content>> GetChildrenAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<IList<Content>> GetChildrenAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default)
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child");
 
@@ -238,7 +238,7 @@ namespace Dapplo.Confluence
         /// <param name="contentId">content id</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
-        public static async Task<History> GetHistoryAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<History> GetHistoryAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default)
         {
             var historyUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "history");
 
@@ -263,7 +263,7 @@ namespace Dapplo.Confluence
         /// <param name="expandSearch">The expand value for the search, when null the value from the ConfluenceClientConfig.ExpandSearch is taken</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Result with content items</returns>
-        public static Task<Result<Content>> SearchAsync(this IContentDomain confluenceClient, IFinalClause cqlClause, string cqlContext = null, int limit = 20, IEnumerable<string> expandSearch = null,CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<Result<Content>> SearchAsync(this IContentDomain confluenceClient, IFinalClause cqlClause, string cqlContext = null, int limit = 20, IEnumerable<string> expandSearch = null,CancellationToken cancellationToken = default)
         {
             return confluenceClient.SearchAsync(cqlClause.ToString(), cqlContext, limit, expandSearch, cancellationToken);
         }
@@ -283,7 +283,7 @@ namespace Dapplo.Confluence
         /// <param name="expandSearch">The expand value for the search, when null the value from the ConfluenceClientConfig.ExpandSearch is taken</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Result with content items</returns>
-        public static async Task<Result<Content>> SearchAsync(this IContentDomain confluenceClient, string cql, string cqlContext = null, int limit = 20, IEnumerable<string> expandSearch = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Result<Content>> SearchAsync(this IContentDomain confluenceClient, string cql, string cqlContext = null, int limit = 20, IEnumerable<string> expandSearch = null, CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
 
@@ -311,7 +311,7 @@ namespace Dapplo.Confluence
         /// <param name="content">Content to update</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Content</returns>
-        public static async Task<Content> UpdateAsync(this IContentDomain confluenceClient, Content content, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Content> UpdateAsync(this IContentDomain confluenceClient, Content content, CancellationToken cancellationToken = default)
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", content.Id);
 
@@ -327,7 +327,7 @@ namespace Dapplo.Confluence
         /// <param name="contentId">content id</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Result with labels</returns>
-        public static async Task<Result<Label>> GetLabelsAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<Result<Label>> GetLabelsAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default)
         {
             var labelUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "label");
             confluenceClient.Behaviour.MakeCurrent();
@@ -344,7 +344,7 @@ namespace Dapplo.Confluence
         /// <param name="labels">IEnumerable labels</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Task</returns>
-        public static async Task AddLabelsAsync(this IContentDomain confluenceClient, long contentId, IEnumerable<Label> labels, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task AddLabelsAsync(this IContentDomain confluenceClient, long contentId, IEnumerable<Label> labels, CancellationToken cancellationToken = default)
         {
             var labelUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "label");
             confluenceClient.Behaviour.MakeCurrent();
@@ -361,7 +361,7 @@ namespace Dapplo.Confluence
         /// <param name="label">Name of label</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Task</returns>
-        public static async Task DeleteLabelAsync(this IContentDomain confluenceClient, long contentId, string label, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task DeleteLabelAsync(this IContentDomain confluenceClient, long contentId, string label, CancellationToken cancellationToken = default)
         {
             var labelUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "label", label);
             confluenceClient.Behaviour.MakeCurrent();

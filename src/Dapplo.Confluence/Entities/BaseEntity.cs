@@ -41,7 +41,7 @@ namespace Dapplo.Confluence.Entities
 	        {
 		        if (value == null)
 		        {
-			        Id = default(TId);
+			        Id = default;
 			        return;
 		        }
 				Id = (TId)Convert.ChangeType(value.Replace("att", ""), typeof(TId));

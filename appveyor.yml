@@ -2,14 +2,14 @@ version: 0.7.{build}
 skip_tags: true
 os: Visual Studio 2017
 configuration: Release
-platform: AnyCPU
+platform: Any CPU
 clone_depth: 2
 test: off
 branches:
   only:
   - master
 environment:
-  COVERALLS_REPO_TOKEN:
+  CoverallsRepoToken:
     secure: 5WWUHMA6N4J56uA5Or7KTn56RYcGHDnTTIxqxGmWyoEpdhkasFIAfeOrFnCLxFPt
   confluence_test_username:
     secure: gdcMwbkCpbe2jH691vkZqw==
@@ -22,9 +22,9 @@ environment:
 build:
   verbosity: minimal
 build_script:
-- ps: .\build.ps1
+- ps: .\build.ps1 --settings_skipverification=true
 cache:
-  - tools -> build.cake, tools/packages.config
+  - tools -> tools/packages.config
 artifacts:
 - path: artifacts\**\*.nupkg
 - path: artifacts\**\site.zip

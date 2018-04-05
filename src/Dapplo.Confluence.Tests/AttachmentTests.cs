@@ -66,7 +66,7 @@ namespace Dapplo.Confluence.Tests
         //[Fact]
         public async Task TestGetAttachments()
         {
-            var attachments = await _confluenceClient.Attachment.GetAttachmentsAsync("950274");
+            var attachments = await _confluenceClient.Attachment.GetAttachmentsAsync(950274);
             Assert.NotNull(attachments);
             Assert.True(attachments.Results.Count > 0);
             using (var attachmentMemoryStream = await _confluenceClient.Attachment.GetContentAsync<MemoryStream>(attachments.FirstOrDefault()))
@@ -84,7 +84,7 @@ namespace Dapplo.Confluence.Tests
         //[Fact]
         public async Task TestAttach()
         {
-            const string testPageId = "950274";
+            const long testPageId = 950274;
             var attachments = await _confluenceClient.Attachment.GetAttachmentsAsync(testPageId);
             Assert.NotNull(attachments);
 

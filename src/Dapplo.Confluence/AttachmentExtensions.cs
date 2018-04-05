@@ -48,6 +48,26 @@ namespace Dapplo.Confluence
     public static class AttachmentDomain
     {
         /// <summary>
+        /// Obsolete: this AttachAsync is a wrapper for the new signature, which only excepts a long for the ID.
+        /// </summary>
+        /// <typeparam name="TContent">Type of the content</typeparam>
+        /// <param name="confluenceClient">IAttachmentDomain</param>
+        /// <param name="contentId">string</param>
+        /// <param name="content">TContent</param>
+        /// <param name="filename">string</param>
+        /// <param name="comment">string</param>
+        /// <param name="contentType">string</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>Result with Content</returns>
+        [Obsolete("The contentId should be of type long")]
+        public static Task<Result<Content>> AttachAsync<TContent>(this IAttachmentDomain confluenceClient, string contentId, TContent content, string filename,
+            string comment = null, string contentType = null, CancellationToken cancellationToken = default)
+            where TContent : class
+        {
+            return confluenceClient.AttachAsync(long.Parse(contentId), content, filename, comment, contentType, cancellationToken);
+        }
+
+        /// <summary>
         ///     Add an attachment to the specified content
         /// </summary>
         /// <typeparam name="TContent">The content to upload</typeparam>
@@ -59,7 +79,7 @@ namespace Dapplo.Confluence
         /// <param name="contentType">Content-Type for the content, or null</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Result with Attachment</returns>
-        public static async Task<Result<Content>> AttachAsync<TContent>(this IAttachmentDomain confluenceClient, string contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default)
+        public static async Task<Result<Content>> AttachAsync<TContent>(this IAttachmentDomain confluenceClient, long contentId, TContent content, string filename, string comment = null, string contentType = null, CancellationToken cancellationToken = default)
             where TContent : class
         {
             var attachment = new AttachmentContainer<TContent>
@@ -122,13 +142,26 @@ namespace Dapplo.Confluence
         }
 
         /// <summary>
+        /// Obsolete: this GetAttachmentsAsync is a wrapper for the new signature, which only excepts a long for the ID.
+        /// </summary>
+        /// <param name="confluenceClient">IAttachmentDomain</param>
+        /// <param name="contentId">string</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>Result with Content</returns>
+        [Obsolete("The contentId should be of type long")]
+        public static Task<Result<Content>> GetAttachmentsAsync(this IAttachmentDomain confluenceClient, string contentId, CancellationToken cancellationToken = default)
+        {
+            return confluenceClient.GetAttachmentsAsync(long.Parse(contentId), cancellationToken);
+        }
+
+        /// <summary>
         ///     Retrieve the attachments for the specified content
         /// </summary>
         /// <param name="confluenceClient">IAttachmentDomain to bind the extension method to</param>
         /// <param name="contentId">string with the content id</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>Result with Attachment(s)</returns>
-        public static async Task<Result<Content>> GetAttachmentsAsync(this IAttachmentDomain confluenceClient, string contentId,
+        public static async Task<Result<Content>> GetAttachmentsAsync(this IAttachmentDomain confluenceClient, long contentId,
             CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();

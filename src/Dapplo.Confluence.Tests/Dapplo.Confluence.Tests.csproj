@@ -27,19 +27,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.8.28">
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.8.31">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.8.28">
+    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.8.31">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.28">
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.31">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.Log" Version="1.1.4">
+    <PackageReference Include="Dapplo.Log" Version="1.2.1">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.Log.XUnit" Version="1.1.4">
+    <PackageReference Include="Dapplo.Log.XUnit" Version="1.2.1">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
     <PackageReference Include="xunit" Version="2.3.1" />

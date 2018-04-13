@@ -39,19 +39,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.8.31" />
-    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.8.31" />
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.8.34" />
+    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.8.34" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.31" />
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.34" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.31" />
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.34" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

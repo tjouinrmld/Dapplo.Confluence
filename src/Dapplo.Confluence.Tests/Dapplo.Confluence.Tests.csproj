@@ -27,13 +27,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.8.31">
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.8.34">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.8.31">
+    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.8.34">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.31">
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.8.34">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
     <PackageReference Include="Dapplo.Log" Version="1.2.1">

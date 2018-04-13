@@ -35,10 +35,10 @@ using Xunit.Abstractions;
 
 namespace Dapplo.Confluence.Tests
 {
-	/// <summary>
-	///     Tests
-	/// </summary>
-	public class UserQueryTests
+    /// <summary>
+    ///     Tests
+    /// </summary>
+    public class UserQueryTests
 	{
 		public UserQueryTests(ITestOutputHelper testOutputHelper)
 		{

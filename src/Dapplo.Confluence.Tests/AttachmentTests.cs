@@ -26,6 +26,7 @@
 #region Usings
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,12 +40,15 @@ using Xunit.Abstractions;
 namespace Dapplo.Confluence.Tests
 {
     /// <summary>
-    ///     Tests
+    ///     Tests for the attachment domain
     /// </summary>
+    [CollectionDefinition("Dapplo.Confluence")]
     public class AttachmentTests
     {
         public AttachmentTests(ITestOutputHelper testOutputHelper)
         {
+            LogSettings.ExceptionToStacktrace = exception => exception.ToStringDemystified();
+
             LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
             _confluenceClient = ConfluenceClient.Create(TestConfluenceUri);
 

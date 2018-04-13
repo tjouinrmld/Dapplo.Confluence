@@ -181,7 +181,7 @@ namespace Dapplo.Confluence
             var queryStart = pathWithQuery.IndexOf('?');
             var path = queryStart >= 0 ? pathWithQuery.Substring(0, queryStart) : pathWithQuery;
             var query = queryStart >= 0 ? pathWithQuery.Substring(queryStart + 1) : null;
-            var uriBuilder = new UriBuilder(baseUri.AppendSegments(path))
+            var uriBuilder = new UriBuilder(baseUri.AppendSegments(Uri.UnescapeDataString(path)))
             {
                 Query = query ?? string.Empty
             };

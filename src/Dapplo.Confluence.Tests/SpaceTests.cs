@@ -26,6 +26,7 @@
 #region Usings
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapplo.Log;
@@ -37,13 +38,16 @@ using Xunit.Abstractions;
 
 namespace Dapplo.Confluence.Tests
 {
-	/// <summary>
-	///     Tests
-	/// </summary>
-	public class SpaceTests
+    /// <summary>
+    ///     Tests
+    /// </summary>
+    [CollectionDefinition("Dapplo.Confluence")]
+    public class SpaceTests
 	{
 		public SpaceTests(ITestOutputHelper testOutputHelper)
 		{
+			LogSettings.ExceptionToStacktrace = exception => exception.ToStringDemystified();
+
 			LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
 			_confluenceClient = ConfluenceClient.Create(TestConfluenceUri);
 

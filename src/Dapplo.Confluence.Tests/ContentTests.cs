@@ -26,6 +26,7 @@
 #region Usings
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,11 +44,14 @@ namespace Dapplo.Confluence.Tests
     /// <summary>
     ///     Tests
     /// </summary>
+    [CollectionDefinition("Dapplo.Confluence")]
     public class ContentTests
     {
         private static readonly LogSource Log = new LogSource();
         public ContentTests(ITestOutputHelper testOutputHelper)
         {
+            LogSettings.ExceptionToStacktrace = exception => exception.ToStringDemystified();
+
             LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
             _confluenceClient = ConfluenceClient.Create(TestConfluenceUri);
 
@@ -140,7 +144,7 @@ namespace Dapplo.Confluence.Tests
 			var searchResult = await _confluenceClient.Content.SearchAsync(query, limit: 1);
 		    var attachment = searchResult.First();
 		    Assert.Equal(ContentTypes.Attachment, attachment.Type);
-		    _confluenceClient.Attachment.CreateDownloadUri(attachment.Links);
+		    Assert.NotNull(_confluenceClient.Attachment.CreateDownloadUri(attachment.Links));
 			// I know the attachment is a bitmap, this should work
 		    var bitmap = await _confluenceClient.Attachment.GetContentAsync<Bitmap>(attachment);
 			Assert.True(bitmap.Width > 0);

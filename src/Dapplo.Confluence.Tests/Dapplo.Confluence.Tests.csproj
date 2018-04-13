@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ben.Demystifier" Version="0.1.1" />
     <PackageReference Include="Dapplo.HttpExtensions" Version="0.8.34">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>

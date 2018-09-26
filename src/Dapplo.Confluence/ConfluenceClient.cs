@@ -181,7 +181,8 @@ namespace Dapplo.Confluence
             var queryStart = pathWithQuery.IndexOf('?');
             var path = queryStart >= 0 ? pathWithQuery.Substring(0, queryStart) : pathWithQuery;
             var query = queryStart >= 0 ? pathWithQuery.Substring(queryStart + 1) : null;
-            var uriBuilder = new UriBuilder(baseUri.AppendSegments(Uri.UnescapeDataString(path)))
+            // Use the given path, without changing encoding, as it's already correctly encoded by atlassian!
+            var uriBuilder = new UriBuilder(baseUri.AppendSegments(s => s, path))
             {
                 Query = query ?? string.Empty
             };

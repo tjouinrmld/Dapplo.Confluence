@@ -1,7 +1,7 @@
 #tool "xunit.runner.console"
 #tool "OpenCover"
 #tool "docfx.console"
-#tool nuget:?package=coveralls.net&version=0.7.0
+#tool "coveralls.net"
 #addin "Cake.DocFx"
 #addin "Cake.Coveralls"
 

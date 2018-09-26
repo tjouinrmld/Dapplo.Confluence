@@ -127,11 +127,11 @@ namespace Dapplo.Confluence
         /// <returns>List of Spaces</returns>
         public static Task<IList<Space>> GetAllAsync(this ISpaceDomain confluenceClient, CancellationToken cancellationToken = default)
         {
-            return confluenceClient.GetAllAsync(null,null, null, null, null, null, null, cancellationToken);
+            return confluenceClient.GetAllWithParametersAsync(cancellationToken: cancellationToken);
         }
 
         /// <summary>
-        ///     Get Spaces with speficied details, see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
+        ///     Get Spaces with specific parameters, see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
         /// </summary>
         /// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
         /// <param name="spaceKeys">IEnumerable of string with space keys</param>
@@ -143,7 +143,7 @@ namespace Dapplo.Confluence
         /// <param name="limit">The maximum number of spaces to return per page. System default is 25, override this with a value. Note, this may be restricted by fixed system limits.</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>List of Spaces</returns>
-        public static async Task<IList<Space>> GetAllAsync(this ISpaceDomain confluenceClient, IEnumerable<string> spaceKeys = null, string type = null, string status = null, string label = null, bool? favourite = null, int? start = null, int? limit = null, CancellationToken cancellationToken = default)
+        public static async Task<IList<Space>> GetAllWithParametersAsync(this ISpaceDomain confluenceClient, IEnumerable<string> spaceKeys = null, string type = null, string status = null, string label = null, bool? favourite = null, int? start = null, int? limit = null, CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
             var spacesUri = confluenceClient.ConfluenceApiUri.AppendSegments("space");

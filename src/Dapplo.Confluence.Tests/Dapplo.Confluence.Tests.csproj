@@ -6,7 +6,6 @@
     <TargetFramework>net461</TargetFramework>
     <AssemblyName>Dapplo.Confluence.Tests</AssemblyName>
     <PackageId>Dapplo.Confluence.Tests</PackageId>
-    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
 	<AllowedReferenceRelatedFileExtensions>
 		.pdb;
 		.xml;
@@ -26,19 +25,19 @@
 
   <ItemGroup>
     <PackageReference Include="Ben.Demystifier" Version="0.1.1" />
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.3">
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.4">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.9.3">
+    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.9.4">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.3">
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.4">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.Log" Version="1.3.8">
+    <PackageReference Include="Dapplo.Log" Version="1.3.11">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.Log.XUnit" Version="1.3.8">
+    <PackageReference Include="Dapplo.Log.XUnit" Version="1.3.11">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
     <PackageReference Include="xunit" Version="2.4.0" />

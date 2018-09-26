@@ -6,20 +6,19 @@
     <AssemblyName>Dapplo.Confluence</AssemblyName>
     <PackageId>Dapplo.Confluence</PackageId>
     <PackageTags>atlassian;confluence;dapplo</PackageTags>
-    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.1</NetStandardImplicitPackageVersion>
     <Version>0.6.0.0</Version>
     <AssemblyVersion>0.6.0.0</AssemblyVersion>
     <FileVersion>0.6.0.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.3" />
-    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.9.3" />
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.4" />
+    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.9.4" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.3" />
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.4" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

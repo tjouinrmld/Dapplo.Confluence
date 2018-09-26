@@ -120,20 +120,67 @@ namespace Dapplo.Confluence
         }
 
         /// <summary>
-        ///     Get Spaces see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
+        ///     Get Spaces with all the defaults, see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
         /// </summary>
         /// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
         /// <param name="cancellationToken">CancellationToken</param>
         /// <returns>List of Spaces</returns>
-        public static async Task<IList<Space>> GetAllAsync(this ISpaceDomain confluenceClient, CancellationToken cancellationToken = default)
+        public static Task<IList<Space>> GetAllAsync(this ISpaceDomain confluenceClient, CancellationToken cancellationToken = default)
+        {
+            return confluenceClient.GetAllAsync(null,null, null, null, null, null, null, cancellationToken);
+        }
+
+        /// <summary>
+        ///     Get Spaces with speficied details, see <a href="https://docs.atlassian.com/confluence/REST/latest/#d3e164">here</a>
+        /// </summary>
+        /// <param name="confluenceClient">ISpaceDomain to bind the extension method to</param>
+        /// <param name="spaceKeys">IEnumerable of string with space keys</param>
+        /// <param name="type">string filter the list of spaces returned by type (global, personal)</param>
+        /// <param name="status">string filter the list of spaces returned by status (current, archived)</param>
+        /// <param name="label">string filter the list of spaces returned by label</param>
+        /// <param name="favourite">bool filter the list of spaces returned by favourites</param>
+        /// <param name="start">the start point of the collection to return</param>
+        /// <param name="limit">The maximum number of spaces to return per page. System default is 25, override this with a value. Note, this may be restricted by fixed system limits.</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>List of Spaces</returns>
+        public static async Task<IList<Space>> GetAllAsync(this ISpaceDomain confluenceClient, IEnumerable<string> spaceKeys = null, string type = null, string status = null, string label = null, bool? favourite = null, int? start = null, int? limit = null, CancellationToken cancellationToken = default)
         {
             confluenceClient.Behaviour.MakeCurrent();
             var spacesUri = confluenceClient.ConfluenceApiUri.AppendSegments("space");
 
+            foreach (var spaceKey in spaceKeys ?? Enumerable.Empty<string>())
+            {
+                spacesUri = spacesUri.ExtendQuery("spaceKey", spaceKey);
+            }
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                spacesUri = spacesUri.ExtendQuery("type", type);
+            }
+            if (!string.IsNullOrEmpty(status))
+            {
+                spacesUri = spacesUri.ExtendQuery("status", status);
+            }
+            if (!string.IsNullOrEmpty(label))
+            {
+                spacesUri = spacesUri.ExtendQuery("label", label);
+            }
+            if (favourite.HasValue)
+            {
+                spacesUri = spacesUri.ExtendQuery("favourite", favourite);
+            }
             var expand = string.Join(",", ConfluenceClientConfig.ExpandGetSpace ?? Enumerable.Empty<string>());
             if (!string.IsNullOrEmpty(expand))
             {
                 spacesUri = spacesUri.ExtendQuery("expand", expand);
+            }
+            if (start.HasValue)
+            {
+                spacesUri = spacesUri.ExtendQuery("start", start.Value);
+            }
+            if (limit.HasValue)
+            {
+                spacesUri = spacesUri.ExtendQuery("limit", limit.Value);
             }
 
             var response = await spacesUri.GetAsAsync<HttpResponse<Result<Space>, Error>>(cancellationToken).ConfigureAwait(false);

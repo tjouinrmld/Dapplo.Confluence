@@ -98,6 +98,17 @@ namespace Dapplo.Confluence.Tests
         }
 
         /// <summary>
+        ///     Test .GetChildren
+        /// </summary>
+        [Fact]
+        public async Task TestGetChildren()
+        {
+            var results = await _confluenceClient.Content.GetChildrenAsync(550731777);
+            Assert.NotNull(results);
+            Assert.True(results.Size > 0);
+        }
+
+        /// <summary>
         ///     Test GetHistoryAsync
         /// </summary>
         //[Fact]

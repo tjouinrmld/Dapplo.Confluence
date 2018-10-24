@@ -215,10 +215,28 @@ namespace Dapplo.Confluence
         /// <param name="confluenceClient">IContentDomain to bind the extension method to</param>
         /// <param name="contentId">content id</param>
         /// <param name="cancellationToken">CancellationToken</param>
+        /// <param name="start">int specifying where to start, used for paging.</param>
+        /// <param name="limit">int used to limit the amount of results, used for paging.</param>
+        /// <param name="parentVersion">int representing the version of the content to retrieve children for.</param>
         /// <returns>List with Content</returns>
-        public static async Task<IList<Content>> GetChildrenAsync(this IContentDomain confluenceClient, long contentId, CancellationToken cancellationToken = default)
+        public static async Task<Result<Content>> GetChildrenAsync(this IContentDomain confluenceClient, long contentId, int? start = null, int? limit = null, int? parentVersion = null, CancellationToken cancellationToken = default)
         {
             var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child");
+
+            if (start.HasValue)
+            {
+                contentUri = contentUri.ExtendQuery("start", start);
+            }
+
+            if (limit.HasValue)
+            {
+                contentUri = contentUri.ExtendQuery("limit", limit);
+            }
+
+            if (parentVersion.HasValue)
+            {
+                contentUri = contentUri.ExtendQuery("parentVersion", parentVersion);
+            }
 
             var expand = string.Join(",", ConfluenceClientConfig.ExpandGetChildren ?? Enumerable.Empty<string>());
             if (!string.IsNullOrEmpty(expand))
@@ -228,7 +246,7 @@ namespace Dapplo.Confluence
             confluenceClient.Behaviour.MakeCurrent();
 
             var response = await contentUri.GetAsAsync<HttpResponse<Children, Error>>(cancellationToken).ConfigureAwait(false);
-            return response.HandleErrors().Result?.Results;
+            return response.HandleErrors().Result;
         }
 
         /// <summary>

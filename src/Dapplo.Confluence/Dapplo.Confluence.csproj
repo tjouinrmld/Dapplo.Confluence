@@ -11,14 +11,14 @@
     <FileVersion>0.6.0.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.4" />
-    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.9.4" />
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.6" />
+    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.9.6" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.4" />
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.6" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

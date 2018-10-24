@@ -82,5 +82,11 @@ namespace Dapplo.Confluence.Entities
 		/// </summary>
 		[DataMember(Name = "webui", EmitDefaultValue = false)]
 		public string WebUi { get; set; }
+
+		/// <summary>
+		///     A link to the next result when using paging
+		/// </summary>
+		[DataMember(Name = "next", EmitDefaultValue = false)]
+		public Uri Next { get; set; }
 	}
 }

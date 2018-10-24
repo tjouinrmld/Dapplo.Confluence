@@ -221,7 +221,7 @@ namespace Dapplo.Confluence
         /// <returns>List with Content</returns>
         public static async Task<Result<Content>> GetChildrenAsync(this IContentDomain confluenceClient, long contentId, int? start = null, int? limit = null, int? parentVersion = null, CancellationToken cancellationToken = default)
         {
-            var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child");
+            var contentUri = confluenceClient.ConfluenceApiUri.AppendSegments("content", contentId, "child", "page");
 
             if (start.HasValue)
             {
@@ -245,8 +245,8 @@ namespace Dapplo.Confluence
             }
             confluenceClient.Behaviour.MakeCurrent();
 
-            var response = await contentUri.GetAsAsync<HttpResponse<Children, Error>>(cancellationToken).ConfigureAwait(false);
-            return response.HandleErrors().Result;
+            var response = await contentUri.GetAsAsync<HttpResponse<Result<Content>, Error>>(cancellationToken).ConfigureAwait(false);
+            return response.HandleErrors();
         }
 
         /// <summary>

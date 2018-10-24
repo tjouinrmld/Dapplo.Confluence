@@ -103,8 +103,9 @@ namespace Dapplo.Confluence.Tests
         [Fact]
         public async Task TestGetChildren()
         {
-            var results = await _confluenceClient.Content.GetChildrenAsync(550731777);
+            var results = await _confluenceClient.Content.GetChildrenAsync(550731777, limit: 1);
             Assert.NotNull(results);
+            Assert.True(results.HasNext);
             Assert.True(results.Size > 0);
         }
 

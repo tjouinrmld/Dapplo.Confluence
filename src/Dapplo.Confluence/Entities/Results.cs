@@ -66,7 +66,12 @@ namespace Dapplo.Confluence.Entities
 		[DataMember(Name = "start", EmitDefaultValue = false)]
 		public int Start { get; set; }
 
-		IEnumerator IEnumerable.GetEnumerator()
+		/// <summary>
+		/// Returns if there are more results as requested
+		/// </summary>
+		public bool HasNext => Links?.Next != null;
+
+        IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
 		}

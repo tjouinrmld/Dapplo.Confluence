@@ -25,6 +25,7 @@
 
 #region Usings
 
+using System;
 using System.IO;
 using Dapplo.Confluence.Entities;
 using Dapplo.HttpExtensions.JsonSimple;
@@ -47,10 +48,13 @@ namespace Dapplo.Confluence.Tests
             LogSettings.RegisterDefaultLogger<XUnitLogger>(LogLevels.Verbose, testOutputHelper);
 
             _testFileLocation = FilesDir;
-            if (!Directory.Exists(FilesDir))
+            if (Directory.Exists(FilesDir))
             {
-                _testFileLocation = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), FilesDir);
+                return;
             }
+
+            var location  = Path.GetDirectoryName(GetType().Assembly.Location) ?? throw new NotSupportedException();
+            _testFileLocation = Path.Combine(location, FilesDir);
         }
 
         [Fact]

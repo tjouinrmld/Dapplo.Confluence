@@ -25,13 +25,13 @@
 
   <ItemGroup>
     <PackageReference Include="Ben.Demystifier" Version="0.1.1" />
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.6">
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.15">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.9.6">
+    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.9.15">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.6">
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.15">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
     <PackageReference Include="Dapplo.Log" Version="1.3.11">
@@ -40,8 +40,11 @@
     <PackageReference Include="Dapplo.Log.XUnit" Version="1.3.11">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="xunit" Version="2.4.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Dapplo.Utils" Version="1.1.9">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>

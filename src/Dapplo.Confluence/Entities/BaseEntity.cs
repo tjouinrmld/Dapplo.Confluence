@@ -20,8 +20,9 @@
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 using System;
-using System.Runtime.Serialization;
 using Dapplo.Confluence.Query;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Dapplo.Confluence.Entities
 {
@@ -34,9 +35,20 @@ namespace Dapplo.Confluence.Entities
 		/// <summary>
 		/// Used internally to convert the string with the id to a typed value
 		/// </summary>
-        [DataMember(Name = "id", EmitDefaultValue = false)]
+        [JsonProperty("id", DefaultValueHandling = DefaultValueHandling.Ignore)]
         protected string InternalId {
-	        get => ContentTypes.Attachment == Type ? $"att{Id}" : Id.ToString();
+            get {
+                if (Equals(default(TId),Id))
+                {
+                    return null;
+                }
+                var returnValue = Id.ToString();
+                if ("0".Equals(returnValue))
+                {
+                    return null;
+                }
+                return ContentTypes.Attachment == Type ? $"att{returnValue}" : returnValue;
+            }
 	        set
 	        {
 		        if (value == null)
@@ -51,18 +63,20 @@ namespace Dapplo.Confluence.Entities
 	    /// <summary>
 	    ///     Unique ID for this entity
 	    /// </summary>
+        [JsonIgnore]
 		public TId Id { get; set; }
 
 		/// <summary>
 		///     Different links for this entity, depending on the entity
 		/// </summary>
-		[DataMember(Name = "_links", EmitDefaultValue = false)]
+		[JsonProperty("_links", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Links Links { get; set; }
 
         /// <summary>
         ///     Type of the entity
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = false)]
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonConverter(typeof(StringEnumConverter))]
         public ContentTypes Type { get; set; }
 
         /// <summary>

@@ -21,8 +21,8 @@
 
 #region using
 
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 #endregion
 
@@ -33,42 +33,43 @@ namespace Dapplo.Confluence.Entities
     ///     See: https://docs.atlassian.com/confluence/REST/latest
     ///     Should be called with expand=icon,description.plain,homepage
     /// </summary>
-    [DataContract]
+    [JsonObject]
     public class Space : BaseEntity<long>
     {
         /// <summary>
         ///     Description
         /// </summary>
-        [DataMember(Name = "description", EmitDefaultValue = false)]
+        [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Description Description { get; set; }
 
         /// <summary>
         ///     The values that are expandable
         /// </summary>
-        [DataMember(Name = "_expandable")]
+        [JsonProperty("_expandable")]
         public IDictionary<string, string> Expandables { get; set; }
 
         /// <summary>
         ///     Icon for the space
         /// </summary>
-        [DataMember(Name = "icon", EmitDefaultValue = false)]
+        [JsonProperty("icon", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Picture Icon { get; set; }
 
         /// <summary>
         ///     Test if this space is a personal space, this is true when the Key starts with a ~
         /// </summary>
+        [JsonIgnore]
         public bool IsPersonal => true == Key?.StartsWith("~");
 
         /// <summary>
         ///     Key for the space
         /// </summary>
-        [DataMember(Name = "key", EmitDefaultValue = false)]
+        [JsonProperty("key", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Key { get; set; }
 
         /// <summary>
         ///     The name of the space
         /// </summary>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
+        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Name { get; set; }
     }
 }

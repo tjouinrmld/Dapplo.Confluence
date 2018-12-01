@@ -21,29 +21,29 @@
 
 #region using
 
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     Metadata information, used in attachment
-	///     See: https://docs.atlassian.com/confluence/REST/latest
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     Metadata information, used in attachment
+    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    /// </summary>
+    [JsonObject]
 	public class Metadata
 	{
 		/// <summary>
 		///     A comment for the attachment
 		/// </summary>
-		[DataMember(Name = "comment", EmitDefaultValue = false)]
+		[JsonProperty("comment", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Comment { get; set; }
 
 		/// <summary>
 		///     Type of media (content-type)
 		/// </summary>
-		[DataMember(Name = "mediaType", EmitDefaultValue = false)]
+		[JsonProperty("mediaType", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string MediaType { get; set; }
 	}
 }

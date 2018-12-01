@@ -21,35 +21,35 @@
 
 #region using
 
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     Info on a label
-	///     See: https://docs.atlassian.com/confluence/REST/latest
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     Info on a label
+    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    /// </summary>
+    [JsonObject]
 	public class Label
 	{
 	    /// <summary>
 	    ///     Prefix of the label
 	    /// </summary>
-	    [DataMember(Name = "prefix", EmitDefaultValue = false)]
+	    [JsonProperty("prefix", DefaultValueHandling = DefaultValueHandling.Ignore)]
 	    public string Prefix { get; set; } = "global";
 
 	    /// <summary>
 	    ///     Name of the label
 	    /// </summary>
-	    [DataMember(Name = "name", EmitDefaultValue = false)]
+	    [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
 	    public string Name { get; set; }
 
 	    /// <summary>
 	    ///     Id of the label
 	    /// </summary>
-	    [DataMember(Name = "id", EmitDefaultValue = false)]
+	    [JsonProperty("id", DefaultValueHandling = DefaultValueHandling.Ignore)]
 	    public long Id { get; set; }
     }
 }

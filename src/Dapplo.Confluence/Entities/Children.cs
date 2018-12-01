@@ -21,36 +21,36 @@
 
 #region using
 
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     Child information
-	///     See: https://docs.atlassian.com/confluence/REST/latest
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     Child information
+    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    /// </summary>
+    [JsonObject]
 	public class Children
 	{
 		/// <summary>
 		///     The values that are expandable
 		/// </summary>
-		[DataMember(Name = "_expandable")]
+		[JsonProperty("_expandable")]
 		public IDictionary<string, string> Expandables { get; set; }
 
 		/// <summary>
 		///     Different links for this entity, depending on the entry
 		/// </summary>
-		[DataMember(Name = "_links", EmitDefaultValue = false)]
+		[JsonProperty("_links", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public Links Links { get; set; }
 
 		/// <summary>
 		///     Results with pages
 		/// </summary>
-		[DataMember(Name = "page", EmitDefaultValue = false)]
+		[JsonProperty("page", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public Result<Content> Result { get; set; }
 	}
 }

@@ -22,71 +22,71 @@
 #region using
 
 using System;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     Links information
-	///     See: https://docs.atlassian.com/confluence/REST/latest
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     Links information
+    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    /// </summary>
+    [JsonObject]
 	public class Links
 	{
 		/// <summary>
 		///     The base (hostname) for the server
 		/// </summary>
-		[DataMember(Name = "base", EmitDefaultValue = false)]
+		[JsonProperty("base", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public Uri Base { get; set; }
 
 		/// <summary>
 		///     A path to the rest API to where this belongs, content has a collection of "/rest/api/content"
 		/// </summary>
-		[DataMember(Name = "collection", EmitDefaultValue = false)]
+		[JsonProperty("collection", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Collection { get; set; }
 
 		/// <summary>
 		///     TODO: What is this?
 		/// </summary>
-		[DataMember(Name = "context", EmitDefaultValue = false)]
+		[JsonProperty("context", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Context { get; set; }
 
 		/// <summary>
 		///     The link, usually for attachments, to download the content
 		/// </summary>
-		[DataMember(Name = "download", EmitDefaultValue = false)]
+		[JsonProperty("download", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Download { get; set; }
 
 		/// <summary>
 		///     A link to the entity itself (so one can find it again)
 		/// </summary>
-		[DataMember(Name = "self", EmitDefaultValue = false)]
+		[JsonProperty("self", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public Uri Self { get; set; }
 
 		/// <summary>
 		///     Status of a task
 		/// </summary>
-		[DataMember(Name = "status", EmitDefaultValue = false)]
+		[JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Status { get; set; }
 
 		/// <summary>
 		///     A short link to the content, relative to the hostname (and port)
 		/// </summary>
-		[DataMember(Name = "tinyui", EmitDefaultValue = false)]
+		[JsonProperty("tinyui", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string TinyUi { get; set; }
 
 		/// <summary>
 		///     A normal, but well readable, link to the content
 		/// </summary>
-		[DataMember(Name = "webui", EmitDefaultValue = false)]
+		[JsonProperty("webui", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string WebUi { get; set; }
 
 		/// <summary>
 		///     A link to the next result when using paging
 		/// </summary>
-		[DataMember(Name = "next", EmitDefaultValue = false)]
+		[JsonProperty("next", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public Uri Next { get; set; }
 	}
 }

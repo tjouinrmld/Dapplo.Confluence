@@ -21,28 +21,28 @@
 
 #region using
 
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     For instance when using delete
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     For instance when using delete
+    /// </summary>
+    [JsonObject]
 	public class LongRunningTask
 	{
 		/// <summary>
 		///     Id of the task
 		/// </summary>
-		[DataMember(Name = "id", EmitDefaultValue = false)]
+		[JsonProperty("id", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Id { get; set; }
 
 		/// <summary>
 		///     In this the link for the status is returned
 		/// </summary>
-		[DataMember(Name = "links", EmitDefaultValue = false)]
+		[JsonProperty("links", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public Links Links { get; set; }
 	}
 }

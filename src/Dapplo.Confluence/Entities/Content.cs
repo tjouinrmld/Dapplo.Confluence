@@ -21,8 +21,8 @@
 
 #region using
 
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 #endregion
 
@@ -32,61 +32,61 @@ namespace Dapplo.Confluence.Entities
     ///     Content, this can be many things e.g a page or an attachment
     ///     See: https://docs.atlassian.com/confluence/REST/latest
     /// </summary>
-    [DataContract]
+    [JsonObject]
     public class Content : BaseEntity<long>
     {
 	    /// <summary>
 	    ///     The container where this content hangs, this is not filled unless expand=container
 	    /// </summary>
-	    [DataMember(Name = "container", EmitDefaultValue = false)]
+	    [JsonProperty("container", DefaultValueHandling = DefaultValueHandling.Ignore)]
 	    public Content Container { get; set; }
 
 	    /// <summary>
 	    ///     Additional meta-data for the attachment, like the comment
 	    /// </summary>
-	    [DataMember(Name = "metadata", EmitDefaultValue = false)]
+	    [JsonProperty("metadata", DefaultValueHandling = DefaultValueHandling.Ignore)]
 	    public Metadata Metadata { get; set; }
 
 		/// <summary>
 		///     Body of the content
 		/// </summary>
-		[DataMember(Name = "body", EmitDefaultValue = false)]
+		[JsonProperty("body", DefaultValueHandling = DefaultValueHandling.Ignore)]
 	    public Body Body { get; set; }
 
 		/// <summary>
 		///     Ancestors for the content
 		/// </summary>
-		[DataMember(Name = "ancestors", EmitDefaultValue = false)]
+		[JsonProperty("ancestors", DefaultValueHandling = DefaultValueHandling.Ignore)]
 	    public IList<Content> Ancestors { get; set; }
 
 		/// <summary>
 		///     The values that are expandable
 		/// </summary>
-		[DataMember(Name = "_expandable", EmitDefaultValue = false)]
+		[JsonProperty("_expandable", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public IDictionary<string, string> Expandables { get; set; }
 
         /// <summary>
         ///     History information for the content, this is not filled unless expand=history
         /// </summary>
-        [DataMember(Name = "history", EmitDefaultValue = false)]
+        [JsonProperty("history", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public History History { get; set; }
 
         /// <summary>
         ///     The space where this content is
         /// </summary>
-        [DataMember(Name = "space", EmitDefaultValue = false)]
+        [JsonProperty("space", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Space Space { get; set; }
 
         /// <summary>
         ///     The title of the content
         /// </summary>
-        [DataMember(Name = "title", EmitDefaultValue = false)]
+        [JsonProperty("title", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Title { get; set; }
 
         /// <summary>
         ///     Version information for the content, this is not filled unless expand=version
         /// </summary>
-        [DataMember(Name = "version", EmitDefaultValue = false)]
+        [JsonProperty("version", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Version Version { get; set; }
     }
 }

@@ -23,53 +23,54 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     A container to store pageable results
-	///     See: https://docs.atlassian.com/confluence/REST/latest
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     A container to store pageable results
+    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    /// </summary>
+    [JsonObject]
 	public class Result<TResult> : IEnumerable<TResult>
 	{
 		/// <summary>
 		///     The result is limited by
 		/// </summary>
-		[DataMember(Name = "limit", EmitDefaultValue = false)]
+		[JsonProperty("limit", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public int Limit { get; set; }
 
 		/// <summary>
 		///     Different links for this entity, depending on the entry
 		/// </summary>
-		[DataMember(Name = "_links", EmitDefaultValue = false)]
+		[JsonProperty("_links", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public Links Links { get; set; }
 
 		/// <summary>
 		///     The actual requested information
 		/// </summary>
-		[DataMember(Name = "results", EmitDefaultValue = false)]
+		[JsonProperty("results", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public IList<TResult> Results { get; set; }
 
 		/// <summary>
 		///     How many elements
 		/// </summary>
-		[DataMember(Name = "size", EmitDefaultValue = false)]
+		[JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public int Size { get; set; }
 
 		/// <summary>
 		///     The start of the elements, this is used for paging
 		/// </summary>
-		[DataMember(Name = "start", EmitDefaultValue = false)]
+		[JsonProperty("start", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public int Start { get; set; }
 
-		/// <summary>
-		/// Returns if there are more results as requested
-		/// </summary>
-		public bool HasNext => Links?.Next != null;
+        /// <summary>
+        /// Returns if there are more results as requested
+        /// </summary>
+        [JsonIgnore]
+        public bool HasNext => Links?.Next != null;
 
         IEnumerator IEnumerable.GetEnumerator()
 		{

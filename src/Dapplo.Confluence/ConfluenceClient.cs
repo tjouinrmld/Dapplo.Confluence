@@ -23,7 +23,7 @@
 
 using System;
 
-#if NET461
+#if NET471 || NETCOREAPP3_0
 using System.Collections.Generic;
 using System.Net.Cache;
 using Dapplo.HttpExtensions.OAuth;
@@ -33,7 +33,7 @@ using Dapplo.HttpExtensions.Extensions;
 
 using Dapplo.Confluence.Entities;
 using Dapplo.HttpExtensions;
-using Dapplo.HttpExtensions.JsonSimple;
+using Dapplo.HttpExtensions.JsonNet;
 
 #endregion
 
@@ -198,7 +198,7 @@ namespace Dapplo.Confluence
         protected IHttpBehaviour ConfigureBehaviour(IChangeableHttpBehaviour behaviour, IHttpSettings httpSettings = null)
         {
             behaviour.HttpSettings = httpSettings ?? HttpExtensionsGlobals.HttpSettings;
-#if NET461
+#if NET471
             // Disable caching, if no HTTP settings were provided.
             // This is needed as was detected here: https://github.com/dapplo/Dapplo.Confluence/issues/11
             if (httpSettings == null)
@@ -207,7 +207,7 @@ namespace Dapplo.Confluence
             }
 #endif
             // Using our own Json Serializer, implemented with SimpleJson
-            behaviour.JsonSerializer = new SimpleJsonSerializer();
+            behaviour.JsonSerializer = new JsonNetJsonSerializer();
 
             behaviour.OnHttpRequestMessageCreated = httpMessage =>
             {
@@ -221,7 +221,7 @@ namespace Dapplo.Confluence
             return behaviour;
         }
 
-#if NET461
+#if NET471 || NETCOREAPP3_0
         /// <summary>
         ///     Create the IConfluenceClient, using OAuth 1 for the communication, here the HttpClient is configured
         /// </summary>

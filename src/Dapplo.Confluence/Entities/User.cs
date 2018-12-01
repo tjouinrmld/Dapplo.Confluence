@@ -21,47 +21,47 @@
 
 #region using
 
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     User information
-	///     See: https://docs.atlassian.com/confluence/REST/latest
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     User information
+    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    /// </summary>
+    [JsonObject]
 	public class User
 	{
 		/// <summary>
 		///     The name which is displayed in the UI, usually "firstname lastname"
 		/// </summary>
-		[DataMember(Name = "displayName", EmitDefaultValue = false)]
+		[JsonProperty("displayName", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string DisplayName { get; set; }
 
 		/// <summary>
 		///     Information on the profile picture
 		/// </summary>
-		[DataMember(Name = "profilePicture", EmitDefaultValue = false)]
+		[JsonProperty("profilePicture", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public Picture ProfilePicture { get; set; }
 
 		/// <summary>
 		///     Type of user
 		/// </summary>
-		[DataMember(Name = "type", EmitDefaultValue = false)]
+		[JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Type { get; set; }
 
 		/// <summary>
 		///     A unique key for the user
 		/// </summary>
-		[DataMember(Name = "userKey", EmitDefaultValue = false)]
+		[JsonProperty("userKey", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string UserKey { get; set; }
 
 		/// <summary>
 		///     The username
 		/// </summary>
-		[DataMember(Name = "username", EmitDefaultValue = false)]
+		[JsonProperty("username", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Username { get; set; }
 	}
 }

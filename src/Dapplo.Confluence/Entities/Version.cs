@@ -22,47 +22,47 @@
 #region using
 
 using System;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     Version information
-	///     See: https://docs.atlassian.com/confluence/REST/latest
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     Version information
+    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    /// </summary>
+    [JsonObject]
 	public class Version
 	{
 		/// <summary>
 		///     Who made this version
 		/// </summary>
-		[DataMember(Name = "by", EmitDefaultValue = false)]
+		[JsonProperty("by", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public User By { get; set; }
 
 		/// <summary>
 		///     Is it a small version change
 		/// </summary>
-		[DataMember(Name = "minorEdit", EmitDefaultValue = false)]
+		[JsonProperty("minorEdit", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public bool IsMinorEdit { get; set; }
 
 		/// <summary>
 		///     A message for the version
 		/// </summary>
-		[DataMember(Name = "message", EmitDefaultValue = false)]
+		[JsonProperty("message", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Message { get; set; }
 
 		/// <summary>
 		///     Version number
 		/// </summary>
-		[DataMember(Name = "number", EmitDefaultValue = false)]
+		[JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public int Number { get; set; }
 
 		/// <summary>
 		///     When was this version
 		/// </summary>
-		[DataMember(Name = "when", EmitDefaultValue = false)]
+		[JsonProperty("when", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public DateTimeOffset When { get; set; }
 	}
 }

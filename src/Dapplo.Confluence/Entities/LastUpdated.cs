@@ -23,47 +23,47 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     LastUpdated information
-	///     See: https://docs.atlassian.com/confluence/REST/latest
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     LastUpdated information
+    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    /// </summary>
+    [JsonObject]
 	public class LastUpdated
 	{
 		/// <summary>
 		///     User who updated
 		/// </summary>
-		[DataMember(Name = "by", EmitDefaultValue = false)]
+		[JsonProperty("by", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public User By { get; set; }
 
 		/// <summary>
 		///     The values that are expandable
 		/// </summary>
-		[DataMember(Name = "_expandable", EmitDefaultValue = false)]
+		[JsonProperty("_expandable", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public IDictionary<string, string> Expandables { get; set; }
 
 		/// <summary>
 		///     Friendly representation for When
 		/// </summary>
-		[DataMember(Name = "friendlyWhen", EmitDefaultValue = false)]
+		[JsonProperty("friendlyWhen", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string FriendlyWhen { get; set; }
 
 		/// <summary>
 		///     Different links for this entity, depending on the entry
 		/// </summary>
-		[DataMember(Name = "_links", EmitDefaultValue = false)]
+		[JsonProperty("_links", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public Links Links { get; set; }
 
 		/// <summary>
 		///     When the last update was
 		/// </summary>
-		[DataMember(Name = "when", EmitDefaultValue = false)]
+		[JsonProperty("when", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public DateTimeOffset When { get; set; }
 	}
 }

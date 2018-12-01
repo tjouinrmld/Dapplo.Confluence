@@ -28,9 +28,9 @@
 using System;
 using System.IO;
 using Dapplo.Confluence.Entities;
-using Dapplo.HttpExtensions.JsonSimple;
 using Dapplo.Log;
 using Dapplo.Log.XUnit;
+using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -61,7 +61,7 @@ namespace Dapplo.Confluence.Tests
         public void TestParseContent()
         {
             var json = File.ReadAllText(Path.Combine(_testFileLocation, "content.json"));
-            var content = SimpleJson.DeserializeObject<Content>(json);
+            var content = JsonConvert.DeserializeObject<Content>(json);
             Assert.NotNull(content);
             Assert.Equal("http://myhost:8080/confluence/rest/api/content/1234", content.Links.Self.AbsoluteUri);
         }

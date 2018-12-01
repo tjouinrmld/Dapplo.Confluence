@@ -21,34 +21,34 @@
 
 #region using
 
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     Contents of a space
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     Contents of a space
+    /// </summary>
+    [JsonObject]
 	public class SpaceContents
     {
 		/// <summary>
 		///     The pages
 		/// </summary>
-		[DataMember(Name = "page", EmitDefaultValue = false)]
+		[JsonProperty("page", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public Result<Content> Pages { get; set; }
 
         /// <summary>
         ///     The blogposts
         /// </summary>
-        [DataMember(Name = "blogpost", EmitDefaultValue = false)]
+        [JsonProperty("blogpost", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Result<Content> Blogposts { get; set; }
 
         /// <summary>
         /// The links
         /// </summary>
-        [DataMember(Name = "_links", EmitDefaultValue = false)]
+        [JsonProperty("_links", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Links Links { get; set; }
     }
 }

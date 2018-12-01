@@ -21,30 +21,30 @@
 
 #region using
 
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     Plain information, used in the description.
-	///     TODO: Find a better name
-	///     See: https://docs.atlassian.com/confluence/REST/latest
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     Plain information, used in the description.
+    ///     TODO: Find a better name
+    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    /// </summary>
+    [JsonObject]
 	public class Plain
 	{
 		/// <summary>
 		///     Type of representation
 		/// </summary>
-		[DataMember(Name = "representation", EmitDefaultValue = false)]
+		[JsonProperty("representation", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Representation { get; set; } = "plain";
 
 		/// <summary>
 		///     Value of the plain description
 		/// </summary>
-		[DataMember(Name = "value", EmitDefaultValue = false)]
+		[JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Value { get; set; }
 	}
 }

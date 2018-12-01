@@ -1,7 +1,7 @@
-﻿#region Dapplo 2017 - GNU Lesser General Public License
+﻿#region Dapplo 2018 - GNU Lesser General Public License
 
 // Dapplo - building blocks for .NET applications
-// Copyright (C) 2017 Dapplo
+// Copyright (C) 2017-2018 Dapplo
 // 
 // For more information see: http://dapplo.net/
 // Dapplo repositories are hosted on GitHub: https://github.com/dapplo
@@ -24,7 +24,7 @@
 #endregion
 
 
-#if NET461
+#if NET471 || NETCOREAPP3_0
 using Dapplo.HttpExtensions.OAuth;
 using System.Security.Cryptography;
 

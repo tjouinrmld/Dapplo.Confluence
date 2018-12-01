@@ -21,29 +21,29 @@
 
 #region using
 
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 #endregion
 
 namespace Dapplo.Confluence.Entities
 {
-	/// <summary>
-	///     Group information
-	///     See: https://docs.atlassian.com/confluence/REST/latest
-	/// </summary>
-	[DataContract]
+    /// <summary>
+    ///     Group information
+    ///     See: https://docs.atlassian.com/confluence/REST/latest
+    /// </summary>
+    [JsonObject]
 	public class Group
 	{
 		/// <summary>
 		///     Name of the group
 		/// </summary>
-		[DataMember(Name = "name", EmitDefaultValue = false)]
+		[JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Name { get; set; }
 
 		/// <summary>
 		///     Type
 		/// </summary>
-		[DataMember(Name = "type", EmitDefaultValue = false)]
+		[JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Type { get; set; }
 	}
 }

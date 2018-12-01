@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Tests for Dapplo.Confluence</Description>
     <AssemblyTitle>Dapplo.Confluence.Tests</AssemblyTitle>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net471</TargetFramework>
     <AssemblyName>Dapplo.Confluence.Tests</AssemblyName>
     <PackageId>Dapplo.Confluence.Tests</PackageId>
 	<AllowedReferenceRelatedFileExtensions>
@@ -24,14 +24,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ben.Demystifier" Version="0.1.1" />
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.16">
+    <PackageReference Include="Ben.Demystifier" Version="0.1.3" />
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.18">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.9.16">
+    <PackageReference Include="Dapplo.HttpExtensions.JsonNet" Version="0.9.18">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.16">
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.18">
 		<PrivateAssets>All</PrivateAssets>
 	</PackageReference>
     <PackageReference Include="Dapplo.Log" Version="1.3.11">
@@ -50,7 +50,7 @@
 	</PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net471' ">
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Drawing" />

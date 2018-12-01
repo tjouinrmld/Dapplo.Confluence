@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>A library for accessing Atlassians Confluence from .NET</Description>
     <AssemblyTitle>Dapplo.Confluence</AssemblyTitle>
-    <TargetFrameworks>netstandard1.3;netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;netstandard2.0;net471;netcoreapp3.0</TargetFrameworks>
     <AssemblyName>Dapplo.Confluence</AssemblyName>
     <PackageId>Dapplo.Confluence</PackageId>
     <PackageTags>atlassian;confluence;dapplo</PackageTags>
@@ -11,12 +11,15 @@
     <FileVersion>0.6.0.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.16" />
-    <PackageReference Include="Dapplo.HttpExtensions.JsonSimple" Version="0.9.16" />
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.9.18" />
+    <PackageReference Include="Dapplo.HttpExtensions.JsonNet" Version="0.9.18" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.16" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net471'">
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.18" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.9.18" />
   </ItemGroup>
 </Project>

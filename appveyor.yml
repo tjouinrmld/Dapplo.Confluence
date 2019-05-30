@@ -1,6 +1,6 @@
 version: 0.8.{build}
 skip_tags: true
-os: Visual Studio 2017
+os: Visual Studio 2019
 configuration: Release
 platform: AnyCPU
 test: off
@@ -11,7 +11,7 @@ environment:
   CoverallsRepoToken:
     secure: 5WWUHMA6N4J56uA5Or7KTn56RYcGHDnTTIxqxGmWyoEpdhkasFIAfeOrFnCLxFPt
   confluence_test_username:
-    secure: gdcMwbkCpbe2jH691vkZqw==
+    secure: YDFCm4fj2pYoTR+QCKcR1Q==
   confluence_test_password:
     secure: Ok03X5fvfNY2h61MHktUJw==
   sonar_token:
@@ -20,12 +20,14 @@ environment:
     secure: Fu7vXeOuWmvDK7WGNsEbTIV2vhDV4P6PiK5k1+UZOmwldhCfvUvkA4HOkml+ZE/n
 # Install dotnet core 3.0 latest (alpha!!), as this is not provided on AppVeyor yet
 install:
+- ps: Invoke-WebRequest https://download.microsoft.com/download/9/0/1/901B684B-659E-4CBD-BEC8-B3F06967C2E7/NDP471-DevPack-ENU.exe -OutFile NDP471-DevPack-ENU.exe
+- ps: Start-Process -FilePath "NDP471-DevPack-ENU.exe" -ArgumentList "/q","/norestart" -Wait
 - ps: Start-FileDownload 'https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/dotnet-sdk-latest-win-x64.exe'
 - ps: Start-Process .\dotnet-sdk-latest-win-x64.exe "/install /norestart /quiet /log sdkinstall.log" -NoNewWindow -Wait
 build:
   verbosity: minimal
 build_script:
-- ps: .\build.ps1 --settings_skipverification=true
+- ps: .\build.ps1 --settings_skipverification=true --settings_skippackageversioncheck=true
 cache:
   - tools -> tools/packages.config
 artifacts:

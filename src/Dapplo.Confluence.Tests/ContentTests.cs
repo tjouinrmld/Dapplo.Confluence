@@ -123,9 +123,18 @@ namespace Dapplo.Confluence.Tests
         [Fact]
         public async Task TestCreateContent()
         {
+            var query = Where.And(Where.Space.Is("TEST"), Where.Type.IsPage, Where.Title.Contains("Testing 1 2 3"));
+            var searchResults = await _confluenceClient.Content.SearchAsync(query);
+            var oldPage = searchResults.Results.FirstOrDefault();
+            if (oldPage != null)
+            {
+                await _confluenceClient.Content.DeleteAsync(oldPage);
+            }
+            await Task.Delay(1000);
             var page = await _confluenceClient.Content.CreateAsync(ContentTypes.Page, "Testing 1 2 3", "TEST", "<p>This is a test</p>");
             Assert.NotNull(page);
             Assert.True(page.Id > 0);
+            await Task.Delay(1000);
             await _confluenceClient.Content.DeleteAsync(page);
         }
 

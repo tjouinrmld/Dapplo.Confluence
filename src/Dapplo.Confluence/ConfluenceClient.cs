@@ -25,10 +25,12 @@ using System;
 
 #if NET471 || NETCOREAPP3_0
 using System.Collections.Generic;
-using System.Net.Cache;
 using Dapplo.HttpExtensions.OAuth;
 using System.Net.Http;
 using Dapplo.HttpExtensions.Extensions;
+#endif
+#if NET471
+using System.Net.Cache;
 #endif
 
 using Dapplo.Confluence.Entities;

@@ -203,7 +203,7 @@ namespace Dapplo.Confluence.Query
 			}
 			else
 			{
-				_clause.Value = $"\"{dateTime:yyyy-MM-dd HH-mm}\"";
+				_clause.Value = $"\"{dateTime:yyyy-MM-dd HH:mm}\"";
 			}
 			return _clause;
 		}

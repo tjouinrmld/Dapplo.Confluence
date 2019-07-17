@@ -23,13 +23,13 @@
 
 using System;
 
-#if NET471 || NETCOREAPP3_0
-using System.Collections.Generic;
+#if NET471 || NET461 || NETCOREAPP3_0
 using Dapplo.HttpExtensions.OAuth;
+using System.Collections.Generic;
 using System.Net.Http;
 using Dapplo.HttpExtensions.Extensions;
 #endif
-#if NET471
+#if NET471 || NET461
 using System.Net.Cache;
 #endif
 
@@ -200,7 +200,7 @@ namespace Dapplo.Confluence
         protected IHttpBehaviour ConfigureBehaviour(IChangeableHttpBehaviour behaviour, IHttpSettings httpSettings = null)
         {
             behaviour.HttpSettings = httpSettings ?? HttpExtensionsGlobals.HttpSettings;
-#if NET471
+#if NET471 || NET461
             // Disable caching, if no HTTP settings were provided.
             // This is needed as was detected here: https://github.com/dapplo/Dapplo.Confluence/issues/11
             if (httpSettings == null)
@@ -223,7 +223,7 @@ namespace Dapplo.Confluence
             return behaviour;
         }
 
-#if NET471 || NETCOREAPP3_0
+#if NET471 || NET461 ||NETCOREAPP3_0
         /// <summary>
         ///     Create the IConfluenceClient, using OAuth 1 for the communication, here the HttpClient is configured
         /// </summary>

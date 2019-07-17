@@ -24,7 +24,7 @@
 #endregion
 
 
-#if NET471 || NETCOREAPP3_0
+#if NET471 || NET461 || NETCOREAPP3_0
 using Dapplo.HttpExtensions.OAuth;
 using System.Security.Cryptography;
 

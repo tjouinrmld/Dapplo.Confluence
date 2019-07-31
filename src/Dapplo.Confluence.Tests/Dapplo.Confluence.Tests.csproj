@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Ben.Demystifier" Version="0.1.4" />
-    <PackageReference Include="Dapplo.Log.XUnit" Version="1.3.21">
+    <PackageReference Include="Dapplo.Log.XUnit" Version="1.3.26">
 		  <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="xunit" Version="2.4.1" />

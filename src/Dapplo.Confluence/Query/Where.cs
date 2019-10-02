@@ -19,11 +19,7 @@
 //  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-#region using
-
 using System.Linq;
-
-#endregion
 
 namespace Dapplo.Confluence.Query
 {
@@ -58,8 +54,6 @@ namespace Dapplo.Confluence.Query
         /// </summary>
         public static ITitleClause Title => new TitleClause(Fields.Title);
 
-        #region User based clauses
-
         /// <summary>
         ///     Create a clause for the creator
         /// </summary>
@@ -85,10 +79,6 @@ namespace Dapplo.Confluence.Query
 		/// </summary>
 		public static IUserClause Favourite => new UserClause(Fields.Favourite);
 
-        #endregion
-
-        #region BooleanLogic
-
         /// <summary>
         /// Create an AND clause of the specified clauses
         /// </summary>
@@ -109,20 +99,12 @@ namespace Dapplo.Confluence.Query
 			return new Clause("(" + string.Join(" or ", clauses.ToList()) + ")");
 		}
 
-		#endregion
-
-		#region text
-
-		/// <summary>
+        /// <summary>
 		///     Create a clause for the Text field
 		/// </summary>
 		public static ITextClause Text => new TextClause(Fields.Text);
 
-		#endregion
-
-		#region content id based
-
-		/// <summary>
+        /// <summary>
 		///     Create a clause for the Id field
 		/// </summary>
 		public static IContentClause Id => new ContentClause(Fields.Id);
@@ -142,11 +124,7 @@ namespace Dapplo.Confluence.Query
 		/// </summary>
 		public static IContentClause Parent => new ContentClause(Fields.Parent);
 
-		#endregion
-
-		#region simple values
-
-		/// <summary>
+        /// <summary>
 		///     Create a clause for the Label field
 		/// </summary>
 		public static ISimpleValueClause Label => new SimpleValueClause(Fields.Label);
@@ -161,7 +139,5 @@ namespace Dapplo.Confluence.Query
 		///     Create a clause for the Macro field
 		/// </summary>
 		public static ISimpleValueClause Macro => new SimpleValueClause(Fields.Macro);
-
-		#endregion
-	}
+    }
 }

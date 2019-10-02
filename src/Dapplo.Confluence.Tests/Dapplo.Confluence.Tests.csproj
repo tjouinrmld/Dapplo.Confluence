@@ -1,11 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <Description>Tests for Dapplo.Confluence</Description>
     <AssemblyTitle>Dapplo.Confluence.Tests</AssemblyTitle>
-    <TargetFramework>net471</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AssemblyName>Dapplo.Confluence.Tests</AssemblyName>
     <PackageId>Dapplo.Confluence.Tests</PackageId>
+	<UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +32,10 @@
     </PackageReference>
     <PackageReference Include="Dapplo.Utils" Version="1.1.21">
 		  <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.msbuild" Version="2.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 

@@ -19,8 +19,6 @@
 //  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-#region using
-
 using System;
 
 #if NET471 || NET461 || NETCOREAPP3_0
@@ -36,8 +34,6 @@ using System.Net.Cache;
 using Dapplo.Confluence.Entities;
 using Dapplo.HttpExtensions;
 using Dapplo.HttpExtensions.JsonNet;
-
-#endregion
 
 namespace Dapplo.Confluence
 {

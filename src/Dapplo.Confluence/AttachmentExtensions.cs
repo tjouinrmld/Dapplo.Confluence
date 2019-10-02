@@ -19,8 +19,6 @@
 //  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-#region using
-
 using System;
 using System.Net;
 using System.Threading;
@@ -30,8 +28,6 @@ using Dapplo.Confluence.Internals;
 using Dapplo.Confluence.Query;
 using Dapplo.HttpExtensions;
 using Enumerable = System.Linq.Enumerable;
-
-#endregion
 
 namespace Dapplo.Confluence
 {

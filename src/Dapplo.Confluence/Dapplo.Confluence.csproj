@@ -12,10 +12,10 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapplo.HttpExtensions" Version="0.10.6" />
-    <PackageReference Include="Dapplo.HttpExtensions.JsonNet" Version="0.10.6" />
+    <PackageReference Include="Dapplo.HttpExtensions" Version="0.10.7" />
+    <PackageReference Include="Dapplo.HttpExtensions.JsonNet" Version="0.10.7" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net471' Or '$(TargetFramework)' == 'net461' Or '$(TargetFramework)' == 'netcoreapp3.0'">
-    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.10.6" />
+    <PackageReference Include="Dapplo.HttpExtensions.OAuth" Version="0.10.7" />
   </ItemGroup>
 </Project>

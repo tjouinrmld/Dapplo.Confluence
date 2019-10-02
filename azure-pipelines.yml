@@ -30,6 +30,9 @@ stages:
         command: test
         projects: '$(solution)'
         arguments: '--configuration Debug /p:Platform="$(buildPlatform)" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+      env:
+        confluence_test_username: $(confluence_test_username)
+        confluence_test_password: $(confluence_test_password)
 
     - task: DotNetCoreCLI@2
       displayName: Build

@@ -91,6 +91,12 @@ namespace Dapplo.Confluence.Internals
                 return response.Response;
             }
 
+            // This is currently not shown, as the HttpExtensions library already throws an exception, but might be after finding a solution for that
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                Log.Warn().WriteLine("You might need an API-Token instead of a password, use the following URL to generate one: https://id.atlassian.com/manage/api-tokens");
+            }
+
             // Log all error information
             LogError(response.StatusCode, response.ErrorResponse);
             throw new ConfluenceException(response.StatusCode, response.ErrorResponse);

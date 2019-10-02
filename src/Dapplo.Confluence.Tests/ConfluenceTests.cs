@@ -30,11 +30,11 @@ using Xunit.Abstractions;
 
 namespace Dapplo.Confluence.Tests
 {
-    /// <summary>
-    ///     Tests
-    /// </summary>
-    [CollectionDefinition("Dapplo.Confluence")]
-    public class ConfluenceTests
+	/// <summary>
+	///     Tests
+	/// </summary>
+	[CollectionDefinition("Dapplo.Confluence")]
+	public class ConfluenceTests
 	{
 		public ConfluenceTests(ITestOutputHelper testOutputHelper)
 		{
@@ -67,6 +67,7 @@ namespace Dapplo.Confluence.Tests
 			var currentUser = await _confluenceClient.User.GetCurrentUserAsync();
 			Assert.NotNull(currentUser);
 			Assert.NotNull(currentUser.ProfilePicture);
+			Assert.DoesNotContain("Anonymous", currentUser.DisplayName);
 
 			var bitmapSource = await _confluenceClient.Misc.GetPictureAsync<MemoryStream>(currentUser.ProfilePicture);
 			Assert.NotNull(bitmapSource);

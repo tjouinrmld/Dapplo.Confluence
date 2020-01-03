@@ -16,7 +16,7 @@ var searchResult = await confluenceClient.Content.SearchAsync(query, limit:1);
 foreach (var contentDigest in searchResult.Results)
 {
 	// As the content from the Search is a digest, get the details (it's also possible to get the details during the search)
-	var content = await _confluenceClient.Content.GetAsync(contentDigest, ConfluenceClientConfig.ExpandGetContentWithStorage);
+	var content = await confluenceClient.Content.GetAsync(contentDigest, ConfluenceClientConfig.ExpandGetContentWithStorage);
 	// Output the information
 	Debug.WriteLine(content.Body);
 }

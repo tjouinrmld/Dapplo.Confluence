@@ -13,8 +13,11 @@ var confluenceClient = ConfluenceClient.Create(new Uri("https://confluence"));
 confluenceClient.SetBasicAuthentication(username, password);
 var query = Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home"));
 var searchResult = await confluenceClient.Content.SearchAsync(query, limit:1);
-foreach (var content in searchResult.Results)
+foreach (var contentDigest in searchResult.Results)
 {
+	// As the content from the Search is a digest, get the details (it's also possible to get the details during the search)
+	var content = await _confluenceClient.Content.GetAsync(contentDigest, ConfluenceClientConfig.ExpandGetContentWithStorage);
+	// Output the information
 	Debug.WriteLine(content.Body);
 }
 ```

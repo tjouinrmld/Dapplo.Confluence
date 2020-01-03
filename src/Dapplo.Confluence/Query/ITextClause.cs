@@ -19,12 +19,21 @@
 //  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-namespace Dapplo.Confluence
+namespace Dapplo.Confluence.Query
 {
-	/// <summary>
-	///     The is the interface to the client plugins (extension) functionality of the Confluence API
-	/// </summary>
-	public interface IConfluenceClientPlugins : IConfluenceDomain
-	{
-	}
+    /// <summary>
+    ///     An interface for a date time calculations clause
+    /// </summary>
+    public interface ITextClause
+    {
+        /// <summary>
+        ///     Negates the expression
+        /// </summary>
+        ITextClause Not { get; }
+
+        /// <summary>
+        ///     This allows fluent constructs like Text.Contains(customernumber)
+        /// </summary>
+        IFinalClause Contains(string value);
+    }
 }

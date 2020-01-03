@@ -19,12 +19,32 @@
 //  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-namespace Dapplo.Confluence
+namespace Dapplo.Confluence.Query
 {
-	/// <summary>
-	///     The is the interface to the client plugins (extension) functionality of the Confluence API
-	/// </summary>
-	public interface IConfluenceClientPlugins : IConfluenceDomain
-	{
-	}
+    /// <summary>
+    ///     An interface for a date time calculations clause
+    /// </summary>
+    public interface IDatetimeClause
+    {
+        /// <summary>
+        /// Used in CQL to test if a datetime is after
+        /// </summary>
+		IDatetimeClauseWithoutValue After { get; }
+        /// <summary>
+        /// Used in CQL to test if a datetime is after or on
+        /// </summary>
+        IDatetimeClauseWithoutValue AfterOrOn { get; }
+        /// <summary>
+        /// Used in CQL to test if a datetime is before
+        /// </summary>
+        IDatetimeClauseWithoutValue Before { get; }
+        /// <summary>
+        /// Used in CQL to test if a datetime is before or on
+        /// </summary>
+        IDatetimeClauseWithoutValue BeforeOrOn { get; }
+        /// <summary>
+        /// Used in CQL to test if a datetime is on
+        /// </summary>
+        IDatetimeClauseWithoutValue On { get; }
+    }
 }

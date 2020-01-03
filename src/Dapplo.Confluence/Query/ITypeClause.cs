@@ -19,26 +19,43 @@
 //  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-using Newtonsoft.Json;
-
-namespace Dapplo.Confluence.Entities
+namespace Dapplo.Confluence.Query
 {
     /// <summary>
-    ///     For instance when using delete
+    /// Interface for the CQL type clauses
     /// </summary>
-    [JsonObject]
-    public class LongRunningTask
+    public interface ITypeClause
     {
         /// <summary>
-        ///     Id of the task
+        ///     This allows fluent constructs like Type.IsAttachment
         /// </summary>
-        [JsonProperty("id", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Id { get; set; }
+        IFinalClause IsAttachment { get; }
 
         /// <summary>
-        ///     In this the link for the status is returned
+        ///     This allows fluent constructs like Type.IsBlogPost
         /// </summary>
-        [JsonProperty("links", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public Links Links { get; set; }
+        IFinalClause IsBlogPost { get; }
+
+        /// <summary>
+        ///     This allows fluent constructs like Type.IsComment
+        /// </summary>
+        IFinalClause IsComment { get; }
+
+        /// <summary>
+        ///     This allows fluent constructs like Type.IsPage
+        /// </summary>
+        IFinalClause IsPage { get; }
+
+        /// <summary>
+        ///     Negates the expression
+        /// </summary>
+        ITypeClause Not { get; }
+
+        /// <summary>
+        ///     Test if the type is one of the specified types
+        /// </summary>
+        /// <param name="contentTypes">array of types</param>
+        /// <returns>IFinalClause</returns>
+        IFinalClause In(params ContentTypes[] contentTypes);
     }
 }

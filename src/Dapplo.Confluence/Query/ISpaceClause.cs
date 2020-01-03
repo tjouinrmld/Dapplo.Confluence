@@ -19,26 +19,41 @@
 //  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-using Newtonsoft.Json;
-
-namespace Dapplo.Confluence.Entities
+namespace Dapplo.Confluence.Query
 {
     /// <summary>
-    ///     For instance when using delete
+    ///     An interface for a space clause
     /// </summary>
-    [JsonObject]
-    public class LongRunningTask
+    public interface ISpaceClause
     {
         /// <summary>
-        ///     Id of the task
+        ///     This allows fluent constructs like Space.InFavouriteSpaces
         /// </summary>
-        [JsonProperty("id", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Id { get; set; }
+        IFinalClause InFavouriteSpaces { get; }
 
         /// <summary>
-        ///     In this the link for the status is returned
+        ///     Negates the expression
         /// </summary>
-        [JsonProperty("links", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public Links Links { get; set; }
+        ISpaceClause Not { get; }
+
+        /// <summary>
+        ///     This allows fluent constructs like Space.In("DEV", "PRODUCTION")
+        /// </summary>
+        IFinalClause In(params string[] values);
+
+        /// <summary>
+        ///     This allows fluent constructs like Space.InFavouriteSpacesAnd("DEV", "PRODUCTION")
+        /// </summary>
+        IFinalClause InFavouriteSpacesAnd(params string[] values);
+
+        /// <summary>
+        ///     This allows fluent constructs like Space.InRecentlyViewedSpaces(10)
+        /// </summary>
+        IFinalClause InRecentlyViewedSpaces(int limit);
+
+        /// <summary>
+        ///     This allows fluent constructs like Space.Is("blub")
+        /// </summary>
+        IFinalClause Is(string spaceId);
     }
 }

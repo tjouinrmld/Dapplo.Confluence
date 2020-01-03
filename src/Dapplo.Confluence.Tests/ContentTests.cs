@@ -1,23 +1,23 @@
-﻿// Dapplo - building blocks for .NET applications
-// Copyright (C) 2016-2019 Dapplo
-// 
-// For more information see: http://dapplo.net/
-// Dapplo repositories are hosted on GitHub: https://github.com/dapplo
-// 
-// This file is part of Dapplo.Confluence
-// 
-// Dapplo.Confluence is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// Dapplo.Confluence is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-// 
-// You should have a copy of the GNU Lesser General Public License
-// along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
+﻿//  Dapplo - building blocks for desktop applications
+//  Copyright (C) 2016-2020 Dapplo
+//
+//  For more information see: http://dapplo.net/
+//  Dapplo repositories are hosted on GitHub: https://github.com/dapplo
+//
+//  This file is part of Dapplo.Confluence
+//
+//  Dapplo.Confluence is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  Dapplo.Confluence is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Lesser General Public License for more details.
+//
+//  You should have a copy of the GNU Lesser General Public License
+//  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
 using System;
 using System.Diagnostics;
@@ -139,38 +139,38 @@ namespace Dapplo.Confluence.Tests
         [Fact]
         public async Task TestSearch()
         {
-            ConfluenceClientConfig.ExpandSearch = new[] {"version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated"};
+            ConfluenceClientConfig.ExpandSearch = new[] { "version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated" };
 
-            var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit:1);
+            var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit: 1);
             Assert.Equal(ContentTypes.Page, searchResult.First().Type);
             var uri = _confluenceClient.CreateWebUiUri(searchResult.FirstOrDefault()?.Links);
             Assert.NotNull(uri);
         }
 
-	    [Fact]
-	    public async Task TestSearchAttachment()
-	    {
-		    ConfluenceClientConfig.ExpandSearch = new[] { "version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated" };
+        [Fact]
+        public async Task TestSearchAttachment()
+        {
+            ConfluenceClientConfig.ExpandSearch = new[] { "version", "space", "space.icon", "space.description", "space.homepage", "history.lastUpdated" };
 
-		    var query = Where.And(Where.Type.IsAttachment, Where.Text.Contains("404"));
+            var query = Where.And(Where.Type.IsAttachment, Where.Text.Contains("404"));
 
-			var searchResult = await _confluenceClient.Content.SearchAsync(query, limit: 1);
-		    var attachment = searchResult.First();
-		    Assert.Equal(ContentTypes.Attachment, attachment.Type);
-		    Assert.NotNull(_confluenceClient.Attachment.CreateDownloadUri(attachment.Links));
-			// I know the attachment is a bitmap, this should work
-		    var bitmap = await _confluenceClient.Attachment.GetContentAsync<Bitmap>(attachment);
-			Assert.True(bitmap.Width > 0);
-	    }
+            var searchResult = await _confluenceClient.Content.SearchAsync(query, limit: 1);
+            var attachment = searchResult.First();
+            Assert.Equal(ContentTypes.Attachment, attachment.Type);
+            Assert.NotNull(_confluenceClient.Attachment.CreateDownloadUri(attachment.Links));
+            // I know the attachment is a bitmap, this should work
+            var bitmap = await _confluenceClient.Attachment.GetContentAsync<Bitmap>(attachment);
+            Assert.True(bitmap.Width > 0);
+        }
 
-		//[Fact]
-		public async Task TestLabels()
+        //[Fact]
+        public async Task TestLabels()
         {
             var searchResult = await _confluenceClient.Content.SearchAsync(Where.And(Where.Type.IsPage, Where.Text.Contains("Test Home")), limit: 1);
             var contentId = searchResult.First().Id;
 
-            var labels = new[] {"test1", "test2"};
-            await _confluenceClient.Content.AddLabelsAsync(contentId, labels.Select(s => new Label{Name = s}));
+            var labels = new[] { "test1", "test2" };
+            await _confluenceClient.Content.AddLabelsAsync(contentId, labels.Select(s => new Label { Name = s }));
             var labelsForContent = await _confluenceClient.Content.GetLabelsAsync(contentId);
             Assert.Equal(labels.Length, labelsForContent.Count(label => labels.Contains(label.Name)));
 

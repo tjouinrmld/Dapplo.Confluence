@@ -19,12 +19,32 @@
 //  You should have a copy of the GNU Lesser General Public License
 //  along with Dapplo.Confluence. If not, see <http://www.gnu.org/licenses/lgpl.txt>.
 
-namespace Dapplo.Confluence
+namespace Dapplo.Confluence.Query
 {
-	/// <summary>
-	///     The is the interface to the client plugins (extension) functionality of the Confluence API
-	/// </summary>
-	public interface IConfluenceClientPlugins : IConfluenceDomain
-	{
-	}
+    /// <summary>
+    ///     An interface for a content id based clauses
+    /// </summary>
+    public interface IContentClause
+    {
+        /// <summary>
+        ///     Negates the expression
+        /// </summary>
+        IContentClause Not { get; }
+
+        /// <summary>
+        ///     This allows fluent constructs like Id.In(1234, 45678)
+        /// </summary>
+        IFinalClause In(params long[] values);
+
+
+        /// <summary>
+        ///     This allows fluent constructs like Id.InRecentlyViewedContent(10, 20)
+        /// </summary>
+        IFinalClause InRecentlyViewedContent(int limit, int offset = 0);
+
+        /// <summary>
+        ///     This allows fluent constructs like Id.Is(12345)
+        /// </summary>
+        IFinalClause Is(long id);
+    }
 }

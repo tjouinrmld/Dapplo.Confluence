@@ -3,7 +3,6 @@
 
 
 using System;
-
 #if NET471 || NET461 || NETCOREAPP3_0
 using Dapplo.HttpExtensions.OAuth;
 using System.Collections.Generic;
@@ -187,8 +186,8 @@ namespace Dapplo.Confluence
                 behaviour.HttpSettings.RequestCacheLevel = RequestCacheLevel.NoCacheNoStore;
             }
 #endif
-            // Using our own Json Serializer, implemented with SimpleJson
-            behaviour.JsonSerializer = new JsonNetJsonSerializer();
+            // Using our own Json Serializer, implemented with JsonNetJsonSerializer
+            behaviour.JsonSerializer = CreateJsonNetJsonSerializer();
 
             behaviour.OnHttpRequestMessageCreated = httpMessage =>
             {
@@ -200,6 +199,18 @@ namespace Dapplo.Confluence
                 return httpMessage;
             };
             return behaviour;
+        }
+
+        /// <summary>
+        /// Factory for CreateJsonNetJsonSerializer
+        /// </summary>
+        /// <returns>JsonNetJsonSerializer</returns>
+        public static JsonNetJsonSerializer CreateJsonNetJsonSerializer()
+        {
+            var result = new JsonNetJsonSerializer();
+            // This should fix https://github.com/dapplo/Dapplo.Confluence/issues/41
+            result.Settings.DateFormatString = result.Settings.DateFormatString.Replace("FFFFFF", "ff");
+            return result;
         }
 
 #if NET471 || NET461 ||NETCOREAPP3_0
